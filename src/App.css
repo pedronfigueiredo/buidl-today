@@ -1,0 +1,69 @@
+/* General */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-size: 3.2rem;
+  margin: 0;
+  color: #2a2825;
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: -0.23px;
+  text-align: center;
+}
+
+/* Login */
+.login-form {
+  margin: 0 auto;
+  padding: 50px;
+}
+
+.login--heading {
+  margin-bottom: 3.6rem;
+  font-size: 3.2rem;
+}
+
+.ui.form > p.login--description {
+  color: #82817d;
+  margin: 0 auto 2.4rem;
+  font-size: 1.4rem;
+}
+
+.ui.form.login-form > .field > label {
+  font-size: 1rem;
+  color: #82817d;
+  margin: 0 0 0.3rem 0;
+}
+
+.ui.form input {
+  line-height: 1.5;
+}
+
+.ui.form input[type="text"]:disabled {
+  background-color: #f3f1ee;
+  background-color-focus: #f3f1ee;
+  border-color: #f3f1ee;
+  border-color-focus: #f3f1ee;
+  pointer-events: none;
+  font-weight: bold;
+  color: black;
+  opacity: 1;
+}
+
+/* Validation */
+.ui.form input.blurred:valid {
+  box-shadow: 0 0 5px 1px green;
+}
+
+.ui.form input:not(.active).blurred:invalid {
+  box-shadow: 0 0 5px 1px red;
+}
+
+.form-error {
+  color: red;
+  font-size: 12px;
+  margin-top: 5px;
+}
