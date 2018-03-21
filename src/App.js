@@ -1,13 +1,13 @@
 import React, {Component} from 'react';
+
 const contract = require('truffle-contract');
 import BuidlContract from '../build/contracts/Buidl.json';
 const Buidl = contract(BuidlContract);
 import getWeb3 from './utils/getWeb3';
 
 import {Button, Form} from 'semantic-ui-react';
-
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'semantic-ui-css/semantic.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 import './css/oswald.css';
 import './css/open-sans.css';
@@ -160,6 +160,8 @@ class App extends Component {
     });
     return isFormValid;
   }
+
+
 
   render() {
     const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
