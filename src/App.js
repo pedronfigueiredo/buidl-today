@@ -1,9 +1,12 @@
 import React, {Component} from 'react';
 
-const contract = require('truffle-contract');
 import BuidlContract from '../build/contracts/Buidl.json';
+import contract from 'truffle-contract';
 const Buidl = contract(BuidlContract);
 import getWeb3 from './utils/getWeb3';
+
+import {frontEndModule} from './frontEndModule.js';
+frontEndModule();
 
 import {Button, Form} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
@@ -27,6 +30,7 @@ class App extends Component {
       numberOfAgreements: null,
       userAccount: '',
       web3: null,
+      response: '',
       loginFormState: {
         emailAddress: '',
         nickname: '',
@@ -52,6 +56,23 @@ class App extends Component {
         console.log('Error finding web3.');
       });
   }
+
+  componentDidMount() {
+    this.callApi('test')
+      .then(res => this.setState({response: res.express}))
+      .catch(err => console.log(err));
+  }
+
+  callApi = async (path) => {
+    const response = await fetch('/api/' + path, {
+      mode: 'cors',
+    });
+    const body = await response.json();
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
+  };
 
   getUserAddress() {
     const {web3} = this.state;
@@ -161,16 +182,17 @@ class App extends Component {
     return isFormValid;
   }
 
-
-
   render() {
+    console.log(this.state);
+
     const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
-    
+
     const loginForm = (
       <Form className="login-form" onSubmit={this.handleLoginFormSubmit}>
         <h2 className="login--heading">Welcome to Buidl.Today</h2>
+        <p>{this.state.response}</p>
         <p className="login--description">
           To get started, please enter your email address and a nickname.
         </p>
