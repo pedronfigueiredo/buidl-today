@@ -58,15 +58,35 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.callApi('test')
+    this.getData('hello')
       .then(res => this.setState({response: res.express}))
       .catch(err => console.log(err));
   }
 
-  callApi = async (path) => {
+  getData = async path => {
     const response = await fetch('/api/' + path, {
       mode: 'cors',
     });
+    const body = await response.json();
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
+  };
+
+  postData = async (path, data) => {
+    var strData = JSON.stringify(data);
+    console.log('postData', path, strData);
+    let testO = {
+      'rest': 'test',
+    }
+    const response = await fetch('/api/' + path, {
+      method: 'post',
+      mode: 'cors',
+      // body: JSON.stringify(data),
+      body: testO,
+    });
+
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
@@ -163,7 +183,14 @@ class App extends Component {
       console.log('Form is valid: submit');
     }
 
-    console.log('Login details:', JSON.stringify(loginDetails));
+    // console.log('Login details:', JSON.stringify(loginDetails));
+
+    var userDetails = {
+      address: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
+      email: 'example@buidl.today',
+      nickname: 'Pedro',
+    };
+    this.postData('insertuser', loginDetails);
   }
 
   showFormErrors() {
