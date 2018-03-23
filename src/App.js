@@ -1,12 +1,9 @@
 import React, {Component} from 'react';
 
-import BuidlContract from '../build/contracts/Buidl.json';
+import BuidlContract from './contracts/Buidl.json';
 import contract from 'truffle-contract';
-const Buidl = contract(BuidlContract);
 import getWeb3 from './utils/getWeb3';
-
 import {frontEndModule} from './frontEndModule.js';
-frontEndModule();
 
 import {Button, Form} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
@@ -16,6 +13,9 @@ import './css/oswald.css';
 import './css/open-sans.css';
 import './css/pure-min.css';
 import './App.css';
+
+const Buidl = contract(BuidlContract);
+frontEndModule();
 
 class App extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ class App extends Component {
       numberOfAgreements: null,
       userAccount: '',
       web3: null,
-      response: '',
+      helloworld: '',
       loginFormState: {
         emailAddress: '',
         nickname: '',
@@ -59,7 +59,7 @@ class App extends Component {
 
   componentDidMount() {
     this.getData('hello')
-      .then(res => this.setState({response: res.express}))
+      .then(res => this.setState({helloworld: res.express}))
       .catch(err => console.log(err));
   }
 
@@ -76,15 +76,14 @@ class App extends Component {
 
   postData = async (path, data) => {
     var strData = JSON.stringify(data);
-    console.log('postData', path, strData);
-    let testO = {
-      'rest': 'test',
-    }
     const response = await fetch('/api/' + path, {
       method: 'post',
       mode: 'cors',
-      // body: JSON.stringify(data),
-      body: testO,
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+        'Content-Type': 'application/json',
+      },
+      body: strData,
     });
 
     const body = await response.json();
@@ -166,7 +165,7 @@ class App extends Component {
     error.textContent = '';
   }
 
-  handleLoginFormSubmit(e) {
+  async handleLoginFormSubmit(e) {
     const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
 
     const loginDetails = {
@@ -177,20 +176,28 @@ class App extends Component {
 
     e.preventDefault();
 
-    if (!this.showFormErrors()) {
-      console.log('Form is invalid: do not submit');
-    } else {
-      console.log('Form is valid: submit');
+    const user = await this.postData('insertuser', loginDetails);
+    if (user) {
+      this.clearLoginForm();
+      console.log(user.nickname + ' was added to the database');
     }
+  }
 
-    // console.log('Login details:', JSON.stringify(loginDetails));
+  clearLoginForm() {
+    const inputFields = document.getElementsByTagName('INPUT');
+    inputFields[1].classList.remove('active');
+    inputFields[1].classList.remove('blurred');
+    this.hideInputError(inputFields[1]);
+    inputFields[2].classList.remove('active');
+    inputFields[2].classList.remove('blurred');
+    this.hideInputError(inputFields[2]);
 
-    var userDetails = {
-      address: '0x627306090abab3a6e1400e9345bc60c78a8bef57',
-      email: 'example@buidl.today',
-      nickname: 'Pedro',
-    };
-    this.postData('insertuser', loginDetails);
+    this.setState({
+      loginFormState: {
+        emailAddress: '',
+        nickname: '',
+      },
+    });
   }
 
   showFormErrors() {
@@ -210,8 +217,6 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.state);
-
     const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
@@ -219,7 +224,7 @@ class App extends Component {
     const loginForm = (
       <Form className="login-form" onSubmit={this.handleLoginFormSubmit}>
         <h2 className="login--heading">Welcome to Buidl.Today</h2>
-        <p>{this.state.response}</p>
+        <p>{this.state.helloworld}</p>
         <p className="login--description">
           To get started, please enter your email address and a nickname.
         </p>
