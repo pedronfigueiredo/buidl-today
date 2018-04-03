@@ -3,6 +3,8 @@ const USER_IS_NEW = 'USER_IS_NEW';
 const USER_FOUND_IN_DB = 'USER_FOUND_IN_DB';
 const STORE_WEB3 = 'STORE_WEB3';
 const STORE_USERACCOUNT = 'STORE_USERACCOUNT';
+const CLEAR_LOGIN_FORM = 'CLEAR__LOGIN_FORM';
+const UPDATE_LOGIN_FORM = 'UPDATE_LOGIN_FORM';
 
 // Action Creators
 export const userIsNew = () => {
@@ -13,7 +15,7 @@ export const userIsNew = () => {
 
 export const userFoundInDb = payload => {
   return {
-    type: USER_IS_NEW,
+    type: USER_FOUND_IN_DB,
     payload,
   };
 };
@@ -32,10 +34,28 @@ export const storeUserAccount = payload => {
   };
 };
 
+export const clearLoginForm = () => {
+  return {
+    type: CLEAR_LOGIN_FORM,
+  };
+};
+
+export const updateLoginForm = (name, value) => {
+  return {
+    type: UPDATE_LOGIN_FORM,
+    name,
+    value,
+  };
+};
+
 // Initial State
 const initialState = {
   web3: '',
   userAccount: '',
+  loginFormState: {
+    emailAddress: '',
+    nickname: '',
+  },
   isLoading: true,
 };
 
@@ -50,8 +70,27 @@ const login = (state = initialState, action) => {
     case USER_FOUND_IN_DB:
       return {
         ...state,
-
+        loginFormState: {
+          emailAddress: action.payload., //JSON STRINGIFY
+          nickname: '',
+        },
         isLoading: false,
+      };
+    case CLEAR_LOGIN_FORM:
+      return {
+        ...state,
+        loginFormState: {
+          emailAddress: '',
+          nickname: '',
+        },
+      };
+    case UPDATE_LOGIN_FORM:
+      return {
+        ...state,
+        loginFormState: {
+          ...state.loginFormState,
+          [action.name]: action.value,
+        },
       };
     case STORE_WEB3:
       return {

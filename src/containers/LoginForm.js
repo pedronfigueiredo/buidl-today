@@ -5,7 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {connect} from 'react-redux';
-import {userIsNew} from '../redux/login.js';
+import {clearLoginForm, updateLoginForm, userIsNew, userFoundInDb} from '../redux/login.js';
 
 class LoginFormComponent extends Component {
   constructor(props) {
@@ -16,12 +16,6 @@ class LoginFormComponent extends Component {
     this.handleLoginFormFocus = this.handleLoginFormFocus.bind(this);
     this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
 
-    this.state = {
-      loginFormState: {
-        emailAddress: '',
-        nickname: '',
-      },
-    };
   }
 
   componentDidMount() {
@@ -63,16 +57,11 @@ class LoginFormComponent extends Component {
   };
 
   handleLoginFormChange(e) {
+    const {dispatch} = this.props;
     const name = e.target.name;
     const value = e.target.value;
 
-    this.setState(prevState => ({
-      ...prevState,
-      loginFormState: {
-        ...prevState.loginFormState,
-        [name]: value,
-      },
-    }));
+    dispatch(updateLoginForm(name, value));
   }
 
   handleLoginFormFocus(e) {
@@ -138,15 +127,14 @@ class LoginFormComponent extends Component {
           console.log('API Call error');
           // error screen
         } else {
-          dispatch(userWasFound(res));
+          dispatch(userFoundInDb(res));
         }
       })
       .catch(err => console.log(err));
   }
 
   async handleLoginFormSubmit(e) {
-    const {loginFormState: {emailAddress, nickname}} = this.state;
-    const {userAccount} = this.props;
+    const {userAccount, loginFormState: {emailAddress, nickname}} = this.props;
 
     const loginDetails = {
       nickname,
@@ -164,6 +152,7 @@ class LoginFormComponent extends Component {
   }
 
   clearLoginForm() {
+    const {dispatch} = this.props;
     const inputFields = document.getElementsByTagName('INPUT');
     inputFields[1].classList.remove('active');
     inputFields[1].classList.remove('blurred');
@@ -171,25 +160,17 @@ class LoginFormComponent extends Component {
     inputFields[2].classList.remove('active');
     inputFields[2].classList.remove('blurred');
     this.hideInputError(inputFields[2]);
-
-    this.setState({
-      loginFormState: {
-        emailAddress: '',
-        nickname: '',
-      },
-    });
+    dispatch(clearLoginForm());
   }
 
   render() {
-    const {loginFormState: {emailAddress, nickname}} = this.state;
-    const {userAccount, isLoading} = this.props;
+    const {userAccount, isLoading, loginFormState: {emailAddress, nickname}} = this.props;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
 
     const loginForm = (
       <Form className="login-form" onSubmit={this.handleLoginFormSubmit}>
         <h2 className="login--heading">Welcome to Buidl.Today</h2>
-        <p>{this.state.helloworld}</p>
         <p className="login--description">
           To get started, please enter your email address and a nickname.
         </p>

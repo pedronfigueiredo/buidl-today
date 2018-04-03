@@ -73,7 +73,7 @@ class App extends Component {
   }
 
   render() {
-    const {isLoading, userAccount, web3} = this.props;
+    const {isLoading, userAccount, loginFormState, web3} = this.props;
     return (
       <div className="App">
         <div className="container">
@@ -82,6 +82,7 @@ class App extends Component {
             numberOfAgreements={this.state.numberOfAgreements}
             userAccount={userAccount}
             isLoading={isLoading}
+            loginFormState={loginFormState}
           />
         </div>
       </div>
@@ -94,6 +95,7 @@ function mapStateToProps(state) {
     web3: state.login.web3,
     userAccount: state.login.userAccount,
     isLoading: state.login.isLoading,
+    loginFormState: state.login.loginFormState,
   };
 }
 
