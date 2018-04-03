@@ -1,23 +1,13 @@
 import React, {Component} from 'react';
 
-import BuidlContract from './contracts/Buidl.json';
-import contract from 'truffle-contract';
-import getWeb3 from './utils/getWeb3';
-import {frontEndModule} from './frontEndModule.js';
-
-import {Button, Form} from 'semantic-ui-react';
+import {Button, Form, Segment, Dimmer, Loader} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import './css/oswald.css';
-import './css/open-sans.css';
-import './css/pure-min.css';
-import './App.css';
+import {connect} from 'react-redux';
+import {userIsNew} from '../redux/login.js';
 
-const Buidl = contract(BuidlContract);
-frontEndModule();
-
-class App extends Component {
+class LoginFormComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -27,10 +17,6 @@ class App extends Component {
     this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
 
     this.state = {
-      numberOfAgreements: null,
-      userAccount: '',
-      web3: null,
-      helloworld: '',
       loginFormState: {
         emailAddress: '',
         nickname: '',
@@ -38,35 +24,18 @@ class App extends Component {
     };
   }
 
-  componentWillMount() {
-    getWeb3
-      .then(results => {
-        this.setState(
-          {
-            web3: results.web3,
-          },
-          () => {
-            Buidl.setProvider(this.state.web3.currentProvider);
-            this.getUserAddress();
-            this.getNumberOfAgreements();
-          },
-        );
-      })
-      .catch(() => {
-        console.log('Error finding web3.');
-      });
-  }
-
   componentDidMount() {
-    this.getData('hello')
-      .then(res => this.setState({helloworld: res.express}))
-      .catch(err => console.log(err));
+    // Wait for ethereum address from props
+    setTimeout(() => {
+      this.checkIfUserExists();
+    }, 2000);
   }
 
   getData = async path => {
     const response = await fetch('/api/' + path, {
-      mode: 'cors',
+      mode: 'no-cors',
     });
+
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
@@ -92,29 +61,6 @@ class App extends Component {
 
     return body;
   };
-
-  getUserAddress() {
-    const {web3} = this.state;
-    web3.eth.getAccounts((error, accounts) => {
-      Buidl.defaults({
-        from: accounts[0],
-        gas: 3000000,
-      });
-      return this.setState({
-        userAccount: accounts[0],
-      });
-    });
-  }
-
-  getNumberOfAgreements() {
-    Buidl.deployed()
-      .then(instance => instance.getNumberOfAgreements())
-      .then(result => {
-        this.setState({
-          numberOfAgreements: result.c[0],
-        });
-      });
-  }
 
   handleLoginFormChange(e) {
     const name = e.target.name;
@@ -165,8 +111,42 @@ class App extends Component {
     error.textContent = '';
   }
 
+  showFormErrors() {
+    const inputs = document.querySelectorAll('input');
+    let isFormValid = true;
+
+    inputs.forEach(input => {
+      input.classList.add('active');
+
+      const isInputValid = this.showInputError(input);
+
+      if (!isInputValid) {
+        isFormValid = false;
+      }
+    });
+    return isFormValid;
+  }
+
+  checkIfUserExists() {
+    const {userAccount, dispatch} = this.props;
+    //this.getData('userexists/' + 'randomaddressthatdoesntexist')
+    this.getData('userexists/' + userAccount)
+      .then(res => {
+        if (res === 'User not found') {
+          dispatch(userIsNew());
+        } else if (res === 'error') {
+          console.log('API Call error');
+          // error screen
+        } else {
+          dispatch(userWasFound(res));
+        }
+      })
+      .catch(err => console.log(err));
+  }
+
   async handleLoginFormSubmit(e) {
-    const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
+    const {loginFormState: {emailAddress, nickname}} = this.state;
+    const {userAccount} = this.props;
 
     const loginDetails = {
       nickname,
@@ -200,24 +180,9 @@ class App extends Component {
     });
   }
 
-  showFormErrors() {
-    const inputs = document.querySelectorAll('input');
-    let isFormValid = true;
-
-    inputs.forEach(input => {
-      input.classList.add('active');
-
-      const isInputValid = this.showInputError(input);
-
-      if (!isInputValid) {
-        isFormValid = false;
-      }
-    });
-    return isFormValid;
-  }
-
   render() {
-    const {userAccount, loginFormState: {emailAddress, nickname}} = this.state;
+    const {loginFormState: {emailAddress, nickname}} = this.state;
+    const {userAccount, isLoading} = this.props;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
 
@@ -270,12 +235,18 @@ class App extends Component {
         <Button type="submit">Save account info</Button>
       </Form>
     );
-    return (
-      <div className="App">
-        <div className="container">{loginForm}</div>
-      </div>
+
+    const loader = (
+      <Segment style={{height: '100vh', border: 'none', boxShadow: 'none'}}>
+        <Dimmer inverted active>
+          <Loader>Loading</Loader>
+        </Dimmer>
+      </Segment>
     );
+
+    return <div>{isLoading ? loader : loginForm}</div>;
   }
 }
 
-export default App;
+// export default LoginFormComponent;
+export default connect()(LoginFormComponent);

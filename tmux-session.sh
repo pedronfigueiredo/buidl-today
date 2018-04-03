@@ -5,6 +5,8 @@
 
 SESSION_NAME="BuidlToday"
 
+cd ~/Documents/src/buidl-today-node-redux
+
 tmux has-session -t ${SESSION_NAME}
 
 if [ $? != 0 ]
@@ -12,7 +14,7 @@ then
   tmux new-session -d -s ${SESSION_NAME}
 
   tmux new-window -t ${SESSION_NAME}:1 -n 'Editor'
-  tmux send-keys -t ${SESSION_NAME}:1 "btd && vi" C-m
+  tmux send-keys -t ${SESSION_NAME}:1 "vi" C-m
   
   tmux new-window -t ${SESSION_NAME}:2 -n 'Truffle, npm and git'
   tmux split-window -h -t ${SESSION_NAME}
@@ -21,16 +23,16 @@ then
   tmux split-window -v -t ${SESSION_NAME}
   # Upper left
   tmux select-pane -t 0
-  tmux send-keys -t ${SESSION_NAME}:2 "btd  && truffle develop" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "truffle develop" C-m
   # Lower left
   tmux select-pane -t 1
-  tmux send-keys -t ${SESSION_NAME}:2 "btd" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "git status" C-m
   # Upper right
   tmux select-pane -t 2
-  tmux send-keys -t ${SESSION_NAME}:2 "btd && npm run dev" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "npm run dev" C-m
   # Lower right
   tmux select-pane -t 3
-  tmux send-keys -t ${SESSION_NAME}:2 "btd && npm run test" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "npm run test" C-m
   # Select Truffle pane
   tmux select-pane -t 0
   

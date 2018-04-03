@@ -65,15 +65,18 @@
     "mongodb": "^3.0.4",
     "react": "^15.4.2",
     "react-dom": "^15.4.2",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.2",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.0"
   },
   "scripts": {
     "start": "npx react-scripts start",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom",
     "server": "nodemon src/server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run start\" \"npm run server\""
+    "dev": "concurrently --kill-others-on-fail \"npm run start\" \"npm run server\"",
+    "test": "node scripts/test.js --env=jsdom",
+    "build": "node scripts/build.js"
   },
   "jest": {
     "collectCoverageFrom": [

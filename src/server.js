@@ -52,6 +52,38 @@ app.get('/api/getusers', (req, res) => {
   });
 });
 
+app.get('/api/userexists/:address', function(req, res) {
+  console.log('inside backend');
+  if (req.params.address.length > 1) {
+    mongo.connect(dbUrl, function(errConnecting, client) {
+      if (errConnecting) {
+        console.error('Error connecting to the database');
+        console.error(errConnecting);
+      } else {
+        console.log('Connected to database');
+        var db = client.db(databaseName);
+        db
+          .collection(userCollectionName)
+          .find({address: req.params.address})
+          .toArray(function(errFinding, documents) {
+            if (errFinding) {
+              console.error('Error finding the user');
+              console.error(errFinding);
+              res.send('error');
+            } else {
+              if (documents.length === 0) {
+                res.send(JSON.stringify('User not found'));
+              } else {
+                res.send(JSON.stringify(documents[0]));
+              }
+              client.close();
+            }
+          });
+      }
+    });
+  }
+});
+
 app.post('/api/insertuser', (req, res) => {
   var user = {
     address: req.body.address,
