@@ -12,7 +12,7 @@ import {
   userFoundInDb,
 } from '../redux/login.js';
 
-class LoginFormComponent extends Component {
+export class LoginFormComponent extends Component {
   constructor(props) {
     super(props);
 
@@ -237,5 +237,4 @@ class LoginFormComponent extends Component {
   }
 }
 
-// export default LoginFormComponent;
 export default connect()(LoginFormComponent);
