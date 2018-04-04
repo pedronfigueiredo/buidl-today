@@ -1,0 +1,18 @@
+h1:first-child.welcome-back--heading {
+  margin-top: 50px;
+}
+.welcome-back--heading {
+  margin-bottom: 55px;
+}
+
+.ui.button.welcome-back--button {
+  margin: 20px 0;
+  transition: all 0.3s;
+}
+
+.ui.button.welcome-back--button:hover {
+  font-size: 120%;
+  -moz-box-shadow: 3px 3px 0px 0px yellow;
+  -webkit-box-shadow: 3px 3px 0px 0px yellow;
+  box-shadow: 3px 3px 0px 0px yellow;
+}

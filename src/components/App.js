@@ -29,8 +29,7 @@ export class App extends Component {
   componentWillMount() {
     let {dispatch} = this.props;
 
-    getWeb3.then(results => {
-      this.setState(
+    getWeb3.then(results => { this.setState(
         {
           web3: results.web3,
         },
@@ -71,7 +70,7 @@ export class App extends Component {
   }
 
   render() {
-    const {isLoading, userAccount, loginFormState, web3} = this.props;
+    const {isLoading, userWasRecognized, userAccount, loginFormState, web3} = this.props;
     return (
       <div className="App">
         <div className="container">
@@ -80,6 +79,7 @@ export class App extends Component {
             numberOfAgreements={this.state.numberOfAgreements}
             userAccount={userAccount}
             isLoading={isLoading}
+            userWasRecognized={userWasRecognized}
             loginFormState={loginFormState}
           />
         </div>
@@ -93,6 +93,7 @@ function mapStateToProps(state) {
     web3: state.login.web3,
     userAccount: state.login.userAccount,
     isLoading: state.login.isLoading,
+    userWasRecognized: state.login.userWasRecognized,
     loginFormState: state.login.loginFormState,
   };
 }

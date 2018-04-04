@@ -57,6 +57,7 @@ const initialState = {
     nickname: '',
   },
   isLoading: true,
+  userWasRecognized: false,
 };
 
 // Reducers
@@ -66,6 +67,7 @@ const login = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        userWasRecognized: false,
       };
     case USER_FOUND_IN_DB:
       return {
@@ -75,6 +77,7 @@ const login = (state = initialState, action) => {
           nickname: action.payload.nickname,
         },
         isLoading: false,
+        userWasRecognized: true,
       };
     case CLEAR_LOGIN_FORM:
       return {

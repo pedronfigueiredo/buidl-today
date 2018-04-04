@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 
-import {Button, Form, Segment, Dimmer, Loader} from 'semantic-ui-react';
+import {Button, Card, Dimmer, Form, Loader, Segment} from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './LoginForm.css';
 
 import {connect} from 'react-redux';
 import {
@@ -171,10 +172,33 @@ export class LoginFormComponent extends Component {
     const {
       userAccount,
       isLoading,
+      userWasRecognized,
       loginFormState: {emailAddress, nickname},
     } = this.props;
 
+    const loader = (
+      <Segment style={{height: '100vh', border: 'none', boxShadow: 'none'}}>
+        <Dimmer inverted active>
+          <Loader>Loading</Loader>
+        </Dimmer>
+      </Segment>
+    );
+
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
+
+    const welcomeBack = (
+      <div>
+        <h1 className="welcome-back--heading">Welcome back {nickname}!</h1>
+        <Button className="welcome-back--button" fluid color="orange">
+          Create new Pledge!
+        </Button>
+        <Card.Group>
+          <Card fluid color="red" header="Option 1" />
+          <Card fluid color="orange" header="Option 2" />
+          <Card fluid color="yellow" header="Option 3" />
+        </Card.Group>
+      </div>
+    );
 
     const loginForm = (
       <Form className="login-form" onSubmit={this.handleLoginFormSubmit}>
@@ -225,15 +249,11 @@ export class LoginFormComponent extends Component {
       </Form>
     );
 
-    const loader = (
-      <Segment style={{height: '100vh', border: 'none', boxShadow: 'none'}}>
-        <Dimmer inverted active>
-          <Loader>Loading</Loader>
-        </Dimmer>
-      </Segment>
+    return (
+      <div>
+        {isLoading ? loader : userWasRecognized ? welcomeBack : loginForm}
+      </div>
     );
-
-    return <div>{isLoading ? loader : loginForm}</div>;
   }
 }
 
