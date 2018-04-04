@@ -3,7 +3,6 @@ import React, {Component} from 'react';
 import BuidlContract from '../contracts/Buidl.json';
 import contract from 'truffle-contract';
 import getWeb3 from '../utils/getWeb3';
-import {frontEndModule} from '../frontEndModule.js';
 
 import LoginFormComponent from '../containers/LoginForm.js';
 
@@ -16,7 +15,6 @@ import '../css/pure-min.css';
 import './App.css';
 
 const Buidl = contract(BuidlContract);
-frontEndModule();
 
 class App extends Component {
   constructor(props) {

@@ -71,8 +71,8 @@ const login = (state = initialState, action) => {
       return {
         ...state,
         loginFormState: {
-          emailAddress: action.payload., //JSON STRINGIFY
-          nickname: '',
+          emailAddress: action.payload.email,
+          nickname: action.payload.nickname,
         },
         isLoading: false,
       };

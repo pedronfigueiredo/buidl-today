@@ -53,8 +53,7 @@ app.get('/api/getusers', (req, res) => {
 });
 
 app.get('/api/userexists/:address', function(req, res) {
-  console.log('inside backend');
-  if (req.params.address.length > 1) {
+  if (req.params.address.length > 0) {
     mongo.connect(dbUrl, function(errConnecting, client) {
       if (errConnecting) {
         console.error('Error connecting to the database');
@@ -69,18 +68,20 @@ app.get('/api/userexists/:address', function(req, res) {
             if (errFinding) {
               console.error('Error finding the user');
               console.error(errFinding);
-              res.send('error');
+              res.send(JSON.stringify('error'));
             } else {
               if (documents.length === 0) {
                 res.send(JSON.stringify('User not found'));
               } else {
                 res.send(JSON.stringify(documents[0]));
               }
-              client.close();
             }
+            client.close();
           });
       }
     });
+  } else {
+    res.send(JSON.stringify('Please provide an address'));
   }
 });
 

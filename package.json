@@ -75,6 +75,8 @@
     "start": "npx react-scripts start",
     "server": "nodemon src/server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run start\" \"npm run server\"",
+    "update-contracts": "cp build/contracts/* src/contracts/",
+    "lint": "node_modules/.bin/eslint src/*.js",
     "test": "node scripts/test.js --env=jsdom",
     "build": "node scripts/build.js"
   },

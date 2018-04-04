@@ -5,7 +5,12 @@ import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {connect} from 'react-redux';
-import {clearLoginForm, updateLoginForm, userIsNew, userFoundInDb} from '../redux/login.js';
+import {
+  clearLoginForm,
+  updateLoginForm,
+  userIsNew,
+  userFoundInDb,
+} from '../redux/login.js';
 
 class LoginFormComponent extends Component {
   constructor(props) {
@@ -15,7 +20,6 @@ class LoginFormComponent extends Component {
     this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
     this.handleLoginFormFocus = this.handleLoginFormFocus.bind(this);
     this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
-
   }
 
   componentDidMount() {
@@ -164,7 +168,11 @@ class LoginFormComponent extends Component {
   }
 
   render() {
-    const {userAccount, isLoading, loginFormState: {emailAddress, nickname}} = this.props;
+    const {
+      userAccount,
+      isLoading,
+      loginFormState: {emailAddress, nickname},
+    } = this.props;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
 
