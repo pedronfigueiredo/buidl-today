@@ -30,6 +30,10 @@ export class LoginFormComponent extends Component {
     }, 2000);
   }
 
+  testButton() {
+    console.log(this.props);
+  }
+
   getData = async path => {
     const response = await fetch('/api/' + path, {
       mode: 'no-cors',
@@ -189,7 +193,11 @@ export class LoginFormComponent extends Component {
     const welcomeBack = (
       <div>
         <h1 className="welcome-back--heading">Welcome back {nickname}!</h1>
-        <Button className="welcome-back--button" fluid color="orange">
+        <Button
+          className="welcome-back--button"
+          fluid
+          color="orange"
+          onClick={() => this.testButton()}>
           Create new Pledge!
         </Button>
         <Card.Group>

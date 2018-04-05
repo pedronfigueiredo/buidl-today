@@ -29,6 +29,7 @@ export class App extends Component {
   componentWillMount() {
     let {dispatch} = this.props;
 
+    console.log(this.props);
     getWeb3.then(results => { this.setState(
         {
           web3: results.web3,
@@ -46,6 +47,7 @@ export class App extends Component {
     this.getUserAddress();
     this.getNumberOfAgreements();
   }
+
 
   getUserAddress() {
     const {web3} = this.state;
