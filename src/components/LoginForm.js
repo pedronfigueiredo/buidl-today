@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
-
 import {Button, Card, Dimmer, Form, Loader, Segment} from 'semantic-ui-react';
-import 'semantic-ui-css/semantic.min.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './LoginForm.css';
 
 import {connect} from 'react-redux';
 import {
@@ -13,7 +9,11 @@ import {
   userFoundInDb,
 } from '../redux/login.js';
 
-export class LoginFormComponent extends Component {
+import 'semantic-ui-css/semantic.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './LoginForm.css';
+
+export class LoginForm extends Component {
   constructor(props) {
     super(props);
 
@@ -265,4 +265,4 @@ export class LoginFormComponent extends Component {
   }
 }
 
-export default connect()(LoginFormComponent);
+export default connect()(LoginForm);

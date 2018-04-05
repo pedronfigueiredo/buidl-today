@@ -1,22 +1,15 @@
 import React, {Component} from 'react';
-
-import BuidlContract from '../contracts/Buidl.json';
-import contract from 'truffle-contract';
-import getWeb3 from '../utils/getWeb3';
-
-import LoginFormComponent from '../containers/LoginForm.js';
+import LoginForm from '../components/LoginForm.js';
 
 import {connect} from 'react-redux';
 import {storeWeb3, storeUserAccount} from '../redux/login.js';
 
-import '../css/oswald.css';
-import '../css/open-sans.css';
-import '../css/pure-min.css';
-import './App.css';
-
+import BuidlContract from '../contracts/Buidl.json';
+import contract from 'truffle-contract';
+import getWeb3 from '../utils/getWeb3';
 const Buidl = contract(BuidlContract);
 
-export class App extends Component {
+export class Login extends Component {
   constructor(props) {
     super(props);
 
@@ -30,7 +23,8 @@ export class App extends Component {
     let {dispatch} = this.props;
 
     console.log(this.props);
-    getWeb3.then(results => { this.setState(
+    getWeb3.then(results => {
+      this.setState(
         {
           web3: results.web3,
         },
@@ -47,7 +41,6 @@ export class App extends Component {
     this.getUserAddress();
     this.getNumberOfAgreements();
   }
-
 
   getUserAddress() {
     const {web3} = this.state;
@@ -72,11 +65,17 @@ export class App extends Component {
   }
 
   render() {
-    const {isLoading, userWasRecognized, userAccount, loginFormState, web3} = this.props;
+    const {
+      isLoading,
+      userWasRecognized,
+      userAccount,
+      loginFormState,
+      web3,
+    } = this.props;
     return (
       <div className="App">
         <div className="container">
-          <LoginFormComponent
+          <LoginForm
             web3={web3}
             numberOfAgreements={this.state.numberOfAgreements}
             userAccount={userAccount}
@@ -100,4 +99,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps)(Login);
