@@ -20,7 +20,7 @@ export class NewPledge extends Component {
           <input />
         </div>
         <LinkButton to={'/home'}>Back</LinkButton>
-        <LinkButton to={'/home'} onClick={() => console.log('Submit')}>
+        <LinkButton to={'/home'} onClick={() => console.warn('Submit')}>
           Submit
         </LinkButton>
       </div>

@@ -22,7 +22,6 @@ export class Login extends Component {
   componentWillMount() {
     let {dispatch} = this.props;
 
-    console.log(this.props);
     getWeb3.then(results => {
       this.setState(
         {
@@ -71,7 +70,12 @@ export class Login extends Component {
       userAccount,
       loginFormState,
       web3,
+      history,
     } = this.props;
+
+    const {from} = this.props.location.state || {from: '/'};
+    console.log('from in login', from);
+
     return (
       <div className="App">
         <div className="container">
@@ -82,6 +86,8 @@ export class Login extends Component {
             isLoading={isLoading}
             userWasRecognized={userWasRecognized}
             loginFormState={loginFormState}
+            history={history}
+            from={from}
           />
         </div>
       </div>

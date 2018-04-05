@@ -6,7 +6,6 @@ import './About.css';
 export class About extends Component {
   render() {
     const {history} = this.props;
-    console.log('about', this.props);
     return (
       <div className="about-container">
         <div className="container">

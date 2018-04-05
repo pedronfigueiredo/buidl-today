@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card, Dimmer, Form, Loader, Segment} from 'semantic-ui-react';
+import {Button, Dimmer, Form, Loader, Segment} from 'semantic-ui-react';
 
 import {connect} from 'react-redux';
 import {
@@ -9,6 +9,7 @@ import {
   userFoundInDb,
 } from '../redux/login.js';
 
+import auth from '../utils/auth.js';
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './LoginForm.css';
@@ -31,7 +32,7 @@ export class LoginForm extends Component {
   }
 
   testButton() {
-    console.log(this.props);
+    console.warn(this.props);
   }
 
   getData = async path => {
@@ -133,17 +134,21 @@ export class LoginForm extends Component {
         if (res === 'User not found') {
           dispatch(userIsNew());
         } else if (res === 'error') {
-          console.log('API Call error');
+          console.err('API Call error');
           // error screen
         } else {
           dispatch(userFoundInDb(res));
         }
       })
-      .catch(err => console.log(err));
+      .catch(err => console.err(err));
   }
 
   async handleLoginFormSubmit(e) {
-    const {userAccount, loginFormState: {emailAddress, nickname}} = this.props;
+    const {
+      userAccount,
+      loginFormState: {emailAddress, nickname},
+      from,
+    } = this.props;
 
     const loginDetails = {
       nickname,
@@ -156,7 +161,9 @@ export class LoginForm extends Component {
     const user = await this.postData('insertuser', loginDetails);
     if (user) {
       this.clearLoginForm();
-      console.log(user.nickname + ' was added to the database');
+      auth.authenticate(() => {
+        this.props.history.push(from);
+      });
     }
   }
 
@@ -176,7 +183,6 @@ export class LoginForm extends Component {
     const {
       userAccount,
       isLoading,
-      userWasRecognized,
       loginFormState: {emailAddress, nickname},
     } = this.props;
 
@@ -189,24 +195,6 @@ export class LoginForm extends Component {
     );
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
-
-    const welcomeBack = (
-      <div>
-        <h1 className="welcome-back--heading">Welcome back {nickname}!</h1>
-        <Button
-          className="welcome-back--button"
-          fluid
-          color="orange"
-          onClick={() => this.testButton()}>
-          Create new Pledge!
-        </Button>
-        <Card.Group>
-          <Card fluid color="red" header="Option 1" />
-          <Card fluid color="orange" header="Option 2" />
-          <Card fluid color="yellow" header="Option 3" />
-        </Card.Group>
-      </div>
-    );
 
     const loginForm = (
       <Form className="login-form" onSubmit={this.handleLoginFormSubmit}>
@@ -257,11 +245,7 @@ export class LoginForm extends Component {
       </Form>
     );
 
-    return (
-      <div>
-        {isLoading ? loader : userWasRecognized ? welcomeBack : loginForm}
-      </div>
-    );
+    return <div>{isLoading ? loader : loginForm}</div>;
   }
 }
 
