@@ -6,6 +6,7 @@ import PledgesList from './containers/PledgesList';
 import NewPledge from './containers/NewPledge';
 import About from './containers/About';
 import My404 from './containers/My404';
+import ErrorContainer from './containers/Error';
 
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
@@ -26,6 +27,7 @@ ReactDOM.render(
         <PrivateRoute path="/new" exact component={NewPledge} />
         <Route path="/about" exact component={About} />
         <Route path="/404" exact component={My404} />
+        <Route path="/error" exact component={ErrorContainer} />
         <Redirect from="*" to="/404" />
       </Switch>
     </BrowserRouter>

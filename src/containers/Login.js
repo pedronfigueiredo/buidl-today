@@ -4,140 +4,57 @@ import LoginForm from '../components/LoginForm.js';
 import {connect} from 'react-redux';
 import {
   updateLoginForm,
-  storeWeb3,
-  storeUserAccount,
   clearLoginForm,
   userIsNew,
   userFoundInDb,
 } from '../redux/login.js';
 
 import auth from '../utils/auth.js';
-
-import BuidlContract from '../contracts/Buidl.json';
-import contract from 'truffle-contract';
-import getWeb3 from '../utils/getWeb3';
-const Buidl = contract(BuidlContract);
+import api from '../utils/api.js';
+import blockchain from '../utils/blockchain.js';
 
 export class Login extends Component {
   constructor(props) {
     super(props);
-
     this.handleLoginFormChange = this.handleLoginFormChange.bind(this);
     this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
     this.handleLoginFormFocus = this.handleLoginFormFocus.bind(this);
     this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
-
-    this.state = {
-      web3: null,
-      numberOfAgreements: null,
-    };
-  }
-
-  componentWillMount() {
-    let {dispatch} = this.props;
-
-    getWeb3.then(results => {
-      this.setState(
-        {
-          web3: results.web3,
-        },
-        () => {
-          dispatch(storeWeb3(results.web3));
-        },
-      );
-    });
+    blockchain.getWeb3(this.props.dispatch);
   }
 
   componentWillReceiveProps(nextProps) {
-    const {web3} = nextProps;
-    Buidl.setProvider(web3.currentProvider);
-    this.getUserAddress();
-    this.getNumberOfAgreements();
+    const {dispatch, web3, userAccount} = this.props;
+    if (nextProps.web3 !== web3) {
+      blockchain.setProvider(nextProps.web3);
+      blockchain.getUserAddress(nextProps.web3, dispatch);
+    }
+    if (nextProps.userAccount !== userAccount) {
+      this.checkIfUserExists(nextProps.userAccount);
+    }
   }
 
-  componentDidMount() {
-    // Wait for ethereum address from props
-    setTimeout(() => {
-      this.checkIfUserExists();
-    }, 2000);
-  }
-
-  getUserAddress() {
-    const {web3} = this.state;
+  checkIfUserExists(userAccount) {
     const {dispatch} = this.props;
-    web3.eth.getAccounts((error, accounts) => {
-      Buidl.defaults({
-        from: accounts[0],
-        gas: 3000000,
-      });
-      dispatch(storeUserAccount(accounts[0]));
-    });
-  }
-
-  getNumberOfAgreements() {
-    Buidl.deployed()
-      .then(instance => instance.getNumberOfAgreements())
-      .then(result => {
-        this.setState({
-          numberOfAgreements: result.c[0],
-        });
-      });
-  }
-
-  checkIfUserExists() {
-    const {userAccount, dispatch} = this.props;
-    this.getData('userexists/' + userAccount)
+    api
+      .get('userexists/' + userAccount)
       .then(res => {
         if (res === 'User not found') {
           dispatch(userIsNew());
         } else if (res === 'error') {
-          console.err('API Call error');
-          // error screen
+          this.props.history.push('/error');
         } else {
           dispatch(userFoundInDb(res));
         }
       })
-      .catch(err => console.err(err));
+      .catch(err => {
+        this.props.history.push('/error');
+      });
   }
 
-  // API Helper Methods
-  getData = async path => {
-    const response = await fetch('/api/' + path, {
-      mode: 'no-cors',
-    });
-
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
-
-  postData = async (path, data) => {
-    var strData = JSON.stringify(data);
-    const response = await fetch('/api/' + path, {
-      method: 'post',
-      mode: 'cors',
-      headers: {
-        Accept: 'application/json, text/plain, */*',
-        'Content-Type': 'application/json',
-      },
-      body: strData,
-    });
-
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
-
-  // FORM METHODS
   handleLoginFormChange(e) {
     const {dispatch} = this.props;
-    const name = e.target.name;
-    const value = e.target.value;
-
+    const {name, value} = e.target;
     dispatch(updateLoginForm(name, value));
   }
 
@@ -153,22 +70,15 @@ export class Login extends Component {
   }
 
   async handleLoginFormSubmit(e) {
-    const {
-      userAccount,
-      loginFormState: {emailAddress, nickname},
-    } = this.props;
-
+    const {userAccount, loginFormState: {emailAddress, nickname}} = this.props;
     const {from} = this.props.location.state || {from: '/'};
-
     const loginDetails = {
       nickname,
       emailAddress,
       address: userAccount,
     };
-
     e.preventDefault();
-
-    const user = await this.postData('insertuser', loginDetails);
+    const user = await api.post('insertuser', loginDetails);
     if (user) {
       this.clearLoginForm();
       auth.authenticate(() => {
@@ -177,13 +87,11 @@ export class Login extends Component {
     }
   }
 
-  // FORM HELPERS
   showInputError(input) {
     const name = input.name;
     const validity = input.validity;
     const label = document.getElementById(`${name}Label`).textContent;
     const error = document.getElementById(`${name}Error`);
-
     if (!validity.valid) {
       if (validity.valueMissing) {
         error.textContent = `${label} is a required field`;
@@ -192,7 +100,6 @@ export class Login extends Component {
       }
       return false;
     }
-
     error.textContent = '';
     return true;
   }
@@ -206,12 +113,9 @@ export class Login extends Component {
   showFormErrors() {
     const inputs = document.querySelectorAll('input');
     let isFormValid = true;
-
     inputs.forEach(input => {
       input.classList.add('active');
-
       const isInputValid = this.showInputError(input);
-
       if (!isInputValid) {
         isFormValid = false;
       }
@@ -232,12 +136,7 @@ export class Login extends Component {
   }
 
   render() {
-    const {
-      isLoading,
-      userAccount,
-      loginFormState,
-    } = this.props;
-
+    const {isLoading, userAccount, loginFormState} = this.props;
     return (
       <div className="login-container">
         <div className="container">
