@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {Button, Dimmer, Form, Loader, Segment} from 'semantic-ui-react';
+import {Button, Form} from 'semantic-ui-react';
+import LoaderScreen from './LoaderScreen.js';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -16,14 +17,6 @@ export class LoginForm extends Component {
       handleLoginFormFocus,
       handleLoginFormBlur,
     } = this.props;
-
-    const loader = (
-      <Segment style={{height: '100vh', border: 'none', boxShadow: 'none'}}>
-        <Dimmer inverted active>
-          <Loader>Loading</Loader>
-        </Dimmer>
-      </Segment>
-    );
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
 
@@ -76,7 +69,7 @@ export class LoginForm extends Component {
       </Form>
     );
 
-    return <div>{isLoading ? loader : loginForm}</div>;
+    return <div>{isLoading ? <LoaderScreen /> : loginForm}</div>;
   }
 }
 
