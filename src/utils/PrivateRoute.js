@@ -2,32 +2,17 @@ import React from 'react';
 import LoaderScreen from '../components/LoaderScreen.js';
 
 import {Route, Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 
-import auth from './auth.js';
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-export default class PrivateRoute extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchedTheDatabase: false,
-    };
-  }
-
-  componentDidMount() {
-    setTimeout(() => {
-      auth.authenticate(() => console.log('Authenticated!'));
-      this.setState({
-        searchedTheDatabase: true,
-      });
-    }, 3000);
-  }
-
+class PrivateRoute extends React.Component {
   render() {
-    const {searchedTheDatabase} = this.state;
-    if (auth.isAuthenticated) return <Route {...this.props} />;
-    if (!searchedTheDatabase) return <LoaderScreen />;
+    const {isAuthenticated, isCheckingIfUserExists} = this.props;
+    if (isAuthenticated && !isCheckingIfUserExists)
+      return <Route {...this.props} />;
+    if (isCheckingIfUserExists) return <LoaderScreen />;
     return (
       <Redirect
         to={{
@@ -38,3 +23,12 @@ export default class PrivateRoute extends React.Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return {
+    isAuthenticated: state.login.isAuthenticated,
+    isCheckingIfUserExists: state.login.isCheckingIfUserExists,
+  };
+}
+
+export default connect(mapStateToProps)(PrivateRoute);

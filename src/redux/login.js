@@ -1,36 +1,60 @@
 // Action Types
-const USER_IS_NEW = 'USER_IS_NEW';
-const USER_FOUND_IN_DB = 'USER_FOUND_IN_DB';
 const STORE_WEB3 = 'STORE_WEB3';
 const STORE_USERACCOUNT = 'STORE_USERACCOUNT';
+
+const AUTHENTICATE = 'AUTHENTICATE';
+const SIGNOUT = 'SIGNOUT';
+const CHECK_IF_USER_EXISTS = 'CHECK_IF_USER_EXISTS';
+const IDENTIFIED_NEW_USER = 'IDENTIFIED_NEW_USER';
+const IDENTIFIED_RETURNING_USER = 'IDENTIFIED_RETURNING_USER';
+const CHECK_IF_USER_EXISTS_ERROR = 'CHECK_IF_USER_EXISTS_ERROR';
+
 const CLEAR_LOGIN_FORM = 'CLEAR__LOGIN_FORM';
 const UPDATE_LOGIN_FORM = 'UPDATE_LOGIN_FORM';
 
 // Action Creators
-export const userIsNew = () => {
-  return {
-    type: USER_IS_NEW,
-  };
-};
-
-export const userFoundInDb = payload => {
-  return {
-    type: USER_FOUND_IN_DB,
-    payload,
-  };
-};
-
 export const storeWeb3 = payload => {
   return {
     type: STORE_WEB3,
     payload,
   };
 };
-
 export const storeUserAccount = payload => {
   return {
     type: STORE_USERACCOUNT,
     payload,
+  };
+};
+
+export const authenticate = () => {
+  return {
+    type: AUTHENTICATE,
+  };
+}
+export const signout = () => {
+  return {
+    type: SIGNOUT,
+  };
+}
+export const checkIfUserExists = () => {
+  return {
+    type: CHECK_IF_USER_EXISTS,
+  };
+};
+export const identifiedNewUser = () => {
+  return {
+    type: IDENTIFIED_NEW_USER,
+  };
+};
+export const identifiedReturningUser = payload => {
+  return {
+    type: IDENTIFIED_RETURNING_USER,
+    payload,
+  };
+};
+export const checkIfUserExistsError = () => {
+  return {
+    type: CHECK_IF_USER_EXISTS_ERROR,
   };
 };
 
@@ -39,7 +63,6 @@ export const clearLoginForm = () => {
     type: CLEAR_LOGIN_FORM,
   };
 };
-
 export const updateLoginForm = (name, value) => {
   return {
     type: UPDATE_LOGIN_FORM,
@@ -56,28 +79,58 @@ const initialState = {
     emailAddress: '',
     nickname: '',
   },
-  isLoading: true,
-  userWasRecognized: false,
+  isAuthenticated: false,
+  isCheckingIfUserExists: false,
 };
 
 // Reducers
 const login = (state = initialState, action) => {
   switch (action.type) {
-    case USER_IS_NEW:
+    case STORE_WEB3:
       return {
         ...state,
-        isLoading: false,
-        userWasRecognized: false,
+        web3: action.payload,
       };
-    case USER_FOUND_IN_DB:
+    case STORE_USERACCOUNT:
+      return {
+        ...state,
+        userAccount: action.payload,
+      };
+    case AUTHENTICATE:
+      return {
+        ...state,
+        isAuthenticated: true,
+      };
+    case SIGNOUT:
+      return {
+        ...state,
+        isAuthenticated: false,
+      };
+    case CHECK_IF_USER_EXISTS:
+      return {
+        ...state,
+        isCheckingIfUserExists: true,
+      };
+    case IDENTIFIED_NEW_USER:
+      return {
+        ...state,
+        isAuthenticated: false,
+        isCheckingIfUserExists: false,
+      };
+    case IDENTIFIED_RETURNING_USER:
       return {
         ...state,
         loginFormState: {
           emailAddress: action.payload.email,
           nickname: action.payload.nickname,
         },
-        isLoading: false,
-        userWasRecognized: true,
+        isAuthenticated: true,
+        isCheckingIfUserExists: false,
+      };
+    case CHECK_IF_USER_EXISTS_ERROR:
+      return {
+        ...state,
+        isCheckingIfUserExists: false,
       };
     case CLEAR_LOGIN_FORM:
       return {
@@ -94,16 +147,6 @@ const login = (state = initialState, action) => {
           ...state.loginFormState,
           [action.name]: action.value,
         },
-      };
-    case STORE_WEB3:
-      return {
-        ...state,
-        web3: action.payload,
-      };
-    case STORE_USERACCOUNT:
-      return {
-        ...state,
-        userAccount: action.payload,
       };
     default:
       return state;

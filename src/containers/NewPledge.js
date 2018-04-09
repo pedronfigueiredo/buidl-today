@@ -5,6 +5,13 @@ import LinkButton from '../components/LinkButton';
 import './NewPledge.css';
 
 export class NewPledge extends Component {
+  componentWillMount() {
+    const {userAccount, isAuthenticated} = this.props;
+    if (!userAccount || !isAuthenticated) {
+      this.props.history.push('/');
+    }
+  }
+
   render() {
     return (
       <div className="new-pledge-container">
@@ -30,7 +37,8 @@ export class NewPledge extends Component {
 
 function mapStateToProps(state) {
   return {
-    mappedState: state,
+    userAccount: state.login.userAccount,
+    isAuthenticated: state.login.isAuthenticated,
   };
 }
 

@@ -2,16 +2,9 @@ import React, {Component} from 'react';
 import LoginForm from '../components/LoginForm.js';
 
 import {connect} from 'react-redux';
-import {
-  updateLoginForm,
-  clearLoginForm,
-  userIsNew,
-  userFoundInDb,
-} from '../redux/login.js';
+import {authenticate, updateLoginForm, clearLoginForm} from '../redux/login.js';
 
-import auth from '../utils/auth.js';
 import api from '../utils/api.js';
-import blockchain from '../utils/blockchain.js';
 
 export class Login extends Component {
   constructor(props) {
@@ -20,36 +13,16 @@ export class Login extends Component {
     this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
     this.handleLoginFormFocus = this.handleLoginFormFocus.bind(this);
     this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
-    blockchain.getWeb3(this.props.dispatch);
   }
 
-  componentWillReceiveProps(nextProps) {
-    const {dispatch, web3, userAccount} = this.props;
-    if (nextProps.web3 !== web3) {
-      blockchain.setProvider(nextProps.web3);
-      blockchain.getUserAddress(nextProps.web3, dispatch);
+  componentWillMount() {
+    const {userAccount, isAuthenticated} = this.props;
+    if (!userAccount) {
+      this.props.history.push('/');
     }
-    if (nextProps.userAccount !== userAccount) {
-      this.checkIfUserExists(nextProps.userAccount);
+    if (userAccount && isAuthenticated) {
+      this.props.history.push('/home');
     }
-  }
-
-  checkIfUserExists(userAccount) {
-    const {dispatch} = this.props;
-    api
-      .get('userexists/' + userAccount)
-      .then(res => {
-        if (res === 'User not found') {
-          dispatch(userIsNew());
-        } else if (res === 'error') {
-          this.props.history.push('/error');
-        } else {
-          dispatch(userFoundInDb(res));
-        }
-      })
-      .catch(err => {
-        this.props.history.push('/error');
-      });
   }
 
   handleLoginFormChange(e) {
@@ -70,8 +43,12 @@ export class Login extends Component {
   }
 
   async handleLoginFormSubmit(e) {
-    const {userAccount, loginFormState: {emailAddress, nickname}} = this.props;
     const {from} = this.props.location.state || {from: '/'};
+    const {
+      dispatch,
+      userAccount,
+      loginFormState: {emailAddress, nickname},
+    } = this.props;
     const loginDetails = {
       nickname,
       emailAddress,
@@ -80,10 +57,9 @@ export class Login extends Component {
     e.preventDefault();
     const user = await api.post('insertuser', loginDetails);
     if (user) {
+      dispatch(authenticate);
       this.clearLoginForm();
-      auth.authenticate(() => {
-        this.props.history.push(from);
-      });
+      this.props.history.push(from);
     }
   }
 
@@ -160,6 +136,7 @@ function mapStateToProps(state) {
     web3: state.login.web3,
     isLoading: state.login.isLoading,
     userAccount: state.login.userAccount,
+    isAuthenticated: state.login.isAuthenticated,
     loginFormState: state.login.loginFormState,
   };
 }

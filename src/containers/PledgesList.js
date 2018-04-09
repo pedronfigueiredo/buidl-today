@@ -9,6 +9,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './PledgesList.css';
 
 export class PledgesList extends Component {
+  componentWillMount() {
+    const {userAccount, isAuthenticated} = this.props;
+    if (!userAccount || !isAuthenticated) {
+      this.props.history.push('/');
+    }
+  }
+
   render() {
     const List = ({nickname}) => (
       <div>
@@ -44,7 +51,8 @@ export class PledgesList extends Component {
 
 function mapStateToProps(state) {
   return {
-    mappedState: state,
+    userAccount: state.login.userAccount,
+    isAuthenticated: state.login.isAuthenticated,
   };
 }
 
