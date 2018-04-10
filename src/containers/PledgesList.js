@@ -51,8 +51,8 @@ export class PledgesList extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.login.userAccount,
-    isAuthenticated: state.login.isAuthenticated,
+    userAccount: state.registration.userAccount,
+    isAuthenticated: state.registration.isAuthenticated,
   };
 }
 

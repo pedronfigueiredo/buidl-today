@@ -16,7 +16,7 @@ class PrivateRoute extends React.Component {
     return (
       <Redirect
         to={{
-          pathname: '/login',
+          pathname: '/register',
           state: {from: this.props.location},
         }}
       />
@@ -26,8 +26,8 @@ class PrivateRoute extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    isAuthenticated: state.login.isAuthenticated,
-    isCheckingIfUserExists: state.login.isCheckingIfUserExists,
+    isAuthenticated: state.registration.isAuthenticated,
+    isCheckingIfUserExists: state.registration.isCheckingIfUserExists,
   };
 }
 

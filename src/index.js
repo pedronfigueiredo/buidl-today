@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 import Welcome from './containers/Welcome';
-import Login from './containers/Login';
+import Registration from './containers/Registration';
 import PledgesList from './containers/PledgesList';
 import NewPledge from './containers/NewPledge';
 import About from './containers/About';
@@ -22,7 +22,7 @@ ReactDOM.render(
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Welcome} />
-        <Route path="/login" exact component={Login} />
+        <Route path="/register" exact component={Registration} />
         <PrivateRoute path="/home" exact component={PledgesList} />
         <PrivateRoute path="/new" exact component={NewPledge} />
         <Route path="/about" exact component={About} />

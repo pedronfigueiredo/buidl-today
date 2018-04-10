@@ -1,18 +1,32 @@
 import React, {Component} from 'react';
-import LoginForm from '../components/LoginForm.js';
+import RegistrationForm from '../components/RegistrationForm.js';
 
 import {connect} from 'react-redux';
-import {authenticate, updateLoginForm, clearLoginForm} from '../redux/login.js';
+import {
+  authenticate,
+  updateRegistrationForm,
+  clearRegistrationForm,
+  errorRegisteringUser,
+  requestRegisterUser,
+} from '../redux/registration.js';
 
 import api from '../utils/api.js';
 
-export class Login extends Component {
+export class Registration extends Component {
   constructor(props) {
     super(props);
-    this.handleLoginFormChange = this.handleLoginFormChange.bind(this);
-    this.handleLoginFormSubmit = this.handleLoginFormSubmit.bind(this);
-    this.handleLoginFormFocus = this.handleLoginFormFocus.bind(this);
-    this.handleLoginFormBlur = this.handleLoginFormBlur.bind(this);
+    this.handleRegistrationFormChange = this.handleRegistrationFormChange.bind(
+      this,
+    );
+    this.handleRegistrationFormSubmit = this.handleRegistrationFormSubmit.bind(
+      this,
+    );
+    this.handleRegistrationFormFocus = this.handleRegistrationFormFocus.bind(
+      this,
+    );
+    this.handleRegistrationFormBlur = this.handleRegistrationFormBlur.bind(
+      this,
+    );
   }
 
   componentWillMount() {
@@ -25,40 +39,43 @@ export class Login extends Component {
     }
   }
 
-  handleLoginFormChange(e) {
+  handleRegistrationFormChange(e) {
     const {dispatch} = this.props;
     const {name, value} = e.target;
-    dispatch(updateLoginForm(name, value));
+    dispatch(updateRegistrationForm(name, value));
   }
 
-  handleLoginFormFocus(e) {
+  handleRegistrationFormFocus(e) {
     e.target.classList.add('active');
     this.hideInputError(e.target);
   }
 
-  handleLoginFormBlur(e) {
+  handleRegistrationFormBlur(e) {
     e.target.classList.remove('active');
     e.target.classList.add('blurred');
     this.showInputError(e.target);
   }
 
-  async handleLoginFormSubmit(e) {
+  async handleRegistrationFormSubmit(e) {
     const {from} = this.props.location.state || {from: '/'};
-    const {
-      dispatch,
-      userAccount,
-      loginFormState: {emailAddress, nickname},
-    } = this.props;
+    const {dispatch, userAccount, emailAddress, nickname} = this.props;
     const loginDetails = {
       nickname,
       emailAddress,
       address: userAccount,
     };
     e.preventDefault();
+
+    dispatch(requestRegisterUser());
     const user = await api.post('insertuser', loginDetails);
-    if (user) {
+
+    if (user[0] === 'error') {
+      dispatch(errorRegisteringUser());
+      this.clearRegistrationForm();
+      this.props.history.push('/error');
+    } else {
       dispatch(authenticate);
-      this.clearLoginForm();
+      this.clearRegistrationForm();
       this.props.history.push(from);
     }
   }
@@ -99,7 +116,7 @@ export class Login extends Component {
     return isFormValid;
   }
 
-  clearLoginForm() {
+  clearRegistrationForm() {
     const {dispatch} = this.props;
     const inputFields = document.getElementsByTagName('INPUT');
     inputFields[1].classList.remove('active');
@@ -108,22 +125,23 @@ export class Login extends Component {
     inputFields[2].classList.remove('active');
     inputFields[2].classList.remove('blurred');
     this.hideInputError(inputFields[2]);
-    dispatch(clearLoginForm());
+    dispatch(clearRegistrationForm());
   }
 
   render() {
-    const {isLoading, userAccount, loginFormState} = this.props;
+    const {registering, userAccount, nickname, emailAddress} = this.props;
     return (
       <div className="login-container">
         <div className="container">
-          <LoginForm
-            isLoading={isLoading}
+          <RegistrationForm
+            registering={registering}
             userAccount={userAccount}
-            loginFormState={loginFormState}
-            handleLoginFormChange={this.handleLoginFormChange}
-            handleLoginFormSubmit={this.handleLoginFormSubmit}
-            handleLoginFormFocus={this.handleLoginFormFocus}
-            handleLoginFormBlur={this.handleLoginFormBlur}
+            nickname={nickname}
+            emailAddress={emailAddress}
+            handleRegistrationFormChange={this.handleRegistrationFormChange}
+            handleRegistrationFormSubmit={this.handleRegistrationFormSubmit}
+            handleRegistrationFormFocus={this.handleRegistrationFormFocus}
+            handleRegistrationFormBlur={this.handleRegistrationFormBlur}
           />
         </div>
       </div>
@@ -133,12 +151,17 @@ export class Login extends Component {
 
 function mapStateToProps(state) {
   return {
-    web3: state.login.web3,
-    isLoading: state.login.isLoading,
-    userAccount: state.login.userAccount,
-    isAuthenticated: state.login.isAuthenticated,
-    loginFormState: state.login.loginFormState,
+    web3: state.registration.web3,
+    registering: state.registration.registering,
+    userAccount: state.registration.userAccount,
+    nickname:
+      state.registration.loginFormState &&
+      state.registration.loginFormState.nickname,
+    emailAddress:
+      state.registration.loginFormState &&
+      state.registration.loginFormState.emailAddress,
+    isAuthenticated: state.registration.isAuthenticated,
   };
 }
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(Registration);

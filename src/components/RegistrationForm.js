@@ -4,24 +4,25 @@ import LoaderScreen from './LoaderScreen.js';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './LoginForm.css';
+import './RegistrationForm.css';
 
-export class LoginForm extends Component {
+export class RegistrationForm extends Component {
   render() {
     const {
-      isLoading,
+      registering,
       userAccount,
-      loginFormState: {emailAddress, nickname},
-      handleLoginFormChange,
-      handleLoginFormSubmit,
-      handleLoginFormFocus,
-      handleLoginFormBlur,
+      emailAddress,
+      nickname,
+      handleRegistrationFormChange,
+      handleRegistrationFormSubmit,
+      handleRegistrationFormFocus,
+      handleRegistrationFormBlur,
     } = this.props;
 
     const emailRegex = '[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}';
 
-    const loginForm = (
-      <Form className="login-form" onSubmit={handleLoginFormSubmit}>
+    const registrationForm = (
+      <Form className="login-form" onSubmit={handleRegistrationFormSubmit}>
         <h2 className="login--heading">Welcome to Buidl.Today</h2>
         <p className="login--description">
           To get started, please enter your email address and a nickname.
@@ -44,9 +45,9 @@ export class LoginForm extends Component {
             placeholder="example@buidl.today"
             value={emailAddress}
             pattern={emailRegex}
-            onChange={handleLoginFormChange}
-            onFocus={handleLoginFormFocus}
-            onBlur={handleLoginFormBlur}
+            onChange={handleRegistrationFormChange}
+            onFocus={handleRegistrationFormFocus}
+            onBlur={handleRegistrationFormBlur}
             required
           />
           <p className="form-error" id="emailAddressError" />
@@ -58,9 +59,9 @@ export class LoginForm extends Component {
             name="nickname"
             placeholder="Pedro"
             value={nickname}
-            onChange={handleLoginFormChange}
-            onFocus={handleLoginFormFocus}
-            onBlur={handleLoginFormBlur}
+            onChange={handleRegistrationFormChange}
+            onFocus={handleRegistrationFormFocus}
+            onBlur={handleRegistrationFormBlur}
             required
           />
           <p className="form-error" id="nicknameError" />
@@ -69,8 +70,8 @@ export class LoginForm extends Component {
       </Form>
     );
 
-    return <div>{isLoading ? <LoaderScreen /> : loginForm}</div>;
+    return <div>{registering ? <LoaderScreen /> : registrationForm}</div>;
   }
 }
 
-export default LoginForm;
+export default RegistrationForm;

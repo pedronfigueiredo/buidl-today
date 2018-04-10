@@ -22,11 +22,13 @@ const api = {
       body: strData,
     });
 
-    const body = await response.json();
+    const body = await response;
 
-    if (response.status !== 200) throw Error(body.message);
+    if (response.status !== 200) {
+      return ['error', response.status, response.statusText];
+    }
 
-    return body;
+    return body.json();
   },
 };
 

@@ -1,4 +1,4 @@
-import {storeWeb3, storeUserAccount} from '../redux/login.js';
+import {storeWeb3, storeUserAccount} from '../redux/registration.js';
 
 import BuidlContract from '../contracts/Buidl.json';
 import contract from 'truffle-contract';

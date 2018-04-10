@@ -9,7 +9,7 @@ import {
   identifiedNewUser,
   identifiedReturningUser,
   checkIfUserExistsError,
-} from '../redux/login.js';
+} from '../redux/registration.js';
 
 import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
@@ -66,8 +66,8 @@ export class Welcome extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.login.userAccount,
-    web3: state.login.web3,
+    userAccount: state.registration.userAccount,
+    web3: state.registration.web3,
   };
 }
 
