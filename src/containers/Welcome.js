@@ -4,6 +4,9 @@ import {connect} from 'react-redux';
 import LinkButton from '../components/LinkButton';
 import './Welcome.css';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../css/css/fontello.css';
+
 import {
   checkIfUserExists,
   identifiedNewUser,
@@ -54,10 +57,43 @@ export class Welcome extends Component {
   render() {
     return (
       <div className="welcome-container">
-        <div className="container">
-          <h1>Welcome</h1>
-          <LinkButton to="/home">Get started!</LinkButton>
-          <LinkButton to="/about">Learn more about the science</LinkButton>
+        <div className="hero-card">
+          <h1 className="heading">Buidl.Today</h1>
+          <p className="slogan">
+            Ship your work
+          </p>
+        </div>
+        <div className="call-to-action-card">
+          <div className="container">
+            <div className="feature-list row">
+              <div className="feature col-md-6">
+                <p className="icon">
+                  <span className="icon-beaker" />
+                </p>
+                <p className="description">
+                  Social science shows that you are 3x more averse to losses than earnings.
+                </p>
+              </div>
+              <div className="feature col-md-6">
+                <p className="icon">
+                  <span className="icon-link" />
+                </p>
+                <p className="description">
+                  Blockchain is one of the most probm of blockchain to make it happen.
+                </p>
+              </div>
+            </div>
+            <div className="buttons-group">
+              <div className="get-started--wrapper">
+                <LinkButton to="/home" className="get-started">
+                  Get started!
+                </LinkButton>
+              </div>
+              <LinkButton to="/about" className="learn-more">
+                Learn more about the science
+              </LinkButton>
+            </div>
+          </div>
         </div>
       </div>
     );

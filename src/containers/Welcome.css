@@ -1,0 +1,118 @@
+.welcome-container .hero-card {
+  background: #b23d3d;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.welcome-container .hero-card * {
+  color: #f2f2f2;
+}
+
+.welcome-container .hero-card .heading {
+  font-size: 44px;
+}
+
+.welcome-container .hero-card .slogan {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.welcome-container .call-to-action-card {
+  height: calc(100vh - 200px);
+  padding-top: 50px;
+}
+
+.welcome-container .call-to-action-card .feature-list {
+  color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-container .call-to-action-card .feature-list .feature {
+  color: #333333;
+  text-align: center;
+  height: 200px;
+  padding: 0 75px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.welcome-container .call-to-action-card .feature-list .feature .icon span {
+  font-size: 70px;
+}
+
+.welcome-container .call-to-action-card .feature-list .feature .description {
+  font-size: 18px;
+}
+
+.welcome-container .call-to-action-card .buttons-group {
+  color: #f2f2f2;
+  padding: 100px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.welcome-container .call-to-action-card .buttons-group button:hover {
+  cursor: pointer;
+}
+
+.welcome-container .call-to-action-card .buttons-group button.get-started {
+  height: 50px;
+  padding: 0 100px;
+  border-radius: 25px;
+  background: white;
+  border: 3px solid #333333;
+  color: #333333;
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: -5px;
+  margin-bottom: 5px;
+  -webkit-transition: 0.3s all;
+  -o-transition: 0.3s all;
+  transition: 0.3s all;
+  outline: none;
+}
+
+.welcome-container
+  .call-to-action-card
+  .buttons-group
+  button.get-started:hover {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  background: #f2f2f2;
+  border: 3px solid black;
+  color: black;
+}
+
+.get-started--wrapper {
+  background: #b23d3d;
+  border-radius: 25px;
+}
+
+.welcome-container .call-to-action-card .buttons-group button.learn-more {
+  height: 30px;
+  padding: 0 20px;
+  margin-top: 20px;
+  background: white;
+  color: #333333;
+  font-size: 18px;
+  border: none;
+  text-decoration: underline;
+  -webkit-transition: 0.3s all;
+  -o-transition: 0.3s all;
+  transition: 0.3s all;
+  outline: none;
+}
+
+.welcome-container .call-to-action-card .buttons-group button.learn-more:hover {
+  text-decoration: none;
+  color: black;
+}
