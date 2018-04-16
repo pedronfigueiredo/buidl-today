@@ -73,28 +73,27 @@
   color: #333333;
   font-size: 20px;
   font-weight: bold;
-  margin-top: -5px;
-  margin-bottom: 5px;
   -webkit-transition: 0.3s all;
   -o-transition: 0.3s all;
   transition: 0.3s all;
   outline: none;
+  margin: -6px 0 6px 0;
+  -webkit-box-shadow: 0px 3px 3px 0px #b23d3d;
+  box-shadow: 0px 6px 0px 0px #b23d3d;
+  border: 1px solid #333333;
 }
 
 .welcome-container
   .call-to-action-card
   .buttons-group
   button.get-started:hover {
-  margin-top: 0px;
-  margin-bottom: 0px;
   background: #f2f2f2;
+  margin: 0;
+  -moz-box-shadow: 0px 0px 0px 0px white;
+  -webkit-box-shadow: 0px 0px 0px 0px white;
+  box-shadow: 0px 0px 0px 0px white;
   border: 3px solid black;
   color: black;
-}
-
-.get-started--wrapper {
-  background: #b23d3d;
-  border-radius: 25px;
 }
 
 .welcome-container .call-to-action-card .buttons-group button.learn-more {

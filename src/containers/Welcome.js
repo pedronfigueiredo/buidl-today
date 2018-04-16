@@ -59,9 +59,7 @@ export class Welcome extends Component {
       <div className="welcome-container">
         <div className="hero-card">
           <h1 className="heading">Buidl.Today</h1>
-          <p className="slogan">
-            Ship your work
-          </p>
+          <p className="slogan">Ship your work</p>
         </div>
         <div className="call-to-action-card">
           <div className="container">
@@ -71,7 +69,8 @@ export class Welcome extends Component {
                   <span className="icon-beaker" />
                 </p>
                 <p className="description">
-                  Social science shows that you are 3x more averse to losses than earnings.
+                  Social science shows that you are 3x more averse to losses
+                  than earnings.
                 </p>
               </div>
               <div className="feature col-md-6">
@@ -79,16 +78,15 @@ export class Welcome extends Component {
                   <span className="icon-link" />
                 </p>
                 <p className="description">
-                  Blockchain is one of the most probm of blockchain to make it happen.
+                  Blockchain is one of the most probm of blockchain to make it
+                  happen.
                 </p>
               </div>
             </div>
             <div className="buttons-group">
-              <div className="get-started--wrapper">
-                <LinkButton to="/home" className="get-started">
-                  Get started!
-                </LinkButton>
-              </div>
+              <LinkButton to="/home" className="get-started">
+                Get started!
+              </LinkButton>
               <LinkButton to="/about" className="learn-more">
                 Learn more about the science
               </LinkButton>

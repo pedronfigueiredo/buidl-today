@@ -1,6 +1,10 @@
 import React from 'react';
 import {withRouter} from 'react-router-dom';
 
+import {Button} from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const LinkButton = props => {
   const {
     history,
@@ -13,7 +17,7 @@ const LinkButton = props => {
     ...rest
   } = props;
   return (
-    <button
+    <Button
       {...rest} // `children` is just another prop!
       onClick={event => {
         onClick && onClick(event);

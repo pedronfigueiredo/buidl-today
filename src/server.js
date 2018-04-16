@@ -12,6 +12,7 @@ if (!!process.env.MONGOLAB_URI) {
 }
 let databaseName = 'buidltoday';
 let userCollectionName = 'useraccounts';
+let pledgeCollectionName = 'pledges';
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
@@ -38,6 +39,36 @@ app.get('/api/getusers', (req, res) => {
           } else {
             console.log(
               'Users list was successfully fetched from the database',
+            );
+            resultArr.push(doc);
+          }
+        },
+        function() {
+          client.close();
+          res.send(resultArr);
+          res.end();
+        },
+      );
+    }
+  });
+});
+
+app.get('/api/getpledges', (req, res) => {
+  let resultArr = [];
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+    } else {
+      var db = client.db(databaseName);
+      let cursor = db.collection(pledgeCollectionName).find();
+      cursor.forEach(
+        function(doc, err) {
+          if (err) {
+            console.error('error getting pledge list');
+            console.error(err);
+          } else {
+            console.log(
+              'Pledges list was successfully fetched from the database',
             );
             resultArr.push(doc);
           }
@@ -113,6 +144,45 @@ app.post('/api/insertuser', (req, res) => {
     }
   });
   res.send(user);
+  res.end();
+});
+
+app.post('/api/insertpledge', (req, res) => {
+  var pledge = {
+    address: req.body.user.address,
+    deadline: req.body.pledge.deadline,
+    description: req.body.pledge.description,
+    email: req.body.user.emailAddress,
+    nickname: req.body.user.nickname,
+    recipient: req.body.pledge.recipient,
+    referee: req.body.pledge.referee,
+    stake: req.body.pledge.stake,
+    redeemed: false,
+  };
+
+  console.log('pledge', pledge);
+
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+      console.error(errConnecting);
+    } else {
+      console.log('Connected to database');
+      var db = client.db(databaseName);
+      db
+        .collection(pledgeCollectionName)
+        .insertOne(pledge, function(errInserting, result) {
+          if (errInserting) {
+            console.error('Error inserting the user');
+            console.error(errInserting);
+          } else {
+            console.log('User was successfully inserted');
+            client.close();
+          }
+        });
+    }
+  });
+  res.send(pledge);
   res.end();
 });
 

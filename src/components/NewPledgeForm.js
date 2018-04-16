@@ -1,0 +1,128 @@
+import React, {Component} from 'react';
+import {Form} from 'semantic-ui-react';
+import LoaderScreen from './LoaderScreen.js';
+
+import moment from 'moment';
+import RedButton from './RedButton.js';
+
+import 'semantic-ui-css/semantic.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './NewPledgeForm.css';
+
+export class NewPledgeForm extends Component {
+  render() {
+    const {
+      ethRateInUSD,
+      submittingPledge,
+      pledgeFormState: {description, deadline, stake, referee, recipient},
+      handlePledgeFormChange,
+      handlePledgeFormFocus,
+      handlePledgeFormBlur,
+      handlePledgeFormSubmit,
+    } = this.props;
+
+    const inAWeek = moment()
+      .add(7, 'days')
+      .format('YYYY-MM-DD');
+
+    const FormComponent = (
+      <Form>
+        <h1 className="heading">Create New Pledge</h1>
+
+        <Form.Field>
+          <label id="descriptionLabel">Pledge description</label>
+          <input
+            type="text"
+            name="description"
+            placeholder="Write my new app"
+            value={description}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="descriptionError" />
+        </Form.Field>
+
+        <Form.Field>
+          <label id="deadlineLabel">Deadline</label>
+          <input
+            type="text"
+            name="deadline"
+            placeholder={inAWeek}
+            value={deadline}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="deadlineError" />
+        </Form.Field>
+
+        <Form.Field>
+          <label id="stakeLabel">Stake (in ETH)</label>
+          <input
+            type="text"
+            name="stake"
+            placeholder="0.5"
+            value={stake}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="stakeError" />
+          {!!ethRateInUSD &&
+            typeof ethRateInUSD === 'number' &&
+            ethRateInUSD !== 0 && (
+              <p className="realtime-conversion">
+                Aproximately {ethRateInUSD} USD
+              </p>
+            )}
+        </Form.Field>
+
+        <Form.Field>
+          <label id="refereeLabel">Referee</label>
+          <input
+            type="text"
+            name="referee"
+            placeholder="Ethereum Address"
+            value={referee}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="refereeError" />
+        </Form.Field>
+
+        <Form.Field>
+          <label id="recipientLabel">Recipient</label>
+          <input
+            type="text"
+            name="recipient"
+            placeholder="Ethereum Address"
+            value={recipient}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="recipientError" />
+        </Form.Field>
+
+        <RedButton
+          name={'submit-pledge'}
+          text={'Make a Pledge'}
+          type="submit"
+          onClick={handlePledgeFormSubmit}
+          fluid
+        />
+      </Form>
+    );
+
+    return <div>{submittingPledge ? <LoaderScreen /> : FormComponent}</div>;
+  }
+}
+
+export default NewPledgeForm;

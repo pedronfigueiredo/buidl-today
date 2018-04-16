@@ -1,0 +1,24 @@
+.red--button__wrapper {
+  height: 50px;
+  padding: 1px 0;
+}
+
+.ui.button.red--button {
+  transition: all 0.3s;
+  background: #b23d3d;
+  color: #f2f2f2;
+  margin: -3px 0 3px 0;
+  -moz-box-shadow: 0px 3px 3px 0px #333333;
+  -webkit-box-shadow: 0px 3px 3px 0px #333333;
+  box-shadow: 0px 3px 3px 0px #333333;
+  border: 0px solid #b23d3d;
+}
+
+.ui.button.red--button:hover {
+  margin: 0;
+  -moz-box-shadow: 0px 0px 0px 0px white;
+  -webkit-box-shadow: 0px 0px 0px 0px white;
+  box-shadow: 0px 0px 0px 0px white;
+  border: 3px solid #333333;
+  color: white;
+}
