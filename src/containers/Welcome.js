@@ -14,6 +14,13 @@ import {
   checkIfUserExistsError,
 } from '../redux/registration.js';
 
+import {
+  getAllPledgesFromUser,
+  getAllPledgesFromUserEmpty,
+  getAllPledgesFromUserError,
+  getAllPledgesFromUserSuccess,
+} from '../redux/pledges.js';
+
 import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 
@@ -41,15 +48,43 @@ export class Welcome extends Component {
       .get('userexists/' + userAccount)
       .then(res => {
         if (res === 'User not found') {
+          console.log('1');
           dispatch(identifiedNewUser());
         } else if (res === 'error') {
+          console.log('2');
           dispatch(checkIfUserExistsError());
           this.props.history.push('/error');
         } else {
+          console.log('3');
           dispatch(identifiedReturningUser(res));
+          this.getAllPledgesFromUser(userAccount);
         }
       })
       .catch(err => {
+        console.log('err', err);
+        console.log('22');
+        this.props.history.push('/error');
+      });
+  }
+
+  getAllPledgesFromUser(address) {
+    const {dispatch} = this.props;
+    dispatch(getAllPledgesFromUser());
+    api
+      .get('pledgesfromuser/' + address)
+      .then(res => {
+        if (res === 'No pledges found') {
+          dispatch(getAllPledgesFromUserEmpty());
+        } else if (res === 'error') {
+          console.log('4');
+          dispatch(getAllPledgesFromUserError());
+          this.props.history.push('/error');
+        } else {
+          dispatch(getAllPledgesFromUserSuccess(res));
+        }
+      })
+      .catch(err => {
+        console.log('40');
         this.props.history.push('/error');
       });
   }

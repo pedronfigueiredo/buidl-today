@@ -57,25 +57,25 @@ export class Registration extends Component {
   }
 
   async handleRegistrationFormSubmit(e) {
-    const {from} = this.props.location.state || {from: '/'};
+    const {from} = this.props.location.state.pathname || {from: '/'};
     const {dispatch, userAccount, emailAddress, nickname} = this.props;
-    const loginDetails = {
+    const registrationDetails = {
       nickname,
       emailAddress,
       address: userAccount,
     };
     e.preventDefault();
-
-    dispatch(requestRegisterUser());
-    const user = await api.post('insertuser', loginDetails);
-
+    console.log(registrationDetails);
+    dispatch(requestRegisterUser(registrationDetails));
+    const user = await api.post('insertuser', registrationDetails);
     if (user[0] === 'error') {
       dispatch(errorRegisteringUser());
       this.clearRegistrationForm();
       this.props.history.push('/error');
     } else {
-      dispatch(authenticate);
+      dispatch(authenticate());
       this.clearRegistrationForm();
+      console.log('from', from);
       this.props.history.push(from);
     }
   }
@@ -153,13 +153,13 @@ function mapStateToProps(state) {
   return {
     web3: state.registration.web3,
     registering: state.registration.registering,
-    userAccount: state.registration.userAccount,
+    userAccount: state.registration.user.userAccount,
     nickname:
-      state.registration.loginFormState &&
-      state.registration.loginFormState.nickname,
+      state.registration.registrationFormState &&
+      state.registration.registrationFormState.nickname,
     emailAddress:
-      state.registration.loginFormState &&
-      state.registration.loginFormState.emailAddress,
+      state.registration.registrationFormState &&
+      state.registration.registrationFormState.emailAddress,
     isAuthenticated: state.registration.isAuthenticated,
   };
 }

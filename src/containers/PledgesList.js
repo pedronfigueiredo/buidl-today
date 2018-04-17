@@ -29,7 +29,9 @@ export class PledgesList extends Component {
   }
 
   render() {
-    const {nickname} = this.props;
+    console.log('this.props.isAuthenticated', this.props.isAuthenticated);
+    console.log('this.props.nickname', this.props.nickname);
+    const {nickname, pledges} = this.props;
 
     const Navbar = () => (
       <div className="nav-bar">
@@ -40,13 +42,42 @@ export class PledgesList extends Component {
       </div>
     );
 
+    const pledgeMap = pledges.map(item => (
+      <Card fluid key={item._id}>
+        <Card.Content>
+          <Card.Header>
+            <span className="">{item.description}</span>&nbsp;<span className="">
+              {item.stake} ETH
+            </span>&nbsp;<span className="">{item.stake} ETH</span>
+          </Card.Header>
+          <Card.Meta>
+            <span className="date">{item.deadline}</span>
+          </Card.Meta>
+          <Card.Description>
+            <p className="">{item.description}</p>
+            <p className="">{item.stake}</p>
+            <p className="">{item.referee}</p>
+            <p className="">{item.recipient}</p>
+          </Card.Description>
+        </Card.Content>
+        <Card.Content extra>
+          <a href={'https://etherscan.io/tx/' + item.tx}>
+            {item.dateOfCreation}
+          </a>
+        </Card.Content>
+        <Card.Content extra>
+          <p className="">
+            <span className="">{item.nickname}</span>&nbsp;<span className="">
+              ({item.address})
+            </span>
+          </p>
+        </Card.Content>
+      </Card>
+    ));
+    // <Card fluid color="red" header={item.description} />
     const List = () => (
       <div className="PledgesList">
-        <Card.Group>
-          <Card fluid color="red" header="Option 1" />
-          <Card fluid color="orange" header="Option 2" />
-          <Card fluid color="yellow" header="Option 3" />
-        </Card.Group>
+        <Card.Group>{pledgeMap}</Card.Group>
       </div>
     );
 
@@ -73,11 +104,10 @@ export class PledgesList extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.registration.userAccount,
-    nickname:
-      state.registration.registrationFormState &&
-      state.registration.registrationFormState.nickname,
+    userAccount: state.registration.user && state.registration.userAccount,
+    nickname: state.registration.user && state.registration.user.nickname,
     isAuthenticated: state.registration.isAuthenticated,
+    pledges: state.pledges.pledges,
   };
 }
 

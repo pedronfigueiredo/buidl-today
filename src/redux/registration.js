@@ -28,26 +28,28 @@ export const storeUserAccount = payload => {
   };
 };
 
-export const requestRegisterUser = () => {
+export const requestRegisterUser = payload => {
   return {
-    type: REQUEST_REGISTER_USER
-  }
-}
+    type: REQUEST_REGISTER_USER,
+    payload,
+  };
+};
 export const errorRegisteringUser = () => {
   return {
-    type: ERROR_REGISTERING_USER
-  }
-}
+    type: ERROR_REGISTERING_USER,
+  };
+};
 export const authenticate = () => {
+  console.log('authenticate');
   return {
     type: AUTHENTICATE,
   };
-}
+};
 export const signout = () => {
   return {
     type: SIGNOUT,
   };
-}
+};
 export const checkIfUserExists = () => {
   return {
     type: CHECK_IF_USER_EXISTS,
@@ -59,6 +61,7 @@ export const identifiedNewUser = () => {
   };
 };
 export const identifiedReturningUser = payload => {
+  console.log(payload);
   return {
     type: IDENTIFIED_RETURNING_USER,
     payload,
@@ -86,7 +89,11 @@ export const updateRegistrationForm = (name, value) => {
 // Initial State
 const initialState = {
   web3: '',
-  userAccount: '',
+  user: {
+    userAccount: '',
+    emailAddress: '',
+    nickname: '',
+  },
   registrationFormState: {
     emailAddress: '',
     nickname: '',
@@ -107,12 +114,21 @@ const registration = (state = initialState, action) => {
     case STORE_USERACCOUNT:
       return {
         ...state,
-        userAccount: action.payload,
+        user: {
+          ...state.user,
+          userAccount: action.payload,
+        },
       };
     case REQUEST_REGISTER_USER:
+      console.log('action.payload', action.payload);
       return {
         ...state,
         registering: true,
+        user: {
+          ...state.user,
+          nickname: action.payload.nickname,
+          emailAddress: action.payload.emailAddress,
+        },
       };
     case ERROR_REGISTERING_USER:
       return {
@@ -144,7 +160,8 @@ const registration = (state = initialState, action) => {
     case IDENTIFIED_RETURNING_USER:
       return {
         ...state,
-        registrationFormState: {
+        userAccount: action.payload.address,
+        user: {
           emailAddress: action.payload.email,
           nickname: action.payload.nickname,
         },

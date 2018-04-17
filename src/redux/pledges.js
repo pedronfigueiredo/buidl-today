@@ -7,6 +7,11 @@ const REQUEST_SUBMIT_PLEDGE = 'REQUEST_SUBMIT_PLEDGE';
 const ERROR_SUBMIT_PLEDGE = 'ERROR_SUBMIT_PLEDGE';
 const SUCCESS_SUBMIT_PLEDGE = 'SUCCESS_SUBMIT_PLEDGE';
 
+const GET_ALL_PLEDGES_FROM_USER = 'GET_ALL_PLEDGES_FROM_USER';
+const GET_ALL_PLEDGES_FROM_USER_EMPTY = 'GET_ALL_PLEDGES_FROM_USER_EMPTY';
+const GET_ALL_PLEDGES_FROM_USER_ERROR = 'GET_ALL_PLEDGES_FROM_USER_ERROR';
+const GET_ALL_PLEDGES_FROM_USER_SUCCESS = 'GET_ALL_PLEDGES_FROM_USER_SUCCESS';
+
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -56,6 +61,34 @@ export const successSubmitPledge = payload => {
   };
 };
 
+export const getAllPledgesFromUser = payload => {
+  return {
+    type: GET_ALL_PLEDGES_FROM_USER,
+    payload,
+  };
+};
+
+export const getAllPledgesFromUserEmpty = payload => {
+  return {
+    type: GET_ALL_PLEDGES_FROM_USER_EMPTY,
+    payload,
+  };
+};
+
+export const getAllPledgesFromUserError = payload => {
+  return {
+    type: GET_ALL_PLEDGES_FROM_USER_ERROR,
+    payload,
+  };
+};
+
+export const getAllPledgesFromUserSuccess = payload => {
+  return {
+    type: GET_ALL_PLEDGES_FROM_USER_SUCCESS,
+    payload,
+  };
+};
+
 // Initial State
 const initialState = {
   ethRate: null,
@@ -69,6 +102,7 @@ const initialState = {
     recipient: '',
   },
   pledges: [],
+  retrievingUsers: false,
 };
 
 // Reducers
@@ -114,11 +148,31 @@ const pledges = (state = initialState, action) => {
         submittingPledge: false,
       };
     case SUCCESS_SUBMIT_PLEDGE:
-      console.log('action.payload', action.payload);
       return {
         ...state,
         submittingPledge: false,
         pledges: [...state.pledges, action.payload],
+      };
+    case GET_ALL_PLEDGES_FROM_USER:
+      return {
+        ...state,
+        retrievingPledges: false,
+      };
+    case GET_ALL_PLEDGES_FROM_USER_EMPTY:
+      return {
+        ...state,
+        retrievingPledges: false,
+      };
+    case GET_ALL_PLEDGES_FROM_USER_ERROR:
+      return {
+        ...state,
+        retrievingPledges: false,
+      };
+    case GET_ALL_PLEDGES_FROM_USER_SUCCESS:
+      return {
+        ...state,
+        retrievingPledges: false,
+        pledges: action.payload,
       };
     default:
       return state;

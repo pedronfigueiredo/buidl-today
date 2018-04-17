@@ -83,6 +83,42 @@ app.get('/api/getpledges', (req, res) => {
   });
 });
 
+app.get('/api/pledgesfromuser/:address', function(req, res) {
+  if (req.params.address.length > 0) {
+    mongo.connect(dbUrl, function(errConnecting, client) {
+      if (errConnecting) {
+        console.error('Error connecting to the database');
+        console.error(errConnecting);
+      } else {
+        console.log('Connected to database');
+        var db = client.db(databaseName);
+        db
+          .collection(pledgeCollectionName)
+          .find({
+            address: req.params.address,
+            redeemed: false,
+          })
+          .toArray(function(errFinding, documents) {
+            if (errFinding) {
+              console.error('Error finding the pledge');
+              console.error(errFinding);
+              res.send(JSON.stringify('error'));
+            } else {
+              if (documents.length === 0) {
+                res.send(JSON.stringify('No pledges found'));
+              } else {
+                res.send(JSON.stringify(documents));
+              }
+            }
+            client.close();
+          });
+      }
+    });
+  } else {
+    res.send(JSON.stringify('Please provide an address'));
+  }
+});
+
 app.get('/api/userexists/:address', function(req, res) {
   if (req.params.address.length > 0) {
     mongo.connect(dbUrl, function(errConnecting, client) {
@@ -92,6 +128,7 @@ app.get('/api/userexists/:address', function(req, res) {
       } else {
         console.log('Connected to database');
         var db = client.db(databaseName);
+        console.log('req.params.address', req.params.address);
         db
           .collection(userCollectionName)
           .find({address: req.params.address})
@@ -122,6 +159,7 @@ app.post('/api/insertuser', (req, res) => {
     email: req.body.emailAddress,
     nickname: req.body.nickname,
   };
+  console.log('user', user);
 
   mongo.connect(dbUrl, function(errConnecting, client) {
     if (errConnecting) {
@@ -149,18 +187,16 @@ app.post('/api/insertuser', (req, res) => {
 
 app.post('/api/insertpledge', (req, res) => {
   var pledge = {
-    address: req.body.user.address,
-    deadline: req.body.pledge.deadline,
-    description: req.body.pledge.description,
-    email: req.body.user.emailAddress,
-    nickname: req.body.user.nickname,
-    recipient: req.body.pledge.recipient,
-    referee: req.body.pledge.referee,
-    stake: req.body.pledge.stake,
+    address: req.body.address,
+    deadline: req.body.deadline,
+    description: req.body.description,
+    email: req.body.emailAddress,
+    nickname: req.body.nickname,
+    recipient: req.body.recipient,
+    referee: req.body.referee,
+    stake: req.body.stake,
     redeemed: false,
   };
-
-  console.log('pledge', pledge);
 
   mongo.connect(dbUrl, function(errConnecting, client) {
     if (errConnecting) {

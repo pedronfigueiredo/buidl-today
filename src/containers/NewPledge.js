@@ -77,15 +77,15 @@ export class NewPledge extends Component {
       nickname,
       pledgeFormState,
     } = this.props;
+    // Call the blockchain with money check if it was successfull
     const newPledgeDetails = {
-      user: {
-        nickname,
-        emailAddress,
-        address: userAccount,
-      },
-      pledge: pledgeFormState,
+      ...pledgeFormState,
+      nickname,
+      emailAddress,
+      address: userAccount,
+      // tx, // Transaction id from blockchain
+      // txTimestamp, // Transaction timestamp from blockchain
     };
-    // Call the blockchain with money check if it was successfull!
     dispatch(requestSubmitPledge());
     const newPledge = api.post('insertpledge', newPledgeDetails);
     if (newPledge[0] === 'error') {
