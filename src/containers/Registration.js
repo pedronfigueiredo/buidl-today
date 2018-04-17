@@ -57,7 +57,6 @@ export class Registration extends Component {
   }
 
   async handleRegistrationFormSubmit(e) {
-    const {from} = this.props.location.state.pathname || {from: '/'};
     const {dispatch, userAccount, emailAddress, nickname} = this.props;
     const registrationDetails = {
       nickname,
@@ -65,7 +64,6 @@ export class Registration extends Component {
       address: userAccount,
     };
     e.preventDefault();
-    console.log(registrationDetails);
     dispatch(requestRegisterUser(registrationDetails));
     const user = await api.post('insertuser', registrationDetails);
     if (user[0] === 'error') {
@@ -75,8 +73,7 @@ export class Registration extends Component {
     } else {
       dispatch(authenticate());
       this.clearRegistrationForm();
-      console.log('from', from);
-      this.props.history.push(from);
+      this.props.history.goBack();
     }
   }
 

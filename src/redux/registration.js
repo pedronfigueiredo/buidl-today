@@ -40,7 +40,6 @@ export const errorRegisteringUser = () => {
   };
 };
 export const authenticate = () => {
-  console.log('authenticate');
   return {
     type: AUTHENTICATE,
   };
@@ -61,7 +60,6 @@ export const identifiedNewUser = () => {
   };
 };
 export const identifiedReturningUser = payload => {
-  console.log(payload);
   return {
     type: IDENTIFIED_RETURNING_USER,
     payload,
@@ -120,7 +118,6 @@ const registration = (state = initialState, action) => {
         },
       };
     case REQUEST_REGISTER_USER:
-      console.log('action.payload', action.payload);
       return {
         ...state,
         registering: true,
@@ -160,8 +157,8 @@ const registration = (state = initialState, action) => {
     case IDENTIFIED_RETURNING_USER:
       return {
         ...state,
-        userAccount: action.payload.address,
         user: {
+          userAccount: action.payload.address,
           emailAddress: action.payload.email,
           nickname: action.payload.nickname,
         },

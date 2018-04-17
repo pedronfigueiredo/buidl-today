@@ -48,21 +48,17 @@ export class Welcome extends Component {
       .get('userexists/' + userAccount)
       .then(res => {
         if (res === 'User not found') {
-          console.log('1');
           dispatch(identifiedNewUser());
         } else if (res === 'error') {
-          console.log('2');
           dispatch(checkIfUserExistsError());
           this.props.history.push('/error');
         } else {
-          console.log('3');
           dispatch(identifiedReturningUser(res));
           this.getAllPledgesFromUser(userAccount);
         }
       })
       .catch(err => {
-        console.log('err', err);
-        console.log('22');
+        console.error('err', err);
         this.props.history.push('/error');
       });
   }
@@ -76,7 +72,6 @@ export class Welcome extends Component {
         if (res === 'No pledges found') {
           dispatch(getAllPledgesFromUserEmpty());
         } else if (res === 'error') {
-          console.log('4');
           dispatch(getAllPledgesFromUserError());
           this.props.history.push('/error');
         } else {
@@ -84,7 +79,6 @@ export class Welcome extends Component {
         }
       })
       .catch(err => {
-        console.log('40');
         this.props.history.push('/error');
       });
   }
@@ -135,7 +129,7 @@ export class Welcome extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.registration.userAccount,
+    userAccount: state.registration.user.userAccount,
     web3: state.registration.web3,
   };
 }

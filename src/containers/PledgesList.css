@@ -52,3 +52,12 @@ h3 {
 .pledges-list--component .pledges-list--container {
   padding: 20px 0 0 0;
 }
+
+.empty-pledges-list-notice {
+  text-align: center;
+  font-style: italic;
+  padding: 40px 0;
+  background: #f2f2f2;
+  border: black 1px solid;
+  border-radius: 5px;
+}

@@ -29,8 +29,7 @@ export class PledgesList extends Component {
   }
 
   render() {
-    console.log('this.props.isAuthenticated', this.props.isAuthenticated);
-    console.log('this.props.nickname', this.props.nickname);
+    console.log('this.props', this.props);
     const {nickname, pledges} = this.props;
 
     const Navbar = () => (
@@ -74,10 +73,15 @@ export class PledgesList extends Component {
         </Card.Content>
       </Card>
     ));
+
     // <Card fluid color="red" header={item.description} />
     const List = () => (
       <div className="PledgesList">
-        <Card.Group>{pledgeMap}</Card.Group>
+        {pledges.length ? (
+          <Card.Group key="1">{pledgeMap}</Card.Group>
+        ) : (
+          <p className="empty-pledges-list-notice">You have no pledges yet.</p>
+        )}
       </div>
     );
 
@@ -93,7 +97,6 @@ export class PledgesList extends Component {
             to={'/new'}
           />
           <List />
-          <LinkButton to="/about">Learn more about the science</LinkButton>
         </div>
       </div>
     );
@@ -104,7 +107,7 @@ export class PledgesList extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.registration.user && state.registration.userAccount,
+    userAccount: state.registration.user && state.registration.user.userAccount,
     nickname: state.registration.user && state.registration.user.nickname,
     isAuthenticated: state.registration.isAuthenticated,
     pledges: state.pledges.pledges,

@@ -12,6 +12,7 @@ import {
 } from '../redux/pledges';
 
 import api from '../utils/api.js';
+import keccak256 from 'js-sha3';
 
 import './NewPledge.css';
 
@@ -99,11 +100,68 @@ export class NewPledge extends Component {
     }
   }
 
+  /**
+   * Checks if the given string is an address
+   *
+   * @method isAddress
+   * @param {String} address the given HEX adress
+   * @return {Boolean}
+   */
+  isAddress(address) {
+    if (!/^(0x)?[0-9a-f]{40}$/i.test(address)) {
+      // check if it has the basic requirements of an address
+      return false;
+    } else if (
+      /^(0x)?[0-9a-f]{40}$/.test(address) ||
+      /^(0x)?[0-9A-F]{40}$/.test(address)
+    ) {
+      // If it's all small caps or all all caps, return true
+      return true;
+    } else {
+      // Otherwise check each case
+      return this.isChecksumAddress(address);
+    }
+  }
+
+  /**
+   * Checks if the given string is a checksummed address
+   *
+   * @method isChecksumAddress
+   * @param {String} address the given HEX adress
+   * @return {Boolean}
+   */
+  isChecksumAddress(address) {
+    // Check each case
+    address = address.replace('0x', '');
+    var addressHash = keccak256(address.toLowerCase());
+    for (var i = 0; i < 40; i++) {
+      // the nth letter should be uppercase if the nth digit of casemap is 1
+      if (
+        (parseInt(addressHash[i], 16) > 7 &&
+          address[i].toUpperCase() !== address[i]) ||
+        (parseInt(addressHash[i], 16) <= 7 &&
+          address[i].toLowerCase() !== address[i])
+      ) {
+        return false;
+      }
+    }
+  }
+
   showInputError(input) {
     const name = input.name;
     const validity = input.validity;
     const label = document.getElementById(`${name}Label`).textContent;
     const error = document.getElementById(`${name}Error`);
+
+    if (name === 'recipient' || name === 'referee') {
+      const addressIsValid = this.isAddress(input.value);
+      if (!addressIsValid) {
+        input.setCustomValidity('Not valid');
+        error.textContent = `${label} is not a valid Ethereum address`;
+        return true;
+      }
+    }
+
     if (!validity.valid) {
       if (validity.valueMissing) {
         error.textContent = `${label} is a required field`;
@@ -117,6 +175,7 @@ export class NewPledge extends Component {
   }
 
   hideInputError(input) {
+    input.setCustomValidity('');
     const name = input.name;
     const error = document.getElementById(`${name}Error`);
     error.textContent = '';
@@ -193,13 +252,9 @@ function mapStateToProps(state) {
     ethRateInUSD: state.pledges.ethRateInUSD,
     submittingPledge: state.pledges.submittingPledge,
     pledgeFormState: state.pledges.pledgeFormState,
-    userAccount: state.registration.userAccount,
-    nickname:
-      state.registration.registrationFormState &&
-      state.registration.registrationFormState.nickname,
-    emailAddress:
-      state.registration.registrationFormState &&
-      state.registration.registrationFormState.emailAddress,
+    userAccount: state.registration.user.userAccount,
+    nickname: state.registration.user.nickname,
+    emailAddress: state.registration.user.emailAddress,
     isAuthenticated: state.registration.isAuthenticated,
   };
 }
