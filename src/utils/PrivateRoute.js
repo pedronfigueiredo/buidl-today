@@ -9,7 +9,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 class PrivateRoute extends React.Component {
   render() {
-    console.log('PrivateRoute', this.props);
     const {isAuthenticated, isCheckingIfUserExists} = this.props;
     if (isAuthenticated && !isCheckingIfUserExists)
       return <Route {...this.props} />;

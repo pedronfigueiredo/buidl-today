@@ -61,3 +61,8 @@ h3 {
   border: black 1px solid;
   border-radius: 5px;
 }
+
+.pledge-list-item .pledge-recipient .heading,
+.pledge-list-item .pledge-referee .heading {
+  font-weight: bold;
+}

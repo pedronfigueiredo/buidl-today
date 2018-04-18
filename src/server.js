@@ -128,7 +128,6 @@ app.get('/api/userexists/:address', function(req, res) {
       } else {
         console.log('Connected to database');
         var db = client.db(databaseName);
-        console.log('req.params.address', req.params.address);
         db
           .collection(userCollectionName)
           .find({address: req.params.address})

@@ -1,6 +1,5 @@
 // Action Types
 const UPDATE_ETH_RATE = 'UPDATE_ETH_RATE';
-const UPDATE_ETH_RATE_IN_USD = 'UPDATE_ETH_RATE_IN_USD';
 const UPDATE_PLEDGE_FORM = 'UPDATE_PLEDGE_FORM';
 const CLEAR_PLEDGE_FORM = 'CLEAR_PLEDGE_FORM';
 const REQUEST_SUBMIT_PLEDGE = 'REQUEST_SUBMIT_PLEDGE';
@@ -16,13 +15,6 @@ const GET_ALL_PLEDGES_FROM_USER_SUCCESS = 'GET_ALL_PLEDGES_FROM_USER_SUCCESS';
 export const updateETHRate = payload => {
   return {
     type: UPDATE_ETH_RATE,
-    payload,
-  };
-};
-
-export const updateETHRateInUSD = payload => {
-  return {
-    type: UPDATE_ETH_RATE_IN_USD,
     payload,
   };
 };
@@ -92,7 +84,6 @@ export const getAllPledgesFromUserSuccess = payload => {
 // Initial State
 const initialState = {
   ethRate: null,
-  ethRateInUSD: null,
   submittingPledge: false,
   pledgeFormState: {
     description: '',
@@ -112,11 +103,6 @@ const pledges = (state = initialState, action) => {
       return {
         ...state,
         ethRate: action.payload,
-      };
-    case UPDATE_ETH_RATE_IN_USD:
-      return {
-        ...state,
-        ethRateInUSD: action.payload,
       };
     case UPDATE_PLEDGE_FORM:
       return {

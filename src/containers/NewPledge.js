@@ -3,7 +3,6 @@ import {connect} from 'react-redux';
 import {NewPledgeForm} from '../components/NewPledgeForm';
 import {
   updateETHRate,
-  updateETHRateInUSD,
   updatePledgeForm,
   clearPledgeForm,
   requestSubmitPledge,
@@ -11,8 +10,10 @@ import {
   successSubmitPledge,
 } from '../redux/pledges';
 
+import moment from 'moment';
+
 import api from '../utils/api.js';
-import keccak256 from 'js-sha3';
+import {keccak256} from 'js-sha3';
 
 import './NewPledge.css';
 
@@ -34,10 +35,10 @@ export class NewPledge extends Component {
   }
 
   componentDidMount() {
-    this.updateEthereumPrice();
+    this.getEthereumPrice();
   }
 
-  updateEthereumPrice() {
+  getEthereumPrice() {
     const {dispatch} = this.props;
     fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/')
       .then(res => res.json())
@@ -50,13 +51,9 @@ export class NewPledge extends Component {
   }
 
   handlePledgeFormChange(e) {
-    const {dispatch, ethRate} = this.props;
+    const {dispatch} = this.props;
     const {name, value} = e.target;
     dispatch(updatePledgeForm(name, value));
-    if (name === 'stake') {
-      const product = Number(value) * Number(ethRate);
-      dispatch(updateETHRateInUSD(product));
-    }
   }
 
   handlePledgeFormFocus(e) {
@@ -87,6 +84,11 @@ export class NewPledge extends Component {
       // tx, // Transaction id from blockchain
       // txTimestamp, // Transaction timestamp from blockchain
     };
+    newPledgeDetails.deadline = moment(
+      pledgeFormState.deadline,
+      'YYYY-MM-DD',
+    ).format('X');
+
     dispatch(requestSubmitPledge());
     const newPledge = api.post('insertpledge', newPledgeDetails);
     if (newPledge[0] === 'error') {
@@ -200,13 +202,7 @@ export class NewPledge extends Component {
   }
 
   render() {
-    const {
-      nickname,
-      ethRate,
-      ethRateInUSD,
-      submittingPledge,
-      pledgeFormState,
-    } = this.props;
+    const {nickname, ethRate, submittingPledge, pledgeFormState} = this.props;
 
     const Navbar = () => (
       <div className="nav-bar">
@@ -232,7 +228,6 @@ export class NewPledge extends Component {
           <BackButton />
           <NewPledgeForm
             ethRate={ethRate}
-            ethRateInUSD={ethRateInUSD}
             submittingPledge={submittingPledge}
             pledgeFormState={pledgeFormState}
             handlePledgeFormChange={this.handlePledgeFormChange}
@@ -249,7 +244,6 @@ export class NewPledge extends Component {
 function mapStateToProps(state) {
   return {
     ethRate: state.pledges.ethRate,
-    ethRateInUSD: state.pledges.ethRateInUSD,
     submittingPledge: state.pledges.submittingPledge,
     pledgeFormState: state.pledges.pledgeFormState,
     userAccount: state.registration.user.userAccount,

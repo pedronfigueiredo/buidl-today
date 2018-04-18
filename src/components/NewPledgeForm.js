@@ -65,19 +65,18 @@ export class NewPledgeForm extends Component {
 
   render() {
     const {
-      ethRateInUSD,
       submittingPledge,
       pledgeFormState: {description, deadline, stake, referee, recipient},
       handlePledgeFormChange,
       handlePledgeFormFocus,
       handlePledgeFormBlur,
       handlePledgeFormSubmit,
+      ethRate,
     } = this.props;
 
     const inAWeek = moment()
       .add(7, 'days')
       .format('YYYY-MM-DD');
-
 
     const FormComponent = (
       <Form>
@@ -126,11 +125,11 @@ export class NewPledgeForm extends Component {
             required
           />
           <p className="form-error" id="stakeError" />
-          {!!ethRateInUSD &&
-            typeof ethRateInUSD === 'number' &&
-            ethRateInUSD !== 0 && (
+          {!!stake &&
+            typeof Number(stake) === 'number' &&
+            (stake !== 0 && stake !== '0') && (
               <p className="realtime-conversion">
-                Aproximately {ethRateInUSD} USD
+                Aproximately {Math.round(ethRate * stake * 100) / 100} USD
               </p>
             )}
         </Form.Field>
