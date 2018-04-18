@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Card} from 'semantic-ui-react';
+import {Button, Card} from 'semantic-ui-react';
 import LoaderScreen from '../components/LoaderScreen.js';
 import RedButton from '../components/RedButton.js';
 
@@ -54,6 +54,53 @@ export class PledgesList extends Component {
       </div>
     );
 
+    const PledgesButton = ({
+      address,
+      referee,
+      recipient,
+      deadline,
+      confirmed,
+      redeemed,
+    }) => {
+      const now = moment().format('X');
+      if (deadline > now && userAccount !== referee) {
+        return null;
+      } else if (deadline > now && !confirmed && userAccount === referee) {
+        return (
+          <Button className="confirm-pledge-button" color={'red'}>
+            Confirm
+          </Button>
+        );
+      } else if (deadline < now && !confirmed && userAccount !== recipient) {
+        return (
+          <div className="expired-pledge-notice">
+            <p>
+              This pledge expired because it wasn't confirmed before the
+              deadline.
+            </p>
+            <p>
+              The stake can now be withdrawn by the recipient ({recipient}).
+            </p>
+          </div>
+        );
+      } else if (deadline < now && !confirmed && userAccount === recipient) {
+        return (
+          <Button className="withdraw-pledge-button" color={'green'}>
+            Withdraw
+          </Button>
+        );
+      } else if (deadline < now && confirmed && userAccount !== address) {
+        <div className="confirmed-pledge-notice">
+          <p>This pledge was confirmed by the referee ({referee}).</p>
+          <p>The stake can now be withdrawn by the pledger ({address}).</p>
+        </div>;
+      } else if (deadline < now && confirmed && userAccount === address) {
+        <Button className="withdraw-pledge-button" color={'green'}>
+          Withdraw
+        </Button>;
+      }
+    };
+
     const pledgeMap = pledges.map(item => (
       <Card className="pledge-list-item" fluid key={item._id}>
         <Card.Content>
@@ -75,11 +122,15 @@ export class PledgesList extends Component {
             </p>
             <p className="pledge-referee">
               <span className="heading">Referee: </span>
-              {item.referee}
+              {item.referee === userAccount
+                ? 'You (' + item.referee + ')'
+                : item.referee}
             </p>
             <p className="pledge-recipient">
               <span className="heading">Recipient: </span>
-              {item.recipient}
+              {item.recipient === userAccount
+                ? 'You (' + item.recipient + ')'
+                : item.recipient}
             </p>
           </Card.Description>
         </Card.Content>
@@ -100,6 +151,14 @@ export class PledgesList extends Component {
             </span>
           </p>
         </Card.Content>
+        <PledgesButton
+          address={item.address}
+          referee={item.referee}
+          recipient={item.recipient}
+          deadline={item.deadline}
+          confirmed={item.confirmed}
+          redeemed={item.redeemed}
+        />
       </Card>
     ));
 

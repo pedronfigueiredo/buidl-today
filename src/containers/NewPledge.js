@@ -84,6 +84,7 @@ export class NewPledge extends Component {
       // tx, // Transaction id from blockchain
       // txTimestamp, // Transaction timestamp from blockchain
     };
+
     newPledgeDetails.deadline = moment(
       pledgeFormState.deadline,
       'YYYY-MM-DD',
