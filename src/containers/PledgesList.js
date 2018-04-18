@@ -43,8 +43,6 @@ export class PledgesList extends Component {
 
   render() {
     const {nickname, pledges, userAccount, ethRate} = this.props;
-    console.log('pledges', pledges);
-
     const Navbar = () => (
       <div className="nav-bar">
         <div className="heading" onClick={this.goHome}>
@@ -67,7 +65,7 @@ export class PledgesList extends Component {
         return null;
       } else if (deadline > now && !confirmed && userAccount === referee) {
         return (
-          <Button className="confirm-pledge-button" color={'red'}>
+          <Button className="confirm-pledge-button" color={'yellow'}>
             Confirm
           </Button>
         );
@@ -90,14 +88,18 @@ export class PledgesList extends Component {
           </Button>
         );
       } else if (deadline < now && confirmed && userAccount !== address) {
-        <div className="confirmed-pledge-notice">
-          <p>This pledge was confirmed by the referee ({referee}).</p>
-          <p>The stake can now be withdrawn by the pledger ({address}).</p>
-        </div>;
+        return (
+          <div className="confirmed-pledge-notice">
+            <p>This pledge was confirmed by the referee ({referee}).</p>
+            <p>The stake can now be withdrawn by the pledger ({address}).</p>
+          </div>
+        );
       } else if (deadline < now && confirmed && userAccount === address) {
-        <Button className="withdraw-pledge-button" color={'green'}>
-          Withdraw
-        </Button>;
+        return (
+          <Button className="withdraw-pledge-button" color={'green'}>
+            Withdraw
+          </Button>
+        );
       }
     };
 

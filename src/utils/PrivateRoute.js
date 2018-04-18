@@ -10,9 +10,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class PrivateRoute extends React.Component {
   render() {
     const {isAuthenticated, isCheckingIfUserExists} = this.props;
-    if (isAuthenticated && !isCheckingIfUserExists)
+    if (isAuthenticated && !isCheckingIfUserExists) {
       return <Route {...this.props} />;
-    if (isCheckingIfUserExists) return <LoaderScreen />;
+    }
+    if (isCheckingIfUserExists) {
+      return <LoaderScreen />;
+    }
     return (
       <Redirect
         to={{

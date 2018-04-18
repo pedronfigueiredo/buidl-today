@@ -73,7 +73,7 @@ export class Registration extends Component {
     } else {
       dispatch(authenticate());
       this.clearRegistrationForm();
-      this.props.history.goBack();
+      this.props.history.push('/home');
     }
   }
 

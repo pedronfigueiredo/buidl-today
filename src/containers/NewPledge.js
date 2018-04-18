@@ -20,6 +20,7 @@ import './NewPledge.css';
 export class NewPledge extends Component {
   constructor(props) {
     super(props);
+    this.goHome = this.goHome.bind(this);
     this.handleBackButton = this.handleBackButton.bind(this);
     this.handlePledgeFormChange = this.handlePledgeFormChange.bind(this);
     this.handlePledgeFormSubmit = this.handlePledgeFormSubmit.bind(this);
@@ -200,6 +201,11 @@ export class NewPledge extends Component {
   clearPledgeForm() {
     const {dispatch} = this.props;
     dispatch(clearPledgeForm());
+  }
+
+  goHome() {
+    const {history} = this.props;
+    history.push('/');
   }
 
   render() {
