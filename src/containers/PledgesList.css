@@ -27,6 +27,21 @@ h3 {
   color: #f2f2f2;
 }
 
+@keyframes wiggle {
+  0% {
+    margin-bottom: 0px;
+  }
+  50% {
+    margin-bottom: 4px;
+  }
+  75% {
+    margin-bottom: 2px;
+  }
+  100% {
+    margin-bottom: 0px;
+  }
+}
+
 .nav-bar .heading {
   font-size: 20px;
   cursor: pointer;
@@ -36,6 +51,14 @@ h3 {
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+  transition: color 0.3s;
+}
+
+.nav-bar .heading:hover {
+  animation-name: wiggle;
+  animation-duration: 0.3s;
+  animation-iteration-count: 1;
+  color: white;
 }
 
 .nav-bar .username {
