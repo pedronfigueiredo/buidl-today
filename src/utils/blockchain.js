@@ -26,11 +26,32 @@ const blockchain = {
     }
   },
   // Contract Call Template
-  getNumberOfAgreements() {
+  getOwner() {
     Buidl.deployed()
-      .then(instance => instance.getNumberOfAgreements())
+      .then(instance => instance.getOwner())
       .then(result => {
-        console.log('Number of agreements', result);
+        console.log('Owner Address', result);
+      });
+  },
+  createAgreement(agreementId, web3) {
+    Buidl.deployed()
+      .then(instance => instance.createAgreement.sendTransaction(agreementId))
+      .then(hash => {
+        console.log('Create Agreement');
+        console.log('Transaction hash:', hash);
+        return web3.eth.getTransactionReceipt(hash);
+        // Transaction created: spinning wheel
+        // Transaction hash for etherscan
+      })
+      .then(receipt => {
+        console.log('receipt', receipt);
+        console.log('confirmation on Block', receipt.blockHash);
+        return web3.eth.getBlock(receipt.blockHash).timestamp;
+      })
+      .then(timestamp => {
+        console.log('Timestamp');
+        console.log(timestamp);
+        // Transaction confirmed send timestamp
       });
   },
 };
