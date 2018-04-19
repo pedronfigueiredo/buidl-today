@@ -30,9 +30,6 @@ export class Welcome extends Component {
     blockchain.getWeb3(this.props.dispatch);
   }
 
-  test() {
-    blockchain.createAgreement(1, this.props.web3);
-  }
   componentWillReceiveProps(nextProps) {
     const {dispatch, web3, userAccount} = this.props;
     if (nextProps.web3 !== web3) {
@@ -115,7 +112,7 @@ export class Welcome extends Component {
                 </p>
               </div>
             </div>
-            <button onClick={() => this.test()} />
+
             <div className="buttons-group">
               <LinkButton to="/home" className="get-started">
                 Get started!

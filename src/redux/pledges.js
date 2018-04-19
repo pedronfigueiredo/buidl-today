@@ -11,6 +11,9 @@ const GET_ALL_PLEDGES_FROM_USER_EMPTY = 'GET_ALL_PLEDGES_FROM_USER_EMPTY';
 const GET_ALL_PLEDGES_FROM_USER_ERROR = 'GET_ALL_PLEDGES_FROM_USER_ERROR';
 const GET_ALL_PLEDGES_FROM_USER_SUCCESS = 'GET_ALL_PLEDGES_FROM_USER_SUCCESS';
 
+const REQUEST_CREATE_AGREEMENT = 'REQUEST_CREATE_AGREEMENT';
+const CREATE_AGREEMENT_CONFIRMED = 'CREATE_AGREEMENT_CONFIRMED';
+
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -78,6 +81,22 @@ export const getAllPledgesFromUserSuccess = payload => {
   return {
     type: GET_ALL_PLEDGES_FROM_USER_SUCCESS,
     payload,
+  };
+};
+
+export const requestCreateAgreement = (agreementId, txHash) => {
+  return {
+    type: REQUEST_CREATE_AGREEMENT,
+    agreementId,
+    txHash,
+  };
+};
+
+export const createAgreementConfirmed = (agreementId, timestamp) => {
+  return {
+    type: CREATE_AGREEMENT_CONFIRMED,
+    agreementId,
+    timestamp,
   };
 };
 
@@ -159,6 +178,44 @@ const pledges = (state = initialState, action) => {
         ...state,
         retrievingPledges: false,
         pledges: action.payload,
+      };
+    case REQUEST_CREATE_AGREEMENT:
+      let counterOne;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (state.pledges[i].agreementId === action.agreementId) {
+          counterOne = i;
+          break;
+        }
+      }
+      let updatedWithHash = state.pledges[counterOne];
+      updatedWithHash.txHash = action.txHash;
+      updatedWithHash.txConfirmed = false;
+      return {
+        ...state,
+        pledges: [
+          ...state.pledges.slice(0, counterOne),
+          updatedWithHash,
+          ...state.pledges.slice(counterOne + 1),
+        ],
+      };
+    case CREATE_AGREEMENT_CONFIRMED:
+      let counterTwo;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (state.pledges[i].agreementId === action.agreementId) {
+          counterTwo = i;
+          break;
+        }
+      }
+      let updatedWithTimestamp = state.pledges[counterTwo];
+      updatedWithTimestamp.txTimestamp = action.timestamp;
+      updatedWithTimestamp.txConfirmed = true;
+      return {
+        ...state,
+        pledges: [
+          ...state.pledges.slice(0, counterTwo),
+          updatedWithTimestamp,
+          ...state.pledges.slice(counterTwo + 1),
+        ],
       };
     default:
       return state;

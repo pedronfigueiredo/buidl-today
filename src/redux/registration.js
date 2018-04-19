@@ -89,7 +89,7 @@ const initialState = {
   web3: '',
   user: {
     userAccount: '',
-    emailAddress: '',
+    email: '',
     nickname: '',
   },
   registrationFormState: {
@@ -124,7 +124,7 @@ const registration = (state = initialState, action) => {
         user: {
           ...state.user,
           nickname: action.payload.nickname,
-          emailAddress: action.payload.emailAddress,
+          email: action.payload.emailAddress,
         },
       };
     case ERROR_REGISTERING_USER:
@@ -159,7 +159,7 @@ const registration = (state = initialState, action) => {
         ...state,
         user: {
           userAccount: action.payload.address,
-          emailAddress: action.payload.email,
+          email: action.payload.email,
           nickname: action.payload.nickname,
         },
         isAuthenticated: true,

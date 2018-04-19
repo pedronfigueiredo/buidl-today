@@ -1,4 +1,10 @@
 import {storeWeb3, storeUserAccount} from '../redux/registration.js';
+import {
+  requestCreateAgreement,
+  createAgreementConfirmed,
+} from '../redux/pledges.js';
+
+import api from '../utils/api.js';
 
 import BuidlContract from '../contracts/Buidl.json';
 import contract from 'truffle-contract';
@@ -33,25 +39,33 @@ const blockchain = {
         console.log('Owner Address', result);
       });
   },
-  createAgreement(agreementId, web3) {
+  createAgreement(agreementId, web3, dispatch) {
+    let storeTxHash;
     Buidl.deployed()
       .then(instance => instance.createAgreement.sendTransaction(agreementId))
-      .then(hash => {
-        console.log('Create Agreement');
-        console.log('Transaction hash:', hash);
-        return web3.eth.getTransactionReceipt(hash);
-        // Transaction created: spinning wheel
-        // Transaction hash for etherscan
+      .then(txHash => {
+        storeTxHash = txHash;
+        dispatch(requestCreateAgreement(agreementId, txHash));
+        return web3.eth.getTransactionReceipt(txHash);
       })
       .then(receipt => {
-        console.log('receipt', receipt);
-        console.log('confirmation on Block', receipt.blockHash);
         return web3.eth.getBlock(receipt.blockHash).timestamp;
       })
       .then(timestamp => {
-        console.log('Timestamp');
-        console.log(timestamp);
-        // Transaction confirmed send timestamp
+        dispatch(createAgreementConfirmed(agreementId, timestamp));
+        let updates = {
+          txHash: storeTxHash,
+          timestamp,
+          txConfirmed: true,
+          isStakePaid: false,
+          isPledgeConfirmed: false,
+        };
+        console.log('updates', updates);
+        const updatePledge = api.post('updatepledge', updates);
+        if (updatePledge[0] === 'error') {
+          console.error('error updating');
+          this.props.history.push('/error');
+        }
       });
   },
 };

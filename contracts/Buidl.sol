@@ -5,7 +5,7 @@ import "./zeppelin/Destructible.sol";
 contract Buidl is Destructible {
     address public owner;
 
-    mapping(uint => uint) agreementStake;
+    mapping(bytes32 => uint) agreementStake;
 
     function Buidl() public payable {
         owner = msg.sender;
@@ -23,17 +23,17 @@ contract Buidl is Destructible {
         owner = _newOwner;
     }
 
-    function createAgreement(uint _agreementId) public payable {
+    function createAgreement(bytes32 _agreementId) public payable {
         agreementStake[_agreementId] = msg.value;
     }
 
-    function getAgreementStake(uint _agreementId) public view returns (uint) {
+    function getAgreementStake(bytes32 _agreementId) public view returns (uint) {
         return (
             agreementStake[_agreementId]
         );
     }
 
-    function withdraw(address _address, uint _agreementId) public payable {
+    function withdraw(address _address, bytes32 _agreementId) public payable {
         _address.transfer(agreementStake[_agreementId]);
         agreementStake[_agreementId] = 0;
     }

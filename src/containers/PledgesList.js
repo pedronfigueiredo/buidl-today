@@ -43,6 +43,7 @@ export class PledgesList extends Component {
 
   render() {
     const {nickname, pledges, userAccount, ethRate} = this.props;
+    console.log('pledges', pledges);
     const Navbar = () => (
       <div className="nav-bar">
         <div className="heading" onClick={this.goHome}>
@@ -100,11 +101,13 @@ export class PledgesList extends Component {
             Withdraw
           </Button>
         );
+      } else {
+        return null;
       }
     };
 
     const pledgeMap = pledges.map(item => (
-      <Card className="pledge-list-item" fluid key={item._id}>
+      <Card className="pledge-list-item" fluid key={item.agreementId}>
         <Card.Content>
           <Card.Header>
             <span className="pledge-description">{item.description}</span>

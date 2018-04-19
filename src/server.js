@@ -194,7 +194,7 @@ app.post('/api/insertpledge', (req, res) => {
     recipient: req.body.recipient,
     referee: req.body.referee,
     stake: req.body.stake,
-    redeemed: false,
+    agreementId: req.body.agreementId,
   };
 
   mongo.connect(dbUrl, function(errConnecting, client) {
@@ -218,6 +218,45 @@ app.post('/api/insertpledge', (req, res) => {
     }
   });
   res.send(pledge);
+  res.end();
+});
+
+app.post('/api/updatepledge', (req, res) => {
+  console.log('req.body', req.body);
+  let txHash = req.body.txHash;
+  let timestamp = req.body.timestamp;
+  let txConfirmed = req.body.txConfirmed;
+  let isStakePaid = req.body.isStakePaid;
+  let isPledgeConfirmed = req.body.isPledgeConfirmed;
+  let agreementId = req.body.agreementId;
+
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+      console.error(errConnecting);
+    } else {
+      console.log('Connected to database');
+      var db = client.db(databaseName);
+      db.collection(pledgeCollectionName).update(
+        {'agreementId': agreementId},
+        {
+          $set: {
+            '$.txHash.0': txHash,
+          },
+        },
+        function(errInserting, result) {
+          if (errInserting) {
+            console.error('Error inserting the user');
+            console.error(errInserting);
+          } else {
+            console.log('User was successfully inserted');
+            client.close();
+          }
+        },
+      );
+    }
+  });
+  res.send({'Updated success':'Success'});
   res.end();
 });
 

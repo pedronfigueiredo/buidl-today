@@ -13,6 +13,7 @@ import {
 import moment from 'moment';
 
 import api from '../utils/api.js';
+import blockchain from '../utils/blockchain.js';
 import {keccak256} from 'js-sha3';
 
 import './NewPledge.css';
@@ -72,18 +73,22 @@ export class NewPledge extends Component {
     const {
       dispatch,
       userAccount,
-      emailAddress,
+      email,
       nickname,
       pledgeFormState,
+      web3,
     } = this.props;
     // Call the blockchain with money check if it was successfull
+
+    let now = moment();
+    let agreementId = keccak256(String(now + 42));
+
     const newPledgeDetails = {
       ...pledgeFormState,
       nickname,
-      emailAddress,
+      email,
       address: userAccount,
-      // tx, // Transaction id from blockchain
-      // txTimestamp, // Transaction timestamp from blockchain
+      agreementId,
     };
 
     newPledgeDetails.deadline = moment(
@@ -99,6 +104,7 @@ export class NewPledge extends Component {
       this.props.history.push('/error');
     } else {
       dispatch(successSubmitPledge(newPledgeDetails));
+      blockchain.createAgreement(agreementId, web3, dispatch);
       this.clearPledgeForm();
       this.props.history.push('/home');
     }
@@ -209,6 +215,7 @@ export class NewPledge extends Component {
   }
 
   render() {
+    console.log('this.props', this.props);
     const {nickname, ethRate, submittingPledge, pledgeFormState} = this.props;
 
     const Navbar = () => (
@@ -255,8 +262,10 @@ function mapStateToProps(state) {
     pledgeFormState: state.pledges.pledgeFormState,
     userAccount: state.registration.user.userAccount,
     nickname: state.registration.user.nickname,
-    emailAddress: state.registration.user.emailAddress,
+    email: state.registration.user.email,
     isAuthenticated: state.registration.isAuthenticated,
+    pledges: state.pledges.pledges,
+    web3: state.registration.web3,
   };
 }
 
