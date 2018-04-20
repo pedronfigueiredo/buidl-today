@@ -107,8 +107,7 @@ export class Welcome extends Component {
                   <span className="icon-link" />
                 </p>
                 <p className="description">
-                  Blockchain is one of the most probm of blockchain to make it
-                  happen.
+                  Leverage blockchain technology to enforce your accountability.
                 </p>
               </div>
             </div>
@@ -117,9 +116,11 @@ export class Welcome extends Component {
               <LinkButton to="/home" className="get-started">
                 Get started!
               </LinkButton>
+              {/*
               <LinkButton to="/about" className="learn-more">
                 Learn more about the science
               </LinkButton>
+              */}
             </div>
           </div>
         </div>
