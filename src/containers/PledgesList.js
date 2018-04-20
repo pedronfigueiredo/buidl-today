@@ -43,7 +43,6 @@ export class PledgesList extends Component {
 
   render() {
     const {nickname, pledges, userAccount, ethRate} = this.props;
-    console.log('pledges', pledges);
     const Navbar = () => (
       <div className="nav-bar">
         <div className="heading" onClick={this.goHome}>
@@ -58,19 +57,22 @@ export class PledgesList extends Component {
       referee,
       recipient,
       deadline,
-      confirmed,
-      redeemed,
+      isPledgeConfirmed,
     }) => {
+      const userIsPledger = userAccount === address;
+      const userIsReferee = userAccount === referee;
+      const userIsRecipient = userAccount === recipient;
       const now = moment().format('X');
-      if (deadline > now && userAccount !== referee) {
+      const timeIsUp = deadline < now;
+      if (!timeIsUp && !userIsReferee) {
         return null;
-      } else if (deadline > now && !confirmed && userAccount === referee) {
+      } else if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
         return (
           <Button className="confirm-pledge-button" color={'yellow'}>
             Confirm
           </Button>
         );
-      } else if (deadline < now && !confirmed && userAccount !== recipient) {
+      } else if (timeIsUp && !isPledgeConfirmed && !userIsRecipient) {
         return (
           <div className="expired-pledge-notice">
             <p>
@@ -82,20 +84,20 @@ export class PledgesList extends Component {
             </p>
           </div>
         );
-      } else if (deadline < now && !confirmed && userAccount === recipient) {
+      } else if (timeIsUp && !isPledgeConfirmed && userIsRecipient) {
         return (
           <Button className="withdraw-pledge-button" color={'green'}>
             Withdraw
           </Button>
         );
-      } else if (deadline < now && confirmed && userAccount !== address) {
+      } else if (isPledgeConfirmed && !userIsPledger) {
         return (
           <div className="confirmed-pledge-notice">
             <p>This pledge was confirmed by the referee ({referee}).</p>
             <p>The stake can now be withdrawn by the pledger ({address}).</p>
           </div>
         );
-      } else if (deadline < now && confirmed && userAccount === address) {
+      } else if (isPledgeConfirmed && userIsPledger) {
         return (
           <Button className="withdraw-pledge-button" color={'green'}>
             Withdraw
@@ -141,18 +143,35 @@ export class PledgesList extends Component {
         </Card.Content>
         <Card.Content extra>
           <p className="pledge-creation-timestamp">
-            <a href={'https://etherscan.io/tx/' + item.tx}>
-              Created {moment(item.dateOfCreation, 'X').format('YYYY-MM-DD')} ({moment(
-                item.dateOfCreation,
-                'X',
-              ).fromNow()})
-            </a>
+            {item.txConfirmed ? (
+              <a
+                target="_blank"
+                href={'https://etherscan.io/tx/' + item.txHash}>
+                Created{' '}
+                {moment(item.timestamp, 'X').format('YYYY-MM-DD') !==
+                'Invalid date'
+                  ? moment(item.timestamp, 'X').format('YYYY-MM-DD') +
+                    ' (' +
+                    moment(item.timestamp, 'X').fromNow() +
+                    ')'
+                  : 'now'}
+              </a>
+            ) : (
+              <a
+                target="_blank"
+                href={'https://etherscan.io/tx/' + item.txHash}>
+                <em>Transaction confirming</em>
+              </a>
+            )}
           </p>
           <p>
-            <span className="pledge-creator-nickname">
-              By {item.address === userAccount ? 'you' : item.nickname}
-            </span>&nbsp;<span className="pledge-creator-address">
-              ({item.address})
+            {item.txConfirmed ? (
+              <span className="pledge-creator-nickname">
+                By {item.address === userAccount ? 'you' : item.nickname}
+              </span>
+            ) : null}
+            <span className="pledge-creator-address">
+              {item.txConfirmed ? ' (' + item.address + ')' : null}
             </span>
           </p>
         </Card.Content>
@@ -161,8 +180,8 @@ export class PledgesList extends Component {
           referee={item.referee}
           recipient={item.recipient}
           deadline={item.deadline}
-          confirmed={item.confirmed}
-          redeemed={item.redeemed}
+          isPledgeConfirmed={item.isPledgeConfirmed}
+          txConfirmed={item.txConfirmed}
         />
       </Card>
     ));

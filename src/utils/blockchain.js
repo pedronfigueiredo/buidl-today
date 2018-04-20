@@ -59,6 +59,7 @@ const blockchain = {
           txConfirmed: true,
           isStakePaid: false,
           isPledgeConfirmed: false,
+          agreementId,
         };
         console.log('updates', updates);
         const updatePledge = api.post('updatepledge', updates);

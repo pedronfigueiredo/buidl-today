@@ -215,7 +215,6 @@ export class NewPledge extends Component {
   }
 
   render() {
-    console.log('this.props', this.props);
     const {nickname, ethRate, submittingPledge, pledgeFormState} = this.props;
 
     const Navbar = () => (

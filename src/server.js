@@ -96,7 +96,7 @@ app.get('/api/pledgesfromuser/:address', function(req, res) {
           .collection(pledgeCollectionName)
           .find({
             address: req.params.address,
-            redeemed: false,
+            isStakePaid: false,
           })
           .toArray(function(errFinding, documents) {
             if (errFinding) {
@@ -189,7 +189,7 @@ app.post('/api/insertpledge', (req, res) => {
     address: req.body.address,
     deadline: req.body.deadline,
     description: req.body.description,
-    email: req.body.emailAddress,
+    email: req.body.email,
     nickname: req.body.nickname,
     recipient: req.body.recipient,
     referee: req.body.referee,
@@ -222,14 +222,6 @@ app.post('/api/insertpledge', (req, res) => {
 });
 
 app.post('/api/updatepledge', (req, res) => {
-  console.log('req.body', req.body);
-  let txHash = req.body.txHash;
-  let timestamp = req.body.timestamp;
-  let txConfirmed = req.body.txConfirmed;
-  let isStakePaid = req.body.isStakePaid;
-  let isPledgeConfirmed = req.body.isPledgeConfirmed;
-  let agreementId = req.body.agreementId;
-
   mongo.connect(dbUrl, function(errConnecting, client) {
     if (errConnecting) {
       console.error('Error connecting to the database');
@@ -238,18 +230,23 @@ app.post('/api/updatepledge', (req, res) => {
       console.log('Connected to database');
       var db = client.db(databaseName);
       db.collection(pledgeCollectionName).update(
-        {'agreementId': agreementId},
+        {'agreementId': req.body.agreementId},
         {
           $set: {
-            '$.txHash.0': txHash,
+            'txHash': req.body.txHash,
+            'timestamp': req.body.timestamp,
+            'txConfirmed': req.body.txConfirmed,
+            'isStakePaid': req.body.isStakePaid,
+            'isPledgeConfirmed': req.body.isPledgeConfirmed,
           },
         },
         function(errInserting, result) {
           if (errInserting) {
-            console.error('Error inserting the user');
+            console.error('Error updating the pledge');
             console.error(errInserting);
           } else {
-            console.log('User was successfully inserted');
+              
+              console.log('Pledge was successfully updated');
             client.close();
           }
         },
