@@ -146,7 +146,7 @@ export class PledgesList extends Component {
             {item.txConfirmed ? (
               <a
                 target="_blank"
-                href={'https://etherscan.io/tx/' + item.txHash}>
+                href={'https://rinkeby.etherscan.io/tx/' + item.txHash}>
                 Created{' '}
                 {moment(item.timestamp, 'X').format('YYYY-MM-DD') !==
                 'Invalid date'
@@ -159,7 +159,7 @@ export class PledgesList extends Component {
             ) : (
               <a
                 target="_blank"
-                href={'https://etherscan.io/tx/' + item.txHash}>
+                href={'https://rinkeby.etherscan.io/tx/' + item.txHash}>
                 <em>Transaction confirming</em>
               </a>
             )}

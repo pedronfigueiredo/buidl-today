@@ -27,7 +27,7 @@ import blockchain from '../utils/blockchain.js';
 export class Welcome extends Component {
   constructor(props) {
     super(props);
-    blockchain.getWeb3(this.props.dispatch);
+    blockchain.getWeb(this.props.dispatch);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -129,6 +129,10 @@ export class Welcome extends Component {
   }
 }
 
+// const mapDispatchToProps = {
+//    test,
+// }
+
 function mapStateToProps(state) {
   return {
     userAccount: state.registration.user.userAccount,
@@ -136,4 +140,5 @@ function mapStateToProps(state) {
   };
 }
 
+/*  , mapDispatchToProps */
 export default connect(mapStateToProps)(Welcome);

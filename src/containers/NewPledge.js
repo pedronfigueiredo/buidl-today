@@ -6,13 +6,10 @@ import {
   updatePledgeForm,
   clearPledgeForm,
   requestSubmitPledge,
-  errorSubmitPledge,
-  successSubmitPledge,
 } from '../redux/pledges';
 
 import moment from 'moment';
 
-import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 import {keccak256} from 'js-sha3';
 
@@ -79,35 +76,24 @@ export class NewPledge extends Component {
       web3,
     } = this.props;
     // Call the blockchain with money check if it was successfull
-
     let now = moment();
     let agreementId = keccak256(String(now + 42));
-
+    let deadline = moment(pledgeFormState.deadline, 'YYYY-MM-DD').format('X');
     const newPledgeDetails = {
       ...pledgeFormState,
       nickname,
       email,
       address: userAccount,
       agreementId,
+      deadline,
     };
-
-    newPledgeDetails.deadline = moment(
-      pledgeFormState.deadline,
-      'YYYY-MM-DD',
-    ).format('X');
-
-    dispatch(requestSubmitPledge());
-    const newPledge = api.post('insertpledge', newPledgeDetails);
-    if (newPledge[0] === 'error') {
-      dispatch(errorSubmitPledge());
-      this.clearPledgeForm();
-      this.props.history.push('/error');
-    } else {
-      dispatch(successSubmitPledge(newPledgeDetails));
-      blockchain.createAgreement(agreementId, web3, dispatch);
-      this.clearPledgeForm();
-      this.props.history.push('/home');
-    }
+    dispatch(requestSubmitPledge(newPledgeDetails));
+    blockchain.createAgreement(
+      newPledgeDetails,
+      web3,
+      dispatch,
+      this.props.history,
+    );
   }
 
   /**
@@ -155,6 +141,7 @@ export class NewPledge extends Component {
         return false;
       }
     }
+    return true;
   }
 
   showInputError(input) {
@@ -265,6 +252,8 @@ function mapStateToProps(state) {
     isAuthenticated: state.registration.isAuthenticated,
     pledges: state.pledges.pledges,
     web3: state.registration.web3,
+    userAcceptedTransaction: state.pledges.userAcceptedTransaction,
+    newPledgeDetails: state.pledges.newPledgeDetails,
   };
 }
 

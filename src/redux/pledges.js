@@ -4,7 +4,6 @@ const UPDATE_PLEDGE_FORM = 'UPDATE_PLEDGE_FORM';
 const CLEAR_PLEDGE_FORM = 'CLEAR_PLEDGE_FORM';
 const REQUEST_SUBMIT_PLEDGE = 'REQUEST_SUBMIT_PLEDGE';
 const ERROR_SUBMIT_PLEDGE = 'ERROR_SUBMIT_PLEDGE';
-const SUCCESS_SUBMIT_PLEDGE = 'SUCCESS_SUBMIT_PLEDGE';
 
 const GET_ALL_PLEDGES_FROM_USER = 'GET_ALL_PLEDGES_FROM_USER';
 const GET_ALL_PLEDGES_FROM_USER_EMPTY = 'GET_ALL_PLEDGES_FROM_USER_EMPTY';
@@ -36,22 +35,16 @@ export const clearPledgeForm = () => {
   };
 };
 
-export const requestSubmitPledge = () => {
+export const requestSubmitPledge = payload => {
   return {
     type: REQUEST_SUBMIT_PLEDGE,
+    payload,
   };
 };
 
 export const errorSubmitPledge = payload => {
   return {
     type: ERROR_SUBMIT_PLEDGE,
-    payload,
-  };
-};
-
-export const successSubmitPledge = payload => {
-  return {
-    type: SUCCESS_SUBMIT_PLEDGE,
     payload,
   };
 };
@@ -84,19 +77,17 @@ export const getAllPledgesFromUserSuccess = payload => {
   };
 };
 
-export const requestCreateAgreement = (agreementId, txHash) => {
+export const requestCreateAgreement = newPledge => {
   return {
     type: REQUEST_CREATE_AGREEMENT,
-    agreementId,
-    txHash,
+    newPledge,
   };
 };
 
-export const createAgreementConfirmed = (agreementId, timestamp) => {
+export const createAgreementConfirmed = updatedPledge => {
   return {
     type: CREATE_AGREEMENT_CONFIRMED,
-    agreementId,
-    timestamp,
+    updatedPledge,
   };
 };
 
@@ -113,6 +104,8 @@ const initialState = {
   },
   pledges: [],
   retrievingUsers: false,
+  userAcceptedTransaction: false,
+  newPledgeDetails: {},
 };
 
 // Reducers
@@ -146,17 +139,12 @@ const pledges = (state = initialState, action) => {
       return {
         ...state,
         submittingPledge: true,
+        newPledgeDetails: action.payload,
       };
     case ERROR_SUBMIT_PLEDGE:
       return {
         ...state,
         submittingPledge: false,
-      };
-    case SUCCESS_SUBMIT_PLEDGE:
-      return {
-        ...state,
-        submittingPledge: false,
-        pledges: [...state.pledges, action.payload],
       };
     case GET_ALL_PLEDGES_FROM_USER:
       return {
@@ -180,43 +168,40 @@ const pledges = (state = initialState, action) => {
         pledges: action.payload,
       };
     case REQUEST_CREATE_AGREEMENT:
-      let counterOne;
-      for (let i = 0; i < state.pledges.length; i += 1) {
-        if (state.pledges[i].agreementId === action.agreementId) {
-          counterOne = i;
-          break;
-        }
-      }
-      let updatedWithHash = state.pledges[counterOne];
-      updatedWithHash.txHash = action.txHash;
-      updatedWithHash.txConfirmed = false;
       return {
         ...state,
-        pledges: [
-          ...state.pledges.slice(0, counterOne),
-          updatedWithHash,
-          ...state.pledges.slice(counterOne + 1),
-        ],
+        userAcceptedTransaction: true,
+        pledges: [...state.pledges, action.newPledge],
       };
     case CREATE_AGREEMENT_CONFIRMED:
-      let counterTwo;
+      let updateCounter;
       for (let i = 0; i < state.pledges.length; i += 1) {
-        if (state.pledges[i].agreementId === action.agreementId) {
-          counterTwo = i;
+        if (
+          state.pledges[i] &&
+          state.pledges[i].agreementId === action.updatedPledge.agreementId
+        ) {
+          updateCounter = i;
           break;
         }
       }
-      let updatedWithTimestamp = state.pledges[counterTwo];
-      updatedWithTimestamp.txTimestamp = action.timestamp;
-      updatedWithTimestamp.txConfirmed = true;
-      return {
-        ...state,
-        pledges: [
-          ...state.pledges.slice(0, counterTwo),
-          updatedWithTimestamp,
-          ...state.pledges.slice(counterTwo + 1),
-        ],
-      };
+      if (updateCounter) {
+        return {
+          ...state,
+          userAcceptedTransaction: false,
+          submittingPledge: false,
+          pledges: [
+            ...state.pledges.slice(0, updateCounter),
+            action.updatedPledge,
+            ...state.pledges.slice(updateCounter + 1),
+          ],
+        };
+      } else {
+        return {
+          ...state,
+          userAcceptedTransaction: false,
+          txTimeStamp: action.timestamp,
+        };
+      }
     default:
       return state;
   }

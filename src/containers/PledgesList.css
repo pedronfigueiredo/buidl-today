@@ -89,3 +89,19 @@ h3 {
 .pledge-list-item .pledge-referee .heading {
   font-weight: bold;
 }
+
+.expired-pledge-notice {
+  padding: 15px;
+  background: #f2f2f2;
+  color: #b23d3d;
+  border-top: 1px solid grey;
+  font-style: italic;
+}
+
+.confirmed-pledge-notice {
+  padding: 15px;
+  background: #f2f2f2;
+  color: green;
+  border-top: 1px solid grey;
+  font-style: italic;
+}

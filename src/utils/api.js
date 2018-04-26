@@ -11,7 +11,6 @@ const api = {
     return body;
   },
   async post(path, data) {
-    console.log('path, data', path, data);
     var strData = JSON.stringify(data);
     const response = await fetch('/api/' + path, {
       method: 'post',

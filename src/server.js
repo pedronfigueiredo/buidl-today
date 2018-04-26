@@ -195,6 +195,10 @@ app.post('/api/insertpledge', (req, res) => {
     referee: req.body.referee,
     stake: req.body.stake,
     agreementId: req.body.agreementId,
+    txHash: req.body.txHash,
+    txConfirmed: req.body.txConfirmed,
+    isStakePaid: req.body.isStakePaid,
+    isPledgeConfirmed: req.body.isPledgeConfirmed,
   };
 
   mongo.connect(dbUrl, function(errConnecting, client) {
@@ -230,14 +234,11 @@ app.post('/api/updatepledge', (req, res) => {
       console.log('Connected to database');
       var db = client.db(databaseName);
       db.collection(pledgeCollectionName).update(
-        {'agreementId': req.body.agreementId},
+        {agreementId: req.body.agreementId},
         {
           $set: {
-            'txHash': req.body.txHash,
-            'timestamp': req.body.timestamp,
-            'txConfirmed': req.body.txConfirmed,
-            'isStakePaid': req.body.isStakePaid,
-            'isPledgeConfirmed': req.body.isPledgeConfirmed,
+            timestamp: req.body.timestamp,
+            txConfirmed: req.body.txConfirmed,
           },
         },
         function(errInserting, result) {
@@ -245,15 +246,14 @@ app.post('/api/updatepledge', (req, res) => {
             console.error('Error updating the pledge');
             console.error(errInserting);
           } else {
-              
-              console.log('Pledge was successfully updated');
+            console.log('Pledge was successfully updated');
             client.close();
           }
         },
       );
     }
   });
-  res.send({'Updated success':'Success'});
+  res.send({'Updated success': 'Success'});
   res.end();
 });
 
