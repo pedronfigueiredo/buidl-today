@@ -13,6 +13,8 @@ const GET_ALL_PLEDGES_FROM_USER_SUCCESS = 'GET_ALL_PLEDGES_FROM_USER_SUCCESS';
 const REQUEST_CREATE_AGREEMENT = 'REQUEST_CREATE_AGREEMENT';
 const CREATE_AGREEMENT_CONFIRMED = 'CREATE_AGREEMENT_CONFIRMED';
 
+const REQUEST_WITHDRAW_PLEDGE = 'REQUEST_WITHDRAW_PLEDGE';
+const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -91,6 +93,19 @@ export const createAgreementConfirmed = updatedPledge => {
   };
 };
 
+export const requestWithdrawPledge = data => {
+  return {
+    type: REQUEST_WITHDRAW_PLEDGE,
+    data,
+  };
+};
+
+export const confirmWithdrawPledge = data => {
+  return {
+    type: CONFIRM_WITHDRAW_PLEDGE,
+    data,
+  };
+};
 // Initial State
 const initialState = {
   ethRate: null,
@@ -200,6 +215,55 @@ const pledges = (state = initialState, action) => {
           ...state,
           userAcceptedTransaction: false,
           txTimeStamp: action.timestamp,
+        };
+      }
+    case REQUEST_WITHDRAW_PLEDGE:
+      let requestWithdrawPledgeCounter;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (
+          state.pledges[i] &&
+          state.pledges[i].agreementId === action.data.agreementId
+        ) {
+          requestWithdrawPledgeCounter = i;
+          break;
+        }
+      }
+      if (requestWithdrawPledgeCounter) {
+        return {
+          ...state,
+          pledges: [
+            ...state.pledges.slice(0, requestWithdrawPledgeCounter),
+            action.data,
+            ...state.pledges.slice(requestWithdrawPledgeCounter + 1),
+          ],
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
+    case CONFIRM_WITHDRAW_PLEDGE:
+      let confirmWithdrawPledgeCounter;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (
+          state.pledges[i] &&
+          state.pledges[i].agreementId === action.data.agreementId
+        ) {
+          confirmWithdrawPledgeCounter = i;
+          break;
+        }
+      }
+      if (confirmWithdrawPledgeCounter) {
+        return {
+          ...state,
+          pledges: [
+            ...state.pledges.slice(0, confirmWithdrawPledgeCounter),
+            ...state.pledges.slice(confirmWithdrawPledgeCounter + 1),
+          ],
+        };
+      } else {
+        return {
+          ...state,
         };
       }
     default:

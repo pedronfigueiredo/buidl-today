@@ -2,6 +2,8 @@ import {storeWeb3, storeUserAccount} from '../redux/registration.js';
 import {
   requestCreateAgreement,
   createAgreementConfirmed,
+  requestWithdrawPledge,
+  confirmWithdrawPledge,
 } from '../redux/pledges.js';
 
 import api from '../utils/api.js';
@@ -31,14 +33,6 @@ const blockchain = {
       });
     }
   },
-  // // Contract Call Template
-  // getOwner() {
-  //   Buidl.deployed()
-  //     .then(instance => instance.getOwner())
-  //     .then(result => {
-  //       console.log('Owner Address', result);
-  //     });
-  // },
   createAgreement(newPledgeDetails, web3, dispatch, history) {
     Buidl.deployed()
       .then(instance => {
@@ -86,6 +80,77 @@ const blockchain = {
                 history.push('/error');
               } else {
                 dispatch(createAgreementConfirmed(updatedData));
+              }
+            } else {
+              console.error('Error getting transaction receipt');
+              console.error('Error message:', error);
+              history.push('/error');
+            }
+          });
+        }
+      } else {
+        console.error(error);
+      }
+    });
+  },
+  withdraw(item, type, web3, dispatch, history) {
+    let address;
+    if (type === 'recipient') {
+      address = item.recipient;
+    } else if (type === 'pledger') {
+      address = item.pledger;
+    } else {
+      console.error('Wrong type of withdrawal');
+      return;
+    }
+    Buidl.deployed()
+      .then(instance => {
+        return instance.withdraw.sendTransaction(address, item.agreementId);
+      })
+      .then(withdrawTxHash => {
+        let data = {
+          ...item,
+          withdrawTxHash,
+          isWithdrawTxConfirmed: false,
+        };
+        const updatePledge = api.post('requestwithdrawpledge', data);
+        if (updatePledge[0] === 'error') {
+          console.error('Error inserting pledge');
+          history.push('/error');
+        } else {
+          dispatch(requestWithdrawPledge(data));
+          blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
+        }
+      });
+  },
+  fetchWithdrawReceipt(data, web3, dispatch, history) {
+    web3.eth.getTransactionReceipt(data.withdrawTxHash, function(
+      error,
+      result,
+    ) {
+      if (!error) {
+        if (result === null) {
+          setTimeout(function() {
+            blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
+          }, 10 * 1000);
+        } else {
+          web3.eth.getBlock(result.blockHash, function(error, result) {
+            if (!error) {
+              let updatedData = {
+                ...data,
+                txWithdrawalTimestamp: result.timestamp,
+                isWithdrawTxConfirmed: true,
+                isStakePaid: true,
+              };
+              const updatedPledge = api.post(
+                'confirmwithdrawpledge',
+                updatedData,
+              );
+              if (updatedPledge[0] === 'error') {
+                console.error('error updating');
+                history.push('/error');
+              } else {
+                dispatch(confirmWithdrawPledge(updatedData));
               }
             } else {
               console.error('Error getting transaction receipt');

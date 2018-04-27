@@ -158,7 +158,6 @@ app.post('/api/insertuser', (req, res) => {
     email: req.body.emailAddress,
     nickname: req.body.nickname,
   };
-  console.log('user', user);
 
   mongo.connect(dbUrl, function(errConnecting, client) {
     if (errConnecting) {
@@ -245,6 +244,71 @@ app.post('/api/updatepledge', (req, res) => {
           if (errInserting) {
             console.error('Error updating the pledge');
             console.error(errInserting);
+          } else {
+            console.log('Pledge was successfully updated');
+            client.close();
+          }
+        },
+      );
+    }
+  });
+  res.send({'Updated success': 'Success'});
+  res.end();
+});
+
+app.post('/api/requestwithdrawpledge', (req, res) => {
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+      console.error(errConnecting);
+    } else {
+      console.log('Connected to database');
+      var db = client.db(databaseName);
+      db.collection(pledgeCollectionName).update(
+        {agreementId: req.body.agreementId},
+        {
+          $set: {
+            withdrawTxHash: req.body.withdrawTxHash,
+            isWithdrawTxConfirmed: req.body.isWithdrawTxConfirmed,
+          },
+        },
+        function(errRequestingWithdrawPledge, result) {
+          if (errRequestingWithdrawPledge) {
+            console.error('Error updating the pledge');
+            console.error(errRequestingWithdrawPledge);
+          } else {
+            console.log('Pledge was successfully updated');
+            client.close();
+          }
+        },
+      );
+    }
+  });
+  res.send({'Updated success': 'Success'});
+  res.end();
+});
+
+app.post('/api/confirmwithdrawpledge', (req, res) => {
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+      console.error(errConnecting);
+    } else {
+      console.log('Connected to database');
+      var db = client.db(databaseName);
+      db.collection(pledgeCollectionName).update(
+        {agreementId: req.body.agreementId},
+        {
+          $set: {
+            txWithdrawalTimestamp: req.body.txWithdrawalTimestamp,
+            isWithdrawTxConfirmed: req.body.isWithdrawTxConfirmed,
+            isStakePaid: req.body.isStakePaid,
+          },
+        },
+        function(errRequestingWithdrawPledge, result) {
+          if (errRequestingWithdrawPledge) {
+            console.error('Error updating the pledge');
+            console.error(errRequestingWithdrawPledge);
           } else {
             console.log('Pledge was successfully updated');
             client.close();

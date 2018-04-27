@@ -11,6 +11,7 @@ import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import moment from 'moment';
 import './PledgesList.css';
+import blockchain from '../utils/blockchain.js';
 
 export class PledgesList extends Component {
   constructor(props) {
@@ -41,6 +42,11 @@ export class PledgesList extends Component {
     history.push('/');
   }
 
+  withdrawPledge(item, type) {
+    const {web3, dispatch, history} = this.props;
+    blockchain.withdraw(item, type, web3, dispatch, history);
+  }
+
   render() {
     const {nickname, pledges, userAccount, ethRate} = this.props;
     const Navbar = () => (
@@ -52,18 +58,27 @@ export class PledgesList extends Component {
       </div>
     );
 
-    const PledgesButton = ({
+    let PledgesButton = ({
+      item,
       address,
       referee,
       recipient,
       deadline,
       isPledgeConfirmed,
     }) => {
-      const userIsPledger = userAccount === address;
-      const userIsReferee = userAccount === referee;
-      const userIsRecipient = userAccount === recipient;
-      const now = moment().format('X');
-      const timeIsUp = deadline < now;
+      let userIsPledger = userAccount === address;
+      let userIsReferee = userAccount === referee;
+      let userIsRecipient = userAccount === recipient;
+      let now = moment().format('X');
+      let timeIsUp = deadline < now;
+      // -------
+      // TESTING
+      // -------
+      timeIsUp = true;
+      isPledgeConfirmed = false;
+      userIsRecipient = true;
+      // userIsReferee = false;
+      // -------
       if (!timeIsUp && !userIsReferee) {
         return null;
       } else if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
@@ -85,9 +100,17 @@ export class PledgesList extends Component {
           </div>
         );
       } else if (timeIsUp && !isPledgeConfirmed && userIsRecipient) {
+        // Recipient Withdraw
+        // change text based on confirming transaction
         return (
-          <Button className="withdraw-pledge-button" color={'green'}>
-            Withdraw
+          <Button
+            className="withdraw-pledge-button"
+            onClick={() => this.withdrawPledge(item, 'recipient')}
+            disabled={item.isWithdrawTxConfirmed === false}
+            color={'red'}>
+            {item.isWithdrawTxConfirmed === false
+              ? 'Withdrawing. Please wait...'
+              : 'Withdraw'}
           </Button>
         );
       } else if (isPledgeConfirmed && !userIsPledger) {
@@ -98,8 +121,12 @@ export class PledgesList extends Component {
           </div>
         );
       } else if (isPledgeConfirmed && userIsPledger) {
+        // Pledger Withdraw
         return (
-          <Button className="withdraw-pledge-button" color={'green'}>
+          <Button
+            className="withdraw-pledge-button"
+            onClick={() => this.withdrawPledge(item, 'pledger')}
+            color={'green'}>
             Withdraw
           </Button>
         );
@@ -108,7 +135,7 @@ export class PledgesList extends Component {
       }
     };
 
-    const pledgeMap = pledges.map(item => (
+    let pledgeMap = pledges.map(item => (
       <Card className="pledge-list-item" fluid key={item.agreementId}>
         <Card.Content>
           <Card.Header>
@@ -175,19 +202,22 @@ export class PledgesList extends Component {
             </span>
           </p>
         </Card.Content>
-        <PledgesButton
-          address={item.address}
-          referee={item.referee}
-          recipient={item.recipient}
-          deadline={item.deadline}
-          isPledgeConfirmed={item.isPledgeConfirmed}
-          txConfirmed={item.txConfirmed}
-        />
+        {item.txConfirmed !== false && (
+          <PledgesButton
+            item={item}
+            address={item.address}
+            referee={item.referee}
+            recipient={item.recipient}
+            deadline={item.deadline}
+            isPledgeConfirmed={item.isPledgeConfirmed}
+            txConfirmed={item.txConfirmed}
+          />
+        )}
       </Card>
     ));
 
     // <Card fluid color="red" header={item.description} />
-    const List = () => (
+    let List = () => (
       <div className="PledgesList">
         {pledges.length ? (
           <Card.Group key="1">{pledgeMap}</Card.Group>
@@ -197,7 +227,7 @@ export class PledgesList extends Component {
       </div>
     );
 
-    const PledgeListComponent = () => (
+    let PledgeListComponent = () => (
       <div className="pledges-list--component">
         <Navbar />
         <div className="container pledges-list--container">
@@ -224,6 +254,7 @@ function mapStateToProps(state) {
     isAuthenticated: state.registration.isAuthenticated,
     pledges: state.pledges.pledges,
     ethRate: state.pledges.ethRate,
+    web3: state.registration.web3,
   };
 }
 
