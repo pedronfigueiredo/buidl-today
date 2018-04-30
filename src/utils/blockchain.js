@@ -98,11 +98,12 @@ const blockchain = {
     if (type === 'recipient') {
       address = item.recipient;
     } else if (type === 'pledger') {
-      address = item.pledger;
+      address = item.address;
     } else {
       console.error('Wrong type of withdrawal');
       return;
     }
+
     Buidl.deployed()
       .then(instance => {
         return instance.withdraw.sendTransaction(address, item.agreementId);

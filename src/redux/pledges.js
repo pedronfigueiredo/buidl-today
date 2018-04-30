@@ -13,6 +13,7 @@ const GET_ALL_PLEDGES_FROM_USER_SUCCESS = 'GET_ALL_PLEDGES_FROM_USER_SUCCESS';
 const REQUEST_CREATE_AGREEMENT = 'REQUEST_CREATE_AGREEMENT';
 const CREATE_AGREEMENT_CONFIRMED = 'CREATE_AGREEMENT_CONFIRMED';
 
+const UPDATE_PLEDGE_ITEM = 'UPDATE_PLEDGE_ITEM ';
 const REQUEST_WITHDRAW_PLEDGE = 'REQUEST_WITHDRAW_PLEDGE';
 const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
 // Action Creators
@@ -90,6 +91,13 @@ export const createAgreementConfirmed = updatedPledge => {
   return {
     type: CREATE_AGREEMENT_CONFIRMED,
     updatedPledge,
+  };
+};
+
+export const updatePledgeItem = payload => {
+  return {
+    type: UPDATE_PLEDGE_ITEM,
+    payload,
   };
 };
 
@@ -217,6 +225,32 @@ const pledges = (state = initialState, action) => {
           txTimeStamp: action.timestamp,
         };
       }
+    case UPDATE_PLEDGE_ITEM:
+      let confirmPledgeCounter;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (
+          state.pledges[i] &&
+          state.pledges[i].agreementId === action.payload.agreementId
+        ) {
+          confirmPledgeCounter = i;
+          break;
+        }
+      }
+      if (confirmPledgeCounter) {
+        return {
+          ...state,
+          pledges: [
+            ...state.pledges.slice(0, confirmPledgeCounter),
+            action.payload,
+            ...state.pledges.slice(confirmPledgeCounter + 1),
+          ],
+        };
+      } else {
+        return {
+          ...state,
+        };
+      }
+
     case REQUEST_WITHDRAW_PLEDGE:
       let requestWithdrawPledgeCounter;
       for (let i = 0; i < state.pledges.length; i += 1) {

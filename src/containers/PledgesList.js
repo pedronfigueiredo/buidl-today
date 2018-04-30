@@ -5,7 +5,9 @@ import RedButton from '../components/RedButton.js';
 
 import {connect} from 'react-redux';
 
-import {updateETHRate} from '../redux/pledges';
+import {updateETHRate, updatePledgeItem} from '../redux/pledges';
+
+import api from '../utils/api.js';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -42,12 +44,41 @@ export class PledgesList extends Component {
     history.push('/');
   }
 
+  confirmPledge(item) {
+    const {dispatch, history} = this.props;
+    let updatedItem = {
+      ...item,
+      isPledgeConfirmed: false,
+      isPledgeConfirming: true,
+    };
+    dispatch(updatePledgeItem(updatedItem));
+    updatedItem = {
+      ...item,
+      isPledgeConfirmed: true,
+      isPledgeConfirming: false,
+    };
+    const updatedPledge = api.post('confirmpledge', updatedItem);
+    if (updatedPledge[0] === 'error') {
+      console.error('error updating');
+      updatedItem = {
+        ...item,
+        isPledgeConfirmed: false,
+        isPledgeConfirming: false,
+      };
+      dispatch(updatePledgeItem(updatedItem));
+      history.push('/error');
+    } else {
+      dispatch(updatePledgeItem(updatedItem));
+    }
+  }
+
   withdrawPledge(item, type) {
     const {web3, dispatch, history} = this.props;
     blockchain.withdraw(item, type, web3, dispatch, history);
   }
 
   render() {
+    console.log('this.props', this.props);
     const {nickname, pledges, userAccount, ethRate} = this.props;
     const Navbar = () => (
       <div className="nav-bar">
@@ -74,17 +105,20 @@ export class PledgesList extends Component {
       // -------
       // TESTING
       // -------
-      timeIsUp = true;
-      isPledgeConfirmed = false;
-      userIsRecipient = true;
-      // userIsReferee = false;
+      timeIsUp = false;
+      userIsReferee = true;
+      // userIsRecipient = true;
       // -------
       if (!timeIsUp && !userIsReferee) {
         return null;
       } else if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
         return (
-          <Button className="confirm-pledge-button" color={'yellow'}>
-            Confirm
+          <Button
+            className="confirm-pledge-button"
+            color={'yellow'}
+            onClick={() => this.confirmPledge(item)}
+            disabled={item.isPledgeConfirming || item.isPledgeConfirmed}>
+            {item.isPledgeConfirming ? 'Confirming. Please wait...' : 'Confirm'}
           </Button>
         );
       } else if (timeIsUp && !isPledgeConfirmed && !userIsRecipient) {
@@ -105,9 +139,9 @@ export class PledgesList extends Component {
         return (
           <Button
             className="withdraw-pledge-button"
+            color={'green'}
             onClick={() => this.withdrawPledge(item, 'recipient')}
-            disabled={item.isWithdrawTxConfirmed === false}
-            color={'red'}>
+            disabled={item.isWithdrawTxConfirmed === false}>
             {item.isWithdrawTxConfirmed === false
               ? 'Withdrawing. Please wait...'
               : 'Withdraw'}
@@ -125,9 +159,12 @@ export class PledgesList extends Component {
         return (
           <Button
             className="withdraw-pledge-button"
+            color={'green'}
             onClick={() => this.withdrawPledge(item, 'pledger')}
-            color={'green'}>
-            Withdraw
+            disabled={item.isWithdrawTxConfirmed === false}>
+            {item.isWithdrawTxConfirmed === false
+              ? 'Withdrawing. Please wait...'
+              : 'Withdraw'}
           </Button>
         );
       } else {

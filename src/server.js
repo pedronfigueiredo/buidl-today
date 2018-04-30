@@ -321,4 +321,36 @@ app.post('/api/confirmwithdrawpledge', (req, res) => {
   res.end();
 });
 
+app.post('/api/confirmpledge', (req, res) => {
+  mongo.connect(dbUrl, function(errConnecting, client) {
+    if (errConnecting) {
+      console.error('Error connecting to the database');
+      console.error(errConnecting);
+    } else {
+      console.log('Connected to database');
+      var db = client.db(databaseName);
+      db.collection(pledgeCollectionName).update(
+        {agreementId: req.body.agreementId},
+        {
+          $set: {
+            isPledgeConfirmed: req.body.isPledgeConfirmed,
+            isPledgeConfirming: req.body.isPledgeConfirming,
+          },
+        },
+        function(errRequestingWithdrawPledge, result) {
+          if (errRequestingWithdrawPledge) {
+            console.error('Error updating the pledge');
+            console.error(errRequestingWithdrawPledge);
+          } else {
+            console.log('Pledge was successfully updated');
+            client.close();
+          }
+        },
+      );
+    }
+  });
+  res.send({'Updated success': 'Success'});
+  res.end();
+});
+
 app.listen(port, () => console.log(`Listening on port ${port}`));
