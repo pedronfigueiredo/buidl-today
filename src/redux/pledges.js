@@ -207,7 +207,7 @@ const pledges = (state = initialState, action) => {
           break;
         }
       }
-      if (updateCounter) {
+      if (updateCounter || updateCounter === 0) {
         return {
           ...state,
           userAcceptedTransaction: false,
@@ -222,7 +222,8 @@ const pledges = (state = initialState, action) => {
         return {
           ...state,
           userAcceptedTransaction: false,
-          txTimeStamp: action.timestamp,
+          submittingPledge: false,
+          pledges: [action.updatedPledge],
         };
       }
     case UPDATE_PLEDGE_ITEM:
@@ -236,7 +237,10 @@ const pledges = (state = initialState, action) => {
           break;
         }
       }
-      if (confirmPledgeCounter) {
+      console.log('state', state);
+      console.log('action.payload', action.payload);
+      console.log('confirmPledgeCounter', confirmPledgeCounter);
+      if (confirmPledgeCounter || confirmPledgeCounter === 0) {
         return {
           ...state,
           pledges: [
@@ -262,7 +266,7 @@ const pledges = (state = initialState, action) => {
           break;
         }
       }
-      if (requestWithdrawPledgeCounter) {
+      if (requestWithdrawPledgeCounter || requestWithdrawPledgeCounter === 0) {
         return {
           ...state,
           pledges: [
@@ -287,7 +291,7 @@ const pledges = (state = initialState, action) => {
           break;
         }
       }
-      if (confirmWithdrawPledgeCounter) {
+      if (confirmWithdrawPledgeCounter || confirmWithdrawPledgeCounter === 0) {
         return {
           ...state,
           pledges: [

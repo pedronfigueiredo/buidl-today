@@ -78,7 +78,6 @@ export class PledgesList extends Component {
   }
 
   render() {
-    console.log('this.props', this.props);
     const {nickname, pledges, userAccount, ethRate} = this.props;
     const Navbar = () => (
       <div className="nav-bar">
@@ -102,13 +101,6 @@ export class PledgesList extends Component {
       let userIsRecipient = userAccount === recipient;
       let now = moment().format('X');
       let timeIsUp = deadline < now;
-      // -------
-      // TESTING
-      // -------
-      timeIsUp = false;
-      userIsReferee = true;
-      // userIsRecipient = true;
-      // -------
       if (!timeIsUp && !userIsReferee) {
         return null;
       } else if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
