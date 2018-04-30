@@ -4,12 +4,7 @@ const mongo = require('mongodb');
 const app = express();
 
 const port = process.env.PORT || 5000;
-let dbUrl;
-if (!!process.env.MONGOLAB_URI) {
-  dbUrl = process.env.MONGOLAB_URI;
-} else {
-  dbUrl = 'mongodb://localhost:27017';
-}
+let dbUrl = process.env.MONGOLAB_URI || 'mongodb://localhost:27017';
 let databaseName = 'buidltoday';
 let userCollectionName = 'useraccounts';
 let pledgeCollectionName = 'pledges';
