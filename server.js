@@ -14,6 +14,10 @@ app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('/'));
+}
+
 app.get('/api/hello', (req, res) => {
   res.send({express: 'Hello From Express'});
 });
