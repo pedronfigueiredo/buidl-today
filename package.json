@@ -79,14 +79,15 @@
     "semantic-ui-react": "^0.79.0"
   },
   "scripts": {
-    "start": "npx react-scripts start",
-    "server": "nodemon src/server.js",
-    "dev": "concurrently --kill-others-on-fail \"npm run start\" \"npm run server\"",
+    "front-end": "npx react-scripts start",
+    "back-end": "nodemon src/server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run front-end\" \"npm run back-end\"",
     "update-contracts": "cp build/contracts/* src/contracts/",
-    "lint": "node_modules/.bin/eslint src/*.js",
-    "test": "node scripts/test.js --env=jsdom",
+    "update-server": "cp src/server.js public/",
     "build": "node scripts/build.js",
-    "deploy": "npm run update-contracts && npm run build && gh-pages -d build_webpack"
+    "deploy": "npm run update-contracts && npm run update-server && npm run build && gh-pages -d build_webpack",
+    "lint": "node_modules/.bin/eslint src/*.js",
+    "test": "node scripts/test.js --env=jsdom"
   },
   "jest": {
     "collectCoverageFrom": [
