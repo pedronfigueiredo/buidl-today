@@ -9,14 +9,21 @@ let databaseName = 'buidltoday';
 let userCollectionName = 'useraccounts';
 let pledgeCollectionName = 'pledges';
 
+app.use(function(req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Origin',
+  );
+  // Pass to next layer of middleware
+  next();
+});
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
-
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('/'));
-}
 
 app.get('/api/hello', (req, res) => {
   res.send({express: 'Hello From Express'});

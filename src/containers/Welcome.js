@@ -36,7 +36,7 @@ export class Welcome extends Component {
       blockchain.setProvider(nextProps.web3);
       blockchain.getUserAddress(nextProps.web3, dispatch);
     }
-    if (nextProps.userAccount !== userAccount) {
+    if (nextProps.userAccount !== userAccount && nextProps.userAccount) {
       this.checkIfUserExists(nextProps.userAccount);
     }
   }

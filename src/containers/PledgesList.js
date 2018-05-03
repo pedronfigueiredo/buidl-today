@@ -245,7 +245,6 @@ export class PledgesList extends Component {
       </Card>
     ));
 
-    // <Card fluid color="red" header={item.description} />
     let List = () => (
       <div className="PledgesList">
         {pledges.length ? (
