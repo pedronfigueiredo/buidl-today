@@ -4,6 +4,8 @@ import {
   createAgreementConfirmed,
   requestWithdrawPledge,
   confirmWithdrawPledge,
+  clearPledgeForm,
+  errorSubmitPledge,
 } from '../redux/pledges.js';
 
 import api from '../utils/api.js';
@@ -19,9 +21,11 @@ const blockchain = {
       dispatch(storeWeb3(results.web3));
     });
   },
+
   setProvider(web3) {
     Buidl.setProvider(web3.currentProvider);
   },
+
   getUserAddress(web3, dispatch) {
     if (web3) {
       web3.eth.getAccounts((error, accounts) => {
@@ -33,11 +37,16 @@ const blockchain = {
       });
     }
   },
+
   createAgreement(newPledgeDetails, web3, dispatch, history) {
     Buidl.deployed()
       .then(instance => {
         return instance.createAgreement.sendTransaction(
           newPledgeDetails.agreementId,
+          {
+            // gas: _gas,
+            value: newPledgeDetails.stake * 1000000000000000000,
+          },
         );
       })
       .then(txHash => {
@@ -50,8 +59,10 @@ const blockchain = {
         };
         const newPledge = api.post('insertpledge', data);
         if (newPledge[0] === 'error') {
-          console.error('Error inserting pledge');
           history.push('/error');
+          console.error('Error inserting pledge');
+          dispatch(clearPledgeForm());
+          dispatch(errorSubmitPledge());
         } else {
           dispatch(requestCreateAgreement(data));
           blockchain.fetchReceipt(data, web3, dispatch, history);
@@ -59,6 +70,7 @@ const blockchain = {
         }
       });
   },
+
   fetchReceipt(data, web3, dispatch, history) {
     web3.eth.getTransactionReceipt(data.txHash, function(error, result) {
       if (!error) {
@@ -76,23 +88,34 @@ const blockchain = {
               };
               const newPledge = api.post('updatepledge', updatedData);
               if (newPledge[0] === 'error') {
-                console.error('error updating');
                 history.push('/error');
+                console.error(
+                  'Error updating pledge with confirmation timestamp',
+                );
+                dispatch(clearPledgeForm());
+                dispatch(errorSubmitPledge());
               } else {
+                dispatch(clearPledgeForm());
                 dispatch(createAgreementConfirmed(updatedData));
               }
             } else {
+              history.push('/error');
               console.error('Error getting transaction receipt');
               console.error('Error message:', error);
-              history.push('/error');
+              dispatch(clearPledgeForm());
+              dispatch(errorSubmitPledge());
             }
           });
         }
       } else {
+        history.push('/error');
         console.error(error);
+        dispatch(clearPledgeForm());
+        dispatch(errorSubmitPledge());
       }
     });
   },
+
   withdraw(item, type, web3, dispatch, history) {
     let address;
     if (type === 'recipient') {
@@ -100,10 +123,10 @@ const blockchain = {
     } else if (type === 'pledger') {
       address = item.address;
     } else {
+      history.push('/error');
       console.error('Wrong type of withdrawal');
       return;
     }
-
     Buidl.deployed()
       .then(instance => {
         return instance.withdraw.sendTransaction(address, item.agreementId);
@@ -116,14 +139,15 @@ const blockchain = {
         };
         const updatePledge = api.post('requestwithdrawpledge', data);
         if (updatePledge[0] === 'error') {
-          console.error('Error inserting pledge');
           history.push('/error');
+          console.error('Error inserting pledge');
         } else {
           dispatch(requestWithdrawPledge(data));
           blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
         }
       });
   },
+
   fetchWithdrawReceipt(data, web3, dispatch, history) {
     web3.eth.getTransactionReceipt(data.withdrawTxHash, function(
       error,
@@ -148,19 +172,20 @@ const blockchain = {
                 updatedData,
               );
               if (updatedPledge[0] === 'error') {
-                console.error('error updating');
                 history.push('/error');
+                console.error('error updating');
               } else {
                 dispatch(confirmWithdrawPledge(updatedData));
               }
             } else {
+              history.push('/error');
               console.error('Error getting transaction receipt');
               console.error('Error message:', error);
-              history.push('/error');
             }
           });
         }
       } else {
+        history.push('/error');
         console.error(error);
       }
     });
