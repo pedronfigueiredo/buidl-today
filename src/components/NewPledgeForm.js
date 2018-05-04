@@ -135,7 +135,7 @@ export class NewPledgeForm extends Component {
           />
           <p className="form-error" id="stakeError" />
           {!!stake &&
-            typeof Number(stake) === 'number' &&
+            stake == Number(stake) &&
             (stake !== 0 && stake !== '0') && (
               <p className="realtime-conversion">
                 Aproximately {Math.round(ethRate * stake * 100) / 100} USD

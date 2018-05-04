@@ -179,6 +179,22 @@ export class NewPledge extends Component {
       }
     }
 
+    if (name === 'stake') {
+      const NUMBER_OF_DECIMAL_PLACES = 18;
+      let stakeIsANumber = Number(input.value) == input.value;
+      let stakeIsBigEnough = input.value >= 0.1 ** NUMBER_OF_DECIMAL_PLACES;
+      if (!stakeIsANumber) {
+        input.setCustomValidity('Not valid');
+        error.textContent = `${label} is not valid. Please enter a number.`;
+        return true;
+      }
+      if (!stakeIsBigEnough) {
+        input.setCustomValidity('Not valid');
+        error.textContent = `${label} is not valid. Enter a larger amount.`;
+        return true;
+      }
+    }
+
     if (name === 'recipient' || name === 'referee') {
       const addressIsValid = this.isAddress(input.value);
       if (!addressIsValid) {
