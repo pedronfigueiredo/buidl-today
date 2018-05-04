@@ -71,6 +71,8 @@ export class NewPledgeForm extends Component {
       handlePledgeFormFocus,
       handlePledgeFormBlur,
       handlePledgeFormSubmit,
+      isDate,
+      isDateInTheFuture,
       ethRate,
     } = this.props;
 
@@ -110,6 +112,13 @@ export class NewPledgeForm extends Component {
             required
           />
           <p className="form-error" id="deadlineError" />
+          {!!deadline &&
+            isDate(deadline) &&
+            isDateInTheFuture(deadline) && (
+              <p className="realtime-timedistance">
+                In {moment(deadline, 'YYYY-MM-DD').fromNow(true)}
+              </p>
+            )}
         </Form.Field>
 
         <Form.Field>

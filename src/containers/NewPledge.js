@@ -144,11 +144,40 @@ export class NewPledge extends Component {
     return true;
   }
 
+  isDate(value) {
+    const date = moment(value, 'YYYY-MM-DD');
+    const isEqual = value === date.format('YYYY-MM-DD');
+    const isValid = date.isValid();
+    return isEqual && isValid;
+  }
+
+  isDateInTheFuture(value) {
+    const date = moment(value, 'YYYY-MM-DD').format('X');
+    let now = moment().format('X');
+    const isFuture = date > now;
+    return isFuture;
+  }
+
   showInputError(input) {
     const name = input.name;
     const validity = input.validity;
     const label = document.getElementById(`${name}Label`).textContent;
     const error = document.getElementById(`${name}Error`);
+
+    if (name === 'deadline') {
+      let deadlineIsADate = this.isDate(input.value);
+      let deadlineIsInTheFuture = this.isDateInTheFuture(input.value);
+      if (!deadlineIsADate) {
+        input.setCustomValidity('Not valid');
+        error.textContent = `${label} is not a valid date. Please use the form YYYY-MM-DD.`;
+        return true;
+      }
+      if (!deadlineIsInTheFuture) {
+        input.setCustomValidity('Not valid');
+        error.textContent = `${label} is not valid. Please enter a date in the future.`;
+        return true;
+      }
+    }
 
     if (name === 'recipient' || name === 'referee') {
       const addressIsValid = this.isAddress(input.value);
@@ -234,6 +263,8 @@ export class NewPledge extends Component {
             handlePledgeFormSubmit={this.handlePledgeFormSubmit}
             handlePledgeFormFocus={this.handlePledgeFormFocus}
             handlePledgeFormBlur={this.handlePledgeFormBlur}
+            isDate={this.isDate}
+            isDateInTheFuture={this.isDateInTheFuture}
           />
         </div>
       </div>
