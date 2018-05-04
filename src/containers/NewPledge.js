@@ -223,19 +223,6 @@ export class NewPledge extends Component {
     error.textContent = '';
   }
 
-  showFormErrors() {
-    const inputs = document.querySelectorAll('input');
-    let isFormValid = true;
-    inputs.forEach(input => {
-      input.classList.add('active');
-      const isInputValid = this.showInputError(input);
-      if (!isInputValid) {
-        isFormValid = false;
-      }
-    });
-    return isFormValid;
-  }
-
   clearPledgeForm() {
     const {dispatch} = this.props;
     dispatch(clearPledgeForm());
