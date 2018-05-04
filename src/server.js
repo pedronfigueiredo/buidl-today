@@ -8,9 +8,7 @@ let dbUrl = process.env.MONGOLAB_URI || 'mongodb://localhost:27017';
 let databaseName = 'buidltoday';
 let userCollectionName = 'useraccounts';
 let pledgeCollectionName = 'pledges';
-
 let ACCESS_CONTROL_ALLOW_ORIGIN;
-
 if (port === 5000) {
   // dev
   ACCESS_CONTROL_ALLOW_ORIGIN = 'http://localhost:3000';
@@ -19,18 +17,21 @@ if (port === 5000) {
   ACCESS_CONTROL_ALLOW_ORIGIN = 'http://buidl.today';
 }
 
-app.use(function(req, res, next) {
-  // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', ACCESS_CONTROL_ALLOW_ORIGIN);
-  res.setHeader('Access-Control-Allow-Headers', 'Access-Control-Allow-Origin');
-  // Pass to next layer of middleware
-  next();
-});
-
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: false}));
 // parse application/json
 app.use(bodyParser.json());
+
+app.use(function(req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', ACCESS_CONTROL_ALLOW_ORIGIN);
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Access-Control-Allow-Origin, Content-Type',
+  );
+  // Pass to next layer of middleware
+  next();
+});
 
 app.get('/api/hello', (req, res) => {
   res.send({express: 'Hello From Express'});

@@ -38,6 +38,7 @@ const api = {
       mode: 'cors',
       headers: {
         'Access-Control-Allow-Origin': FRONT_END_ORIGIN,
+        'Content-Type': 'application/json',
       },
       body: strData,
     });
