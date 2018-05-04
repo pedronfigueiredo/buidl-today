@@ -237,9 +237,6 @@ const pledges = (state = initialState, action) => {
           break;
         }
       }
-      console.log('state', state);
-      console.log('action.payload', action.payload);
-      console.log('confirmPledgeCounter', confirmPledgeCounter);
       if (confirmPledgeCounter || confirmPledgeCounter === 0) {
         return {
           ...state,

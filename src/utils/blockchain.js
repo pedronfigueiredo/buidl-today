@@ -31,7 +31,7 @@ const blockchain = {
       web3.eth.getAccounts((error, accounts) => {
         Buidl.defaults({
           from: accounts[0],
-          gas: 3000000,
+          gas: 3 * 1000 * 1000,
         });
         dispatch(storeUserAccount(accounts[0]));
       });
@@ -40,34 +40,42 @@ const blockchain = {
 
   createAgreement(newPledgeDetails, web3, dispatch, history) {
     Buidl.deployed()
-      .then(instance => {
-        return instance.createAgreement.sendTransaction(
-          newPledgeDetails.agreementId,
-          {
-            // gas: _gas,
-            value: newPledgeDetails.stake * 1000000000000000000,
-          },
+      .then(function(instance) {
+        return instance.createAgreement.estimateGas(
+          newPledgeDetails.stake * 10 ** 18,
         );
       })
-      .then(txHash => {
-        let data = {
-          ...newPledgeDetails,
-          txHash,
-          txConfirmed: false,
-          isStakePaid: false,
-          isPledgeConfirmed: false,
-        };
-        const newPledge = api.post('insertpledge', data);
-        if (newPledge[0] === 'error') {
-          history.push('/error');
-          console.error('Error inserting pledge');
-          dispatch(clearPledgeForm());
-          dispatch(errorSubmitPledge());
-        } else {
-          dispatch(requestCreateAgreement(data));
-          blockchain.fetchReceipt(data, web3, dispatch, history);
-          history.push('/home');
-        }
+      .then(function(estimatedCostInUnits) {
+        Buidl.deployed()
+          .then(instance => {
+            return instance.createAgreement.sendTransaction(
+              newPledgeDetails.agreementId,
+              {
+                gas: Number(estimatedCostInUnits),
+                value: newPledgeDetails.stake * 10 ** 18,
+              },
+            );
+          })
+          .then(txHash => {
+            let data = {
+              ...newPledgeDetails,
+              txHash,
+              txConfirmed: false,
+              isStakePaid: false,
+              isPledgeConfirmed: false,
+            };
+            const newPledge = api.post('insertpledge', data);
+            if (newPledge[0] === 'error') {
+              history.push('/error');
+              console.error('Error inserting pledge');
+              dispatch(clearPledgeForm());
+              dispatch(errorSubmitPledge());
+            } else {
+              dispatch(requestCreateAgreement(data));
+              blockchain.fetchReceipt(data, web3, dispatch, history);
+              history.push('/home');
+            }
+          });
       });
   },
 
@@ -128,23 +136,35 @@ const blockchain = {
       return;
     }
     Buidl.deployed()
-      .then(instance => {
-        return instance.withdraw.sendTransaction(address, item.agreementId);
+      .then(function(instance) {
+        return instance.withdraw.estimateGas(address, item.agreementId);
       })
-      .then(withdrawTxHash => {
-        let data = {
-          ...item,
-          withdrawTxHash,
-          isWithdrawTxConfirmed: false,
-        };
-        const updatePledge = api.post('requestwithdrawpledge', data);
-        if (updatePledge[0] === 'error') {
-          history.push('/error');
-          console.error('Error inserting pledge');
-        } else {
-          dispatch(requestWithdrawPledge(data));
-          blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
-        }
+      .then(function(estimatedCostOfWithdrawal) {
+        Buidl.deployed()
+          .then(instance => {
+            return instance.withdraw.sendTransaction(
+              address,
+              item.agreementId,
+              {
+                gas: Number(estimatedCostOfWithdrawal),
+              },
+            );
+          })
+          .then(withdrawTxHash => {
+            let data = {
+              ...item,
+              withdrawTxHash,
+              isWithdrawTxConfirmed: false,
+            };
+            const updatePledge = api.post('requestwithdrawpledge', data);
+            if (updatePledge[0] === 'error') {
+              history.push('/error');
+              console.error('Error inserting pledge');
+            } else {
+              dispatch(requestWithdrawPledge(data));
+              blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
+            }
+          });
       });
   },
 
