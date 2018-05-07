@@ -108,10 +108,27 @@ app.get('/api/pledgesfromuser/:address', function(req, res) {
         var db = client.db(databaseName);
         db
           .collection(pledgeCollectionName)
-          .find({
-            address: req.params.address,
-            isStakePaid: false,
-          })
+          .aggregate([
+            {
+              $match: {
+                $or: [
+                  {
+                    address: req.params.address,
+                    isStakePaid: false,
+                  },
+                  {
+                    recipient: req.params.address,
+                    isStakePaid: false,
+                  },
+                  {
+                    referee: req.params.address,
+                    isStakePaid: false,
+                  },
+                ],
+              },
+            },
+            {$sort: {deadline: 1}},
+          ])
           .toArray(function(errFinding, documents) {
             if (errFinding) {
               console.error('Error finding the pledge');
