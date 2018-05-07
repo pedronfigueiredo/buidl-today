@@ -1,8 +1,10 @@
 pragma solidity ^0.4.19;
 
-import "./zeppelin/Destructible.sol";
+// import "./zeppelin/Destructible.sol";
+// import "./zeppelin/Ownable.sol";
 
-contract Buidl is Destructible {
+// contract Buidl is Destructible, Ownable {
+contract Buidl {
     address public owner;
 
     mapping(bytes32 => uint) agreementStake;
