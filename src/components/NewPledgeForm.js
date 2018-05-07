@@ -36,7 +36,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="description"
-            placeholder="Write my new app"
+            placeholder="Develop my new app"
             value={description}
             onChange={handlePledgeFormChange}
             onFocus={handlePledgeFormFocus}
