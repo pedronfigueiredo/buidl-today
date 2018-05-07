@@ -29,17 +29,22 @@ export class PledgesList extends Component {
   }
 
   componentDidMount() {
+    this.getEthereumPrice();
+    this.getMissedTransactionReceipts();
+  }
+
+  getMissedTransactionReceipts() {
     const {
       dispatch,
       history,
       web3,
       userAccount,
       justCreatedAgreement,
+      justCreatedWithdrawal,
     } = this.props;
-    this.getEthereumPrice();
     if (!justCreatedAgreement) {
       api
-        .get('unconfirmedpledgesfromuser/' + userAccount)
+        .get('missedcreationreceipts/' + userAccount)
         .then(res => {
           if (res === 'No pledges found') {
           } else if (res === 'error') {
@@ -47,6 +52,24 @@ export class PledgesList extends Component {
           } else {
             for (let i = 0; i < res.length; i++) {
               blockchain.fetchReceipt(res[i], web3, dispatch, history);
+            }
+          }
+        })
+        .catch(err => {
+          console.error('err', err);
+          this.props.history.push('/error');
+        });
+    }
+    if (!justCreatedWithdrawal) {
+      api
+        .get('missedwithdrawalreceipts/' + userAccount)
+        .then(res => {
+          if (res === 'No pledges found') {
+          } else if (res === 'error') {
+            this.props.history.push('/error');
+          } else {
+            for (let i = 0; i < res.length; i++) {
+              blockchain.fetchWithdrawReceipt(res[i], web3, dispatch, history);
             }
           }
         })
@@ -309,6 +332,7 @@ function mapStateToProps(state) {
     ethRate: state.pledges.ethRate,
     web3: state.registration.web3,
     justCreatedAgreement: state.pledges.justCreatedAgreement,
+    justCreatedWithdrawal: state.pledges.justCreatedWithdrawal,
   };
 }
 

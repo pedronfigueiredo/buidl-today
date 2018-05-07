@@ -114,6 +114,7 @@ export const confirmWithdrawPledge = data => {
     data,
   };
 };
+
 // Initial State
 const initialState = {
   ethRate: null,
@@ -128,6 +129,7 @@ const initialState = {
   pledges: [],
   retrievingUsers: false,
   justCreatedAgreement: false,
+  justCreatedWithdrawal: false,
   newPledgeDetails: {},
 };
 
@@ -284,6 +286,7 @@ const pledges = (state = initialState, action) => {
       if (requestWithdrawPledgeCounter || requestWithdrawPledgeCounter === 0) {
         return {
           ...state,
+          justCreatedWithdrawal: true,
           pledges: [
             ...state.pledges.slice(0, requestWithdrawPledgeCounter),
             action.data,
@@ -309,6 +312,7 @@ const pledges = (state = initialState, action) => {
       if (confirmWithdrawPledgeCounter || confirmWithdrawPledgeCounter === 0) {
         return {
           ...state,
+          justCreatedWithdrawal: false,
           pledges: [
             ...state.pledges.slice(0, confirmWithdrawPledgeCounter),
             ...state.pledges.slice(confirmWithdrawPledgeCounter + 1),

@@ -150,7 +150,7 @@ app.get('/api/pledgesfromuser/:address', function(req, res) {
   }
 });
 
-app.get('/api/unconfirmedpledgesfromuser/:address', function(req, res) {
+app.get('/api/missedcreationreceipts/:address', function(req, res) {
   if (req.params.address.length > 0) {
     mongo.connect(dbUrl, function(errConnecting, client) {
       if (errConnecting) {
@@ -179,6 +179,61 @@ app.get('/api/unconfirmedpledgesfromuser/:address', function(req, res) {
                     referee: req.params.address,
                     isStakePaid: false,
                     txConfirmed: false,
+                  },
+                ],
+              },
+            },
+          ])
+          .toArray(function(errFinding, documents) {
+            if (errFinding) {
+              console.error('Error finding the pledge');
+              console.error(errFinding);
+              res.send(JSON.stringify('error'));
+            } else {
+              if (documents.length === 0) {
+                res.send(JSON.stringify('No pledges found'));
+              } else {
+                res.send(JSON.stringify(documents));
+              }
+            }
+            client.close();
+          });
+      }
+    });
+  } else {
+    res.send(JSON.stringify('Please provide an address'));
+  }
+});
+
+app.get('/api/missedwithdrawalreceipts/:address', function(req, res) {
+  if (req.params.address.length > 0) {
+    mongo.connect(dbUrl, function(errConnecting, client) {
+      if (errConnecting) {
+        console.error('Error connecting to the database');
+        console.error(errConnecting);
+      } else {
+        console.log('Connected to database');
+        var db = client.db(databaseName);
+        db
+          .collection(pledgeCollectionName)
+          .aggregate([
+            {
+              $match: {
+                $or: [
+                  {
+                    address: req.params.address,
+                    isStakePaid: false,
+                    isWithdrawTxConfirmed: false,
+                  },
+                  {
+                    recipient: req.params.address,
+                    isStakePaid: false,
+                    isWithdrawTxConfirmed: false,
+                  },
+                  {
+                    referee: req.params.address,
+                    isStakePaid: false,
+                    isWithdrawTxConfirmed: false,
                   },
                 ],
               },
