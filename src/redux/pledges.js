@@ -191,10 +191,28 @@ const pledges = (state = initialState, action) => {
         pledges: action.payload,
       };
     case REQUEST_CREATE_AGREEMENT:
+      let insertBeforeThis;
+      for (let i = 0; i < state.pledges.length; i += 1) {
+        if (state.pledges[i].deadline > action.newPledge.deadline) {
+          insertBeforeThis = i;
+          break;
+        }
+      }
+      if (insertBeforeThis === 0) {
+        return {
+          ...state,
+          userAcceptedTransaction: true,
+          pledges: [action.newPledge, ...state.pledges],
+        };
+      }
       return {
         ...state,
         userAcceptedTransaction: true,
-        pledges: [...state.pledges, action.newPledge],
+        pledges: [
+          ...state.pledges.slice(0, insertBeforeThis),
+          action.newPledge,
+          ...state.pledges.slice(insertBeforeThis),
+        ],
       };
     case CREATE_AGREEMENT_CONFIRMED:
       let updateCounter;
