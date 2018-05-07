@@ -127,7 +127,7 @@ const initialState = {
   },
   pledges: [],
   retrievingUsers: false,
-  userAcceptedTransaction: false,
+  justCreatedAgreement: false,
   newPledgeDetails: {},
 };
 
@@ -201,13 +201,13 @@ const pledges = (state = initialState, action) => {
       if (insertBeforeThis === 0) {
         return {
           ...state,
-          userAcceptedTransaction: true,
+          justCreatedAgreement: true,
           pledges: [action.newPledge, ...state.pledges],
         };
       }
       return {
         ...state,
-        userAcceptedTransaction: true,
+        justCreatedAgreement: true,
         pledges: [
           ...state.pledges.slice(0, insertBeforeThis),
           action.newPledge,
@@ -228,7 +228,7 @@ const pledges = (state = initialState, action) => {
       if (updateCounter || updateCounter === 0) {
         return {
           ...state,
-          userAcceptedTransaction: false,
+          justCreatedAgreement: false,
           submittingPledge: false,
           pledges: [
             ...state.pledges.slice(0, updateCounter),
@@ -239,7 +239,7 @@ const pledges = (state = initialState, action) => {
       } else {
         return {
           ...state,
-          userAcceptedTransaction: false,
+          justCreatedAgreement: false,
           submittingPledge: false,
           pledges: [action.updatedPledge],
         };

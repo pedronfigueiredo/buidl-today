@@ -29,7 +29,32 @@ export class PledgesList extends Component {
   }
 
   componentDidMount() {
+    const {
+      dispatch,
+      history,
+      web3,
+      userAccount,
+      justCreatedAgreement,
+    } = this.props;
     this.getEthereumPrice();
+    if (!justCreatedAgreement) {
+      api
+        .get('unconfirmedpledgesfromuser/' + userAccount)
+        .then(res => {
+          if (res === 'No pledges found') {
+          } else if (res === 'error') {
+            this.props.history.push('/error');
+          } else {
+            for (let i = 0; i < res.length; i++) {
+              blockchain.fetchReceipt(res[i], web3, dispatch, history);
+            }
+          }
+        })
+        .catch(err => {
+          console.error('err', err);
+          this.props.history.push('/error');
+        });
+    }
   }
 
   getEthereumPrice() {
@@ -283,6 +308,7 @@ function mapStateToProps(state) {
     pledges: state.pledges.pledges,
     ethRate: state.pledges.ethRate,
     web3: state.registration.web3,
+    justCreatedAgreement: state.pledges.justCreatedAgreement,
   };
 }
 
