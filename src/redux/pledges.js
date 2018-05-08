@@ -45,10 +45,9 @@ export const requestSubmitPledge = payload => {
   };
 };
 
-export const errorSubmitPledge = payload => {
+export const errorSubmitPledge = () => {
   return {
     type: ERROR_SUBMIT_PLEDGE,
-    payload,
   };
 };
 

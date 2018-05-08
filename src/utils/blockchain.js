@@ -51,13 +51,39 @@ const blockchain = {
       .then(function(estimatedCostInUnits) {
         Buidl.deployed()
           .then(instance => {
-            return instance.createAgreement.sendTransaction(
-              newPledgeDetails.agreementId,
-              {
+            return instance.createAgreement
+              .sendTransaction(newPledgeDetails.agreementId, {
                 gas: Number(estimatedCostInUnits),
                 value: newPledgeDetails.stake * 10 ** 18,
-              },
-            );
+              })
+              .catch(err => {
+                if (
+                  err.message.includes('User denied transaction') ||
+                  err.message.includes('Request has been rejected.') ||
+                  err.message.includes('transaction has been discarded') ||
+                  err.message.includes('Transaction not confirmed')
+                ) {
+                  dispatch(errorSubmitPledge());
+                  return Promise.reject('User cancelled');
+                }
+
+                if (err.message.includes('nonce too low')) {
+                  return Promise.reject('web3NonceTooLow');
+                }
+
+                if (err.message.includes('nonce may not be larger than')) {
+                  return Promise.reject('web3NonceTooHigh');
+                }
+
+                if (err.message.includes('insufficient funds for gas')) {
+                  return Promise.reject('web3InsufficientFundsForGas');
+                }
+
+                if (err.message.includes('intrinsic gas too low')) {
+                  return Promise.reject('web3GasTooLow');
+                }
+                return Promise.reject(err);
+              });
           })
           .then(txHash => {
             let data = {
@@ -77,6 +103,13 @@ const blockchain = {
               dispatch(requestCreateAgreement(data));
               blockchain.fetchReceipt(data, web3, dispatch, history);
               history.push('/home');
+            }
+          })
+          .catch(err => {
+            if (err !== 'User cancelled') {
+              console.log('err', err);
+              dispatch(errorSubmitPledge());
+              history.push('/error');
             }
           });
       });
