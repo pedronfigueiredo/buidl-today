@@ -10,6 +10,52 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './NewPledgeForm.css';
 
 export class NewPledgeForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      disableButton: true,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    let self = this;
+    setTimeout(function() {
+      let valid = self.areAllFieldsValid();
+      let filled = self.areAllFieldsFilled();
+      if (valid && filled) {
+        self.setState({disableButton: false});
+      } else {
+        self.setState({disableButton: true});
+      }
+    }, 16);
+  }
+
+  areAllFieldsFilled() {
+    const {
+      pledgeFormState: {deadline, description, recipient, referee, stake},
+    } = this.props;
+    if (!!deadline && !!description && !!recipient && !!referee && !!stake) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  areAllFieldsValid() {
+    const {
+      description,
+      deadline,
+      stake,
+      referee,
+      recipient,
+    } = this.props.areFieldsValid;
+    if (!!description && !!deadline && !!stake && !!referee && !!recipient) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   render() {
     const {
       submittingPledge,
@@ -29,7 +75,9 @@ export class NewPledgeForm extends Component {
 
     const FormComponent = (
       <Form>
-        <h1 className="heading">Create New Pledge</h1>
+        <h1 className="heading">
+          Create New Pledge
+        </h1>
 
         <Form.Field>
           <label id="descriptionLabel">Pledge description</label>
@@ -126,6 +174,7 @@ export class NewPledgeForm extends Component {
           type="submit"
           onClick={handlePledgeFormSubmit}
           fluid
+          disabled={this.state.disableButton}
         />
       </Form>
     );

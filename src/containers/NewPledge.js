@@ -18,6 +18,15 @@ import './NewPledge.css';
 export class NewPledge extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      areFieldsValid: {
+        description: false,
+        deadline: false,
+        stake: false,
+        recipient: false,
+        referee: false,
+      },
+    };
     this.goHome = this.goHome.bind(this);
     this.handleBackButton = this.handleBackButton.bind(this);
     this.handlePledgeFormChange = this.handlePledgeFormChange.bind(this);
@@ -169,11 +178,25 @@ export class NewPledge extends Component {
       let deadlineIsInTheFuture = this.isDateInTheFuture(input.value);
       if (!deadlineIsADate) {
         input.setCustomValidity('Not valid');
+        this.setState((prevState, props) => ({
+          ...prevState,
+          areFieldsValid: {
+            ...prevState.areFieldsValid,
+            [name]: false,
+          },
+        }));
         error.textContent = `${label} is not a valid date. Please use the form YYYY-MM-DD.`;
         return true;
       }
       if (!deadlineIsInTheFuture) {
         input.setCustomValidity('Not valid');
+        this.setState((prevState, props) => ({
+          ...prevState,
+          areFieldsValid: {
+            ...prevState.areFieldsValid,
+            [name]: false,
+          },
+        }));
         error.textContent = `${label} is not valid. Please enter a date in the future.`;
         return true;
       }
@@ -185,11 +208,25 @@ export class NewPledge extends Component {
       let stakeIsBigEnough = input.value >= 0.1 ** NUMBER_OF_DECIMAL_PLACES;
       if (!stakeIsANumber) {
         input.setCustomValidity('Not valid');
+        this.setState((prevState, props) => ({
+          ...prevState,
+          areFieldsValid: {
+            ...prevState.areFieldsValid,
+            [name]: false,
+          },
+        }));
         error.textContent = `${label} is not valid. Please enter a number.`;
         return true;
       }
       if (!stakeIsBigEnough) {
         input.setCustomValidity('Not valid');
+        this.setState((prevState, props) => ({
+          ...prevState,
+          areFieldsValid: {
+            ...prevState.areFieldsValid,
+            [name]: false,
+          },
+        }));
         error.textContent = `${label} is not valid. Enter a larger amount.`;
         return true;
       }
@@ -199,6 +236,13 @@ export class NewPledge extends Component {
       const addressIsValid = this.isAddress(input.value);
       if (!addressIsValid) {
         input.setCustomValidity('Not valid');
+        this.setState((prevState, props) => ({
+          ...prevState,
+          areFieldsValid: {
+            ...prevState.areFieldsValid,
+            [name]: false,
+          },
+        }));
         error.textContent = `${label} is not a valid Ethereum address`;
         return true;
       }
@@ -218,6 +262,13 @@ export class NewPledge extends Component {
 
   hideInputError(input) {
     input.setCustomValidity('');
+    this.setState((prevState, props) => ({
+      ...prevState,
+      areFieldsValid: {
+        ...prevState.areFieldsValid,
+        [name]: true,
+      },
+    }));
     const name = input.name;
     const error = document.getElementById(`${name}Error`);
     error.textContent = '';
@@ -268,6 +319,7 @@ export class NewPledge extends Component {
             handlePledgeFormBlur={this.handlePledgeFormBlur}
             isDate={this.isDate}
             isDateInTheFuture={this.isDateInTheFuture}
+            areFieldsValid={this.state.areFieldsValid}
           />
         </div>
       </div>
