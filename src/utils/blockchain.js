@@ -42,7 +42,10 @@ const blockchain = {
     Buidl.deployed()
       .then(function(instance) {
         return instance.createAgreement.estimateGas(
-          newPledgeDetails.stake * 10 ** 18,
+          newPledgeDetails.agreementId,
+          {
+            value: newPledgeDetails.stake * 10 ** 18,
+          },
         );
       })
       .then(function(estimatedCostInUnits) {
