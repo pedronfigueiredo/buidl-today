@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import LinkButton from '../components/LinkButton';
-import MetamaskModal from '../components/MetamaskModal';
+import MetaMaskInstructions from '../components/MetaMaskInstructions';
+import MetaMaskLocked from '../components/MetaMaskLocked';
 import './Welcome.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -85,6 +86,29 @@ export class Welcome extends Component {
   }
 
   render() {
+    const {web3, userAccount, dispatch} = this.props;
+
+    this.account = web3 && web3.eth.accounts[0];
+    var self = this;
+    this.accountInterval = setInterval(function() {
+      if (web3 && web3.eth.accounts[0] !== self.account) {
+        blockchain.getUserAddress(web3, dispatch);
+      }
+    }, 2 * 1000);
+
+    const ButtonsGroup = () => (
+      <div className="buttons-group">
+        <LinkButton to="/home" className="get-started">
+          Get started!
+        </LinkButton>
+        {/*
+              <LinkButton to="/about" className="learn-more">
+                Learn more about the science
+              </LinkButton>
+              */}
+      </div>
+    );
+
     let WelcomeContainer = () => (
       <div className="welcome-container">
         <div className="hero-card">
@@ -113,25 +137,20 @@ export class Welcome extends Component {
               </div>
             </div>
 
-            {this.props.web3 === '' ? null : typeof this.props.web3 !==
-            'object' ? (
-              <div className="buttons-group">
-                <LinkButton to="/home" className="get-started">
-                  Get started!
-                </LinkButton>
-                {/*
-              <LinkButton to="/about" className="learn-more">
-                Learn more about the science
-              </LinkButton>
-              */}
-              </div>
+            {web3 === '' ? null : typeof web3 === 'object' ? (
+              userAccount ? (
+                <ButtonsGroup />
+              ) : (
+                <MetaMaskLocked />
+              )
             ) : (
-              <MetamaskModal />
+              <MetaMaskInstructions />
             )}
           </div>
         </div>
       </div>
     );
+
     return <WelcomeContainer />;
   }
 }

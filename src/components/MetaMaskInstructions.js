@@ -1,8 +1,7 @@
 import React from 'react';
-import {Button, Header, Icon, Modal} from 'semantic-ui-react';
-import './MetamaskModal.css';
+import './MetaMaskInstructions.css';
 
-const MetamaskModal = () => (
+const MetaMaskInstructions = () => (
   <div className="metamask-modal container">
     <h2>Wanna try it out?</h2>
     <p>
@@ -32,4 +31,4 @@ const MetamaskModal = () => (
   </div>
 );
 
-export default MetamaskModal;
+export default MetaMaskInstructions;
