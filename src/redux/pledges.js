@@ -130,6 +130,7 @@ const initialState = {
   justCreatedAgreement: false,
   justCreatedWithdrawal: false,
   newPledgeDetails: {},
+  userToRespondToMetaMask: false,
 };
 
 // Reducers
@@ -164,11 +165,13 @@ const pledges = (state = initialState, action) => {
         ...state,
         submittingPledge: true,
         newPledgeDetails: action.payload,
+        userToRespondToMetaMask: true,
       };
     case ERROR_SUBMIT_PLEDGE:
       return {
         ...state,
         submittingPledge: false,
+        userToRespondToMetaMask: false,
       };
     case GET_ALL_PLEDGES_FROM_USER:
       return {
@@ -204,6 +207,7 @@ const pledges = (state = initialState, action) => {
           ...state,
           justCreatedAgreement: true,
           pledges: [action.newPledge, ...state.pledges],
+          userToRespondToMetaMask: false,
         };
       }
       return {

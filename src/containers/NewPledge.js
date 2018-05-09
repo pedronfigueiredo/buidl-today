@@ -285,7 +285,13 @@ export class NewPledge extends Component {
   }
 
   render() {
-    const {nickname, ethRate, submittingPledge, pledgeFormState} = this.props;
+    const {
+      nickname,
+      ethRate,
+      submittingPledge,
+      pledgeFormState,
+      userToRespondToMetaMask,
+    } = this.props;
 
     const Navbar = () => (
       <div className="nav-bar">
@@ -293,6 +299,13 @@ export class NewPledge extends Component {
           Buidl.Today
         </div>
         <div className="username">{nickname}</div>
+      </div>
+    );
+
+    const RespondToMetaMask = () => (
+      <div className="respond-to-metamask">
+        <h2>Confirm Transaction</h2>
+        <p>Please confirm the transaction on MetaMask</p>
       </div>
     );
 
@@ -308,19 +321,25 @@ export class NewPledge extends Component {
       <div className="new-pledge-component">
         <Navbar />
         <div className="container new-pledge-container">
-          <BackButton />
-          <NewPledgeForm
-            ethRate={ethRate}
-            submittingPledge={submittingPledge}
-            pledgeFormState={pledgeFormState}
-            handlePledgeFormChange={this.handlePledgeFormChange}
-            handlePledgeFormSubmit={this.handlePledgeFormSubmit}
-            handlePledgeFormFocus={this.handlePledgeFormFocus}
-            handlePledgeFormBlur={this.handlePledgeFormBlur}
-            isDate={this.isDate}
-            isDateInTheFuture={this.isDateInTheFuture}
-            areFieldsValid={this.state.areFieldsValid}
-          />
+          {userToRespondToMetaMask ? (
+            <RespondToMetaMask />
+          ) : (
+            <div>
+              <BackButton />
+              <NewPledgeForm
+                ethRate={ethRate}
+                submittingPledge={submittingPledge}
+                pledgeFormState={pledgeFormState}
+                handlePledgeFormChange={this.handlePledgeFormChange}
+                handlePledgeFormSubmit={this.handlePledgeFormSubmit}
+                handlePledgeFormFocus={this.handlePledgeFormFocus}
+                handlePledgeFormBlur={this.handlePledgeFormBlur}
+                isDate={this.isDate}
+                isDateInTheFuture={this.isDateInTheFuture}
+                areFieldsValid={this.state.areFieldsValid}
+              />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -340,6 +359,7 @@ function mapStateToProps(state) {
     web3: state.registration.web3,
     userAcceptedTransaction: state.pledges.userAcceptedTransaction,
     newPledgeDetails: state.pledges.newPledgeDetails,
+    userToRespondToMetaMask: state.pledges.userToRespondToMetaMask,
   };
 }
 

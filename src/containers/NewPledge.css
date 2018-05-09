@@ -38,6 +38,15 @@
   margin-bottom: 35px;
 }
 
+.new-pledge-component .new-pledge-container .respond-to-metamask h2 {
+  margin: 150px 0 50px 0;
+}
+
+.new-pledge-component .new-pledge-container .respond-to-metamask p {
+  margin: 50px;
+  text-align: center;
+}
+
 .new-pledge-component .new-pledge-container .back-button-wrapper {
   height: 85px;
   display: flex;
