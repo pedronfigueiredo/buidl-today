@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import LinkButton from '../components/LinkButton';
+import MetamaskModal from '../components/MetamaskModal';
 import './Welcome.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -84,7 +85,7 @@ export class Welcome extends Component {
   }
 
   render() {
-    return (
+    let WelcomeContainer = () => (
       <div className="welcome-container">
         <div className="hero-card">
           <h1 className="heading">Buidl.Today</h1>
@@ -112,20 +113,26 @@ export class Welcome extends Component {
               </div>
             </div>
 
-            <div className="buttons-group">
-              <LinkButton to="/home" className="get-started">
-                Get started!
-              </LinkButton>
-              {/*
+            {this.props.web3 === '' ? null : typeof this.props.web3 !==
+            'object' ? (
+              <div className="buttons-group">
+                <LinkButton to="/home" className="get-started">
+                  Get started!
+                </LinkButton>
+                {/*
               <LinkButton to="/about" className="learn-more">
                 Learn more about the science
               </LinkButton>
               */}
-            </div>
+              </div>
+            ) : (
+              <MetamaskModal />
+            )}
           </div>
         </div>
       </div>
     );
+    return <WelcomeContainer />;
   }
 }
 
