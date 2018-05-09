@@ -95,6 +95,8 @@ export class NewPledge extends Component {
       address: userAccount,
       agreementId,
       deadline,
+      recipient: pledgeFormState.recipient.toLowerCase(),
+      referee: pledgeFormState.referee.toLowerCase(),
     };
     dispatch(requestSubmitPledge(newPledgeDetails));
     blockchain.createAgreement(
