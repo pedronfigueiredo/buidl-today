@@ -5,7 +5,11 @@ import RedButton from '../components/RedButton.js';
 
 import {connect} from 'react-redux';
 
-import {updateETHRate, updatePledgeItem} from '../redux/pledges';
+import {
+  updateETHRate,
+  updatePledgeItem,
+  startWithdrawalProcess,
+} from '../redux/pledges';
 
 import api from '../utils/api.js';
 
@@ -122,11 +126,18 @@ export class PledgesList extends Component {
 
   withdrawPledge(item, type) {
     const {web3, dispatch, history} = this.props;
+    dispatch(startWithdrawalProcess());
     blockchain.withdraw(item, type, web3, dispatch, history);
   }
 
   render() {
-    const {nickname, pledges, userAccount, ethRate} = this.props;
+    const {
+      nickname,
+      pledges,
+      userAccount,
+      ethRate,
+      userToRespondToMetaMask,
+    } = this.props;
     const Navbar = () => (
       <div className="nav-bar">
         <div className="heading" onClick={this.goHome}>
@@ -157,7 +168,11 @@ export class PledgesList extends Component {
             className="confirm-pledge-button"
             color={'yellow'}
             onClick={() => this.confirmPledge(item)}
-            disabled={item.isPledgeConfirming || item.isPledgeConfirmed}>
+            disabled={
+              item.isPledgeConfirming ||
+              item.isPledgeConfirmed ||
+              userToRespondToMetaMask
+            }>
             {item.isPledgeConfirming ? 'Confirming. Please wait...' : 'Confirm'}
           </Button>
         );
@@ -181,10 +196,14 @@ export class PledgesList extends Component {
             className="withdraw-pledge-button"
             color={'green'}
             onClick={() => this.withdrawPledge(item, 'recipient')}
-            disabled={item.isWithdrawTxConfirmed === false}>
+            disabled={
+              item.isWithdrawTxConfirmed === false || userToRespondToMetaMask
+            }>
             {item.isWithdrawTxConfirmed === false
               ? 'Withdrawing. Please wait...'
-              : 'Withdraw'}
+              : userToRespondToMetaMask
+                ? 'Confirm withdrawal on MetaMask'
+                : 'Withdraw'}
           </Button>
         );
       } else if (isPledgeConfirmed && !userIsPledger) {
@@ -201,10 +220,15 @@ export class PledgesList extends Component {
             className="withdraw-pledge-button"
             color={'green'}
             onClick={() => this.withdrawPledge(item, 'pledger')}
-            disabled={item.isWithdrawTxConfirmed === false}>
+            disabled={
+              item.isWithdrawTxConfirmed === false ||
+              userToRespondToMetaMask
+            }>
             {item.isWithdrawTxConfirmed === false
               ? 'Withdrawing. Please wait...'
-              : 'Withdraw'}
+              : userToRespondToMetaMask
+                ? 'Confirm withdrawal on MetaMask'
+                : 'Withdraw'}
           </Button>
         );
       } else {
@@ -333,6 +357,7 @@ function mapStateToProps(state) {
     web3: state.registration.web3,
     justCreatedAgreement: state.pledges.justCreatedAgreement,
     justCreatedWithdrawal: state.pledges.justCreatedWithdrawal,
+    userToRespondToMetaMask: state.pledges.userToRespondToMetaMask,
   };
 }
 

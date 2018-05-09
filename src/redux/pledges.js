@@ -14,6 +14,7 @@ const REQUEST_CREATE_AGREEMENT = 'REQUEST_CREATE_AGREEMENT';
 const CREATE_AGREEMENT_CONFIRMED = 'CREATE_AGREEMENT_CONFIRMED';
 
 const UPDATE_PLEDGE_ITEM = 'UPDATE_PLEDGE_ITEM ';
+const START_WITHDRAWAL_PROCESS = 'START_WITHDRAWAL_PROCESS'
 const REQUEST_WITHDRAW_PLEDGE = 'REQUEST_WITHDRAW_PLEDGE';
 const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
 // Action Creators
@@ -97,6 +98,12 @@ export const updatePledgeItem = payload => {
   return {
     type: UPDATE_PLEDGE_ITEM,
     payload,
+  };
+};
+
+export const startWithdrawalProcess = payload => {
+  return {
+    type: START_WITHDRAWAL_PROCESS,
   };
 };
 
@@ -275,6 +282,12 @@ const pledges = (state = initialState, action) => {
         };
       }
 
+    case START_WITHDRAWAL_PROCESS:
+      return {
+        ...state,
+        userToRespondToMetaMask: true,
+      } 
+
     case REQUEST_WITHDRAW_PLEDGE:
       let requestWithdrawPledgeCounter;
       for (let i = 0; i < state.pledges.length; i += 1) {
@@ -295,6 +308,7 @@ const pledges = (state = initialState, action) => {
             action.data,
             ...state.pledges.slice(requestWithdrawPledgeCounter + 1),
           ],
+          userToRespondToMetaMask: false,
         };
       } else {
         return {
