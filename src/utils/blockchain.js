@@ -178,13 +178,37 @@ const blockchain = {
       .then(function(estimatedCostOfWithdrawal) {
         Buidl.deployed()
           .then(instance => {
-            return instance.withdraw.sendTransaction(
-              address,
-              item.agreementId,
-              {
+            return instance.withdraw
+              .sendTransaction(address, item.agreementId, {
                 gas: Number(estimatedCostOfWithdrawal),
-              },
-            );
+              })
+              .catch(err => {
+                if (
+                  err.message.includes('User denied transaction') ||
+                  err.message.includes('Request has been rejected.') ||
+                  err.message.includes('transaction has been discarded') ||
+                  err.message.includes('Transaction not confirmed')
+                ) {
+                  return Promise.reject('User cancelled');
+                }
+
+                if (err.message.includes('nonce too low')) {
+                  return Promise.reject('web3NonceTooLow');
+                }
+
+                if (err.message.includes('nonce may not be larger than')) {
+                  return Promise.reject('web3NonceTooHigh');
+                }
+
+                if (err.message.includes('insufficient funds for gas')) {
+                  return Promise.reject('web3InsufficientFundsForGas');
+                }
+
+                if (err.message.includes('intrinsic gas too low')) {
+                  return Promise.reject('web3GasTooLow');
+                }
+                return Promise.reject(err);
+              });
           })
           .then(withdrawTxHash => {
             let data = {
@@ -199,6 +223,12 @@ const blockchain = {
             } else {
               dispatch(requestWithdrawPledge(data));
               blockchain.fetchWithdrawReceipt(data, web3, dispatch, history);
+            }
+          })
+          .catch(err => {
+            if (err !== 'User cancelled') {
+              console.log('err', err);
+              history.push('/error');
             }
           });
       });
