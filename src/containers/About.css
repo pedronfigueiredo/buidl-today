@@ -1,0 +1,49 @@
+.about-container * {
+  line-height: 2;
+}
+
+.about-container h1 {
+  font-size: 3rem;
+  margin-top: 6rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1.5px;
+}
+
+.about-container h2 {
+  font-size: 2.5rem;
+  text-align: left;
+  margin-top: 5rem;
+  margin-bottom: 1.5rem;
+}
+
+.about-container h3 {
+  font-size: 2rem;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  color: #b23d3d;
+  font-style: italic;
+}
+
+.about-container p,
+.about-container li {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.about-container small p {
+  font-size: 0.875rem;
+  margin-top: 0.875rem;
+}
+
+.about-container .go-back--wrapper {
+  text-align: center;
+  margin-top: 5em;
+  margin-bottom: 5em;
+}
+
+.about-container .go-back--wrapper button {
+  width: 180px;
+  height: 45px;
+}
