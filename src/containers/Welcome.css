@@ -49,6 +49,7 @@
 
 .welcome-container .call-to-action-card .feature-list .feature .description {
   font-size: 18px;
+  max-width: 300px;
 }
 
 .welcome-container .call-to-action-card .buttons-group {

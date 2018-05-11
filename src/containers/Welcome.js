@@ -115,11 +115,9 @@ export class Welcome extends Component {
         <LinkButton to="/home" className="get-started">
           Get started!
         </LinkButton>
-        {/*
-              <LinkButton to="/about" className="learn-more">
-                Learn more about the science
-              </LinkButton>
-              */}
+        <LinkButton to="/about" className="learn-more">
+          Learn more
+        </LinkButton>
       </div>
     );
 
@@ -150,8 +148,8 @@ export class Welcome extends Component {
                   <span className="icon-beaker" />
                 </p>
                 <p className="description">
-                  Social science shows that you are 3x more averse to losses
-                  than earnings.
+                  Science shows that you are 2 times more averse to losses than
+                  earnings.
                 </p>
               </div>
               <div className="feature col-md-6">
@@ -159,7 +157,7 @@ export class Welcome extends Component {
                   <span className="icon-link" />
                 </p>
                 <p className="description">
-                  Leverage blockchain technology to enforce your accountability.
+                  Harness the blockchain to keep yourself accountable.
                 </p>
               </div>
             </div>
