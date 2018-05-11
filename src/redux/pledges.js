@@ -14,9 +14,11 @@ const REQUEST_CREATE_AGREEMENT = 'REQUEST_CREATE_AGREEMENT';
 const CREATE_AGREEMENT_CONFIRMED = 'CREATE_AGREEMENT_CONFIRMED';
 
 const UPDATE_PLEDGE_ITEM = 'UPDATE_PLEDGE_ITEM ';
-const START_WITHDRAWAL_PROCESS = 'START_WITHDRAWAL_PROCESS'
+const START_WITHDRAWAL_PROCESS = 'START_WITHDRAWAL_PROCESS';
 const REQUEST_WITHDRAW_PLEDGE = 'REQUEST_WITHDRAW_PLEDGE';
+const STOP_WITHDRAW_PLEDGE = 'STOP_WITHDRAW_PLEDGE';
 const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
+
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -24,7 +26,6 @@ export const updateETHRate = payload => {
     payload,
   };
 };
-
 export const updatePledgeForm = (name, value) => {
   return {
     type: UPDATE_PLEDGE_FORM,
@@ -32,20 +33,17 @@ export const updatePledgeForm = (name, value) => {
     value,
   };
 };
-
 export const clearPledgeForm = () => {
   return {
     type: CLEAR_PLEDGE_FORM,
   };
 };
-
 export const requestSubmitPledge = payload => {
   return {
     type: REQUEST_SUBMIT_PLEDGE,
     payload,
   };
 };
-
 export const errorSubmitPledge = () => {
   return {
     type: ERROR_SUBMIT_PLEDGE,
@@ -58,21 +56,18 @@ export const getAllPledgesFromUser = payload => {
     payload,
   };
 };
-
 export const getAllPledgesFromUserEmpty = payload => {
   return {
     type: GET_ALL_PLEDGES_FROM_USER_EMPTY,
     payload,
   };
 };
-
 export const getAllPledgesFromUserError = payload => {
   return {
     type: GET_ALL_PLEDGES_FROM_USER_ERROR,
     payload,
   };
 };
-
 export const getAllPledgesFromUserSuccess = payload => {
   return {
     type: GET_ALL_PLEDGES_FROM_USER_SUCCESS,
@@ -86,7 +81,6 @@ export const requestCreateAgreement = newPledge => {
     newPledge,
   };
 };
-
 export const createAgreementConfirmed = updatedPledge => {
   return {
     type: CREATE_AGREEMENT_CONFIRMED,
@@ -100,20 +94,22 @@ export const updatePledgeItem = payload => {
     payload,
   };
 };
-
 export const startWithdrawalProcess = payload => {
   return {
     type: START_WITHDRAWAL_PROCESS,
   };
 };
-
 export const requestWithdrawPledge = data => {
   return {
     type: REQUEST_WITHDRAW_PLEDGE,
     data,
   };
 };
-
+export const stopWithdrawPledge = () => {
+  return {
+    type: STOP_WITHDRAW_PLEDGE,
+  };
+};
 export const confirmWithdrawPledge = data => {
   return {
     type: CONFIRM_WITHDRAW_PLEDGE,
@@ -281,13 +277,11 @@ const pledges = (state = initialState, action) => {
           ...state,
         };
       }
-
     case START_WITHDRAWAL_PROCESS:
       return {
         ...state,
         userToRespondToMetaMask: true,
-      } 
-
+      };
     case REQUEST_WITHDRAW_PLEDGE:
       let requestWithdrawPledgeCounter;
       for (let i = 0; i < state.pledges.length; i += 1) {
@@ -315,6 +309,12 @@ const pledges = (state = initialState, action) => {
           ...state,
         };
       }
+    case STOP_WITHDRAW_PLEDGE: {
+      return {
+        ...state,
+        userToRespondToMetaMask: false,
+      };
+    }
     case CONFIRM_WITHDRAW_PLEDGE:
       let confirmWithdrawPledgeCounter;
       for (let i = 0; i < state.pledges.length; i += 1) {
