@@ -285,6 +285,7 @@ export class NewPledge extends Component {
 
   goHome() {
     const {history} = this.props;
+    this.clearPledgeForm();
     history.push('/');
   }
 

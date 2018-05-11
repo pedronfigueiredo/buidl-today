@@ -61,7 +61,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  color: #333333;
+  color: #c2c2c2;
   transition: all 0.3s;
 }
 
@@ -69,7 +69,7 @@
   .new-pledge-container
   .back-button-wrapper
   .back-button:hover {
-  color: #b23d3d;
+  color: black;
 }
 
 .new-pledge-component .new-pledge-container .submit-button-wrapper {
