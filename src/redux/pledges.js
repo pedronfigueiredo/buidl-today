@@ -19,6 +19,8 @@ const REQUEST_WITHDRAW_PLEDGE = 'REQUEST_WITHDRAW_PLEDGE';
 const STOP_WITHDRAW_PLEDGE = 'STOP_WITHDRAW_PLEDGE';
 const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
 
+const CHANGE_FORM_FIELD = 'CHANGE_FORM_FIELD';
+
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -114,6 +116,14 @@ export const confirmWithdrawPledge = data => {
   return {
     type: CONFIRM_WITHDRAW_PLEDGE,
     data,
+  };
+};
+
+export const changeFormField = (field, value) => {
+  return {
+    type: CHANGE_FORM_FIELD,
+    field,
+    value,
   };
 };
 
@@ -341,6 +351,16 @@ const pledges = (state = initialState, action) => {
           ...state,
         };
       }
+    case CHANGE_FORM_FIELD:
+      let field = action.field;
+      let value = action.value;
+      return {
+        ...state,
+        pledgeFormState: {
+          ...state.pledgeFormState,
+          [field]: value,
+        },
+      };
     default:
       return state;
   }

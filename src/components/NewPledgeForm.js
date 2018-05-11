@@ -67,17 +67,18 @@ export class NewPledgeForm extends Component {
       isDate,
       isDateInTheFuture,
       ethRate,
+      populateField,
     } = this.props;
 
     const inAWeek = moment()
       .add(7, 'days')
       .format('YYYY-MM-DD');
 
+    const developerEthAddress = '0xa9f570d8f799c7770021dfe6a58fb91773f9a14f';
+
     const FormComponent = (
       <Form>
-        <h1 className="heading">
-          Create New Pledge
-        </h1>
+        <h1 className="heading">Create New Pledge</h1>
 
         <Form.Field>
           <label id="descriptionLabel">Pledge description</label>
@@ -114,6 +115,25 @@ export class NewPledgeForm extends Component {
                 In {moment(deadline, 'YYYY-MM-DD').fromNow(true)}
               </p>
             )}
+          {deadline === '' && (
+            <div className="badge-btn-wrapper">
+              <div
+                className="badge-btn deadline--badge-btn"
+                onClick={() => populateField('deadline', '1 week')}>
+                1 week
+              </div>
+              <div
+                className="badge-btn deadline--badge-btn"
+                onClick={() => populateField('deadline', '2 weeks')}>
+                2 weeks
+              </div>
+              <div
+                className="badge-btn deadline--badge-btn"
+                onClick={() => populateField('deadline', '2 months')}>
+                2 months
+              </div>
+            </div>
+          )}
         </Form.Field>
 
         <Form.Field>
@@ -136,6 +156,25 @@ export class NewPledgeForm extends Component {
                 Aproximately {Math.round(ethRate * stake * 100) / 100} USD
               </p>
             )}
+          {stake === '' && (
+            <div className="badge-btn-wrapper">
+              <div
+                className="badge-btn amount--badge-btn"
+                onClick={() => populateField('stake', '5')}>
+                5 USD
+              </div>
+              <div
+                className="badge-btn amount--badge-btn"
+                onClick={() => populateField('stake', '20')}>
+                20 USD
+              </div>
+              <div
+                className="badge-btn amount--badge-btn"
+                onClick={() => populateField('stake', '50')}>
+                50 USD
+              </div>
+            </div>
+          )}
         </Form.Field>
 
         <Form.Field>
@@ -166,6 +205,21 @@ export class NewPledgeForm extends Component {
             required
           />
           <p className="form-error" id="recipientError" />
+          {!!recipient &&
+            recipient === developerEthAddress && 
+                <p className="realtime-thank-you">
+                  Thank you for the support (but I hope you confirm your pledge!)
+                </p>
+              }
+          {recipient === '' && (
+            <div className="badge-btn-wrapper">
+              <div
+                className="badge-btn support-developer--badge-btn"
+                onClick={() => populateField('recipient', developerEthAddress)}>
+                Support Developer
+              </div>
+            </div>
+          )}
         </Form.Field>
 
         <RedButton

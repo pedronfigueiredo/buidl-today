@@ -6,6 +6,7 @@ import {
   updatePledgeForm,
   clearPledgeForm,
   requestSubmitPledge,
+  changeFormField,
 } from '../redux/pledges';
 
 import moment from 'moment';
@@ -33,6 +34,7 @@ export class NewPledge extends Component {
     this.handlePledgeFormSubmit = this.handlePledgeFormSubmit.bind(this);
     this.handlePledgeFormFocus = this.handlePledgeFormFocus.bind(this);
     this.handlePledgeFormBlur = this.handlePledgeFormBlur.bind(this);
+    this.populateField = this.populateField.bind(this);
   }
 
   componentWillMount() {
@@ -286,6 +288,36 @@ export class NewPledge extends Component {
     history.push('/');
   }
 
+  populateField(field, value) {
+    const {dispatch, ethRate} = this.props;
+    let newValue;
+    if (field === 'recipient') {
+      newValue = value;
+      dispatch(changeFormField(field, newValue));
+    } else if (field === 'deadline') {
+      let now = moment();
+      if (value === '1 week') {
+        newValue = moment()
+          .add(1, 'weeks')
+          .format('YYYY-MM-DD');
+      } else if (value === '2 weeks') {
+        newValue = moment()
+          .add(2, 'weeks')
+          .format('YYYY-MM-DD');
+      } else if (value === '2 months') {
+        newValue = moment()
+          .add(2, 'months')
+          .format('YYYY-MM-DD');
+      }
+      dispatch(changeFormField(field, newValue));
+    } else if (field === 'stake') {
+      newValue = value / ethRate;
+      dispatch(changeFormField(field, newValue));
+    } else {
+      this.props.history.push('/error');
+    }
+  }
+
   render() {
     const {
       nickname,
@@ -339,6 +371,7 @@ export class NewPledge extends Component {
                 isDate={this.isDate}
                 isDateInTheFuture={this.isDateInTheFuture}
                 areFieldsValid={this.state.areFieldsValid}
+                populateField={this.populateField}
               />
             </div>
           )}
