@@ -221,6 +221,7 @@ const pledges = (state = initialState, action) => {
           action.newPledge,
           ...state.pledges.slice(insertBeforeThis),
         ],
+        userToRespondToMetaMask: false,
       };
     case CREATE_AGREEMENT_CONFIRMED:
       let updateCounter;

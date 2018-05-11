@@ -76,19 +76,15 @@ const blockchain = {
                   dispatch(errorSubmitPledge());
                   return Promise.reject('User cancelled');
                 }
-
                 if (err.message.includes('nonce too low')) {
                   return Promise.reject('web3NonceTooLow');
                 }
-
                 if (err.message.includes('nonce may not be larger than')) {
                   return Promise.reject('web3NonceTooHigh');
                 }
-
                 if (err.message.includes('insufficient funds for gas')) {
                   return Promise.reject('web3InsufficientFundsForGas');
                 }
-
                 if (err.message.includes('intrinsic gas too low')) {
                   return Promise.reject('web3GasTooLow');
                 }

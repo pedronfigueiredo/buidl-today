@@ -169,9 +169,7 @@ export class PledgesList extends Component {
             color={'yellow'}
             onClick={() => this.confirmPledge(item)}
             disabled={
-              item.isPledgeConfirming ||
-              item.isPledgeConfirmed ||
-              userToRespondToMetaMask
+              item.isPledgeConfirming
             }>
             {item.isPledgeConfirming ? 'Confirming. Please wait...' : 'Confirm'}
           </Button>
