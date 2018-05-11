@@ -1,4 +1,8 @@
-import {storeWeb3, storeUserAccount} from '../redux/registration.js';
+import {
+  storeWeb3,
+  storeUserAccount,
+  recognizeMetaMask,
+} from '../redux/registration.js';
 import {
   requestCreateAgreement,
   createAgreementConfirmed,
@@ -18,12 +22,17 @@ const Buidl = contract(BuidlContract);
 const blockchain = {
   getWeb(dispatch) {
     getWeb3.then(results => {
+      if (results.recognizeMetaMask) {
+        dispatch(recognizeMetaMask());
+      }
       dispatch(storeWeb3(results.web3));
     });
   },
 
   setProvider(web3) {
-    Buidl.setProvider(web3.currentProvider);
+    if (web3) {
+      Buidl.setProvider(web3.currentProvider);
+    }
   },
 
   getUserAddress(web3, dispatch) {

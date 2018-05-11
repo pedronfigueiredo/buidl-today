@@ -13,6 +13,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
 
       results = {
         web3: web3,
+        recognizeMetaMask: true,
       };
 
       console.log('Injected web3 detected.');
@@ -24,6 +25,19 @@ let getWeb3 = new Promise(function(resolve, reject) {
       var provider = new Web3.providers.HttpProvider('http://127.0.0.1:9545');
 
       web3 = new Web3(provider);
+
+      try {
+        throw web3.personal.listAccounts;
+      } catch (e) {
+        if (e.length === undefined) {
+          // Couldn't find MetaMask nor connect to local RPC.
+          results = {
+            web3: undefined,
+          };
+          console.log("Couldn't find MetaMask nor connect to local RPC.");
+          return resolve(results);
+        }
+      }
 
       results = {
         web3: web3,

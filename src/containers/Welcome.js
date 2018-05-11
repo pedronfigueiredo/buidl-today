@@ -26,6 +26,14 @@ import {
 import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 
+let host = window.location.host;
+let env;
+if (host === 'localhost:3000') {
+  env = 'dev';
+} else {
+  env = 'prod';
+}
+
 export class Welcome extends Component {
   constructor(props) {
     super(props);
@@ -34,7 +42,7 @@ export class Welcome extends Component {
 
   componentWillReceiveProps(nextProps) {
     const {dispatch, web3, userAccount} = this.props;
-    if (nextProps.web3 !== web3) {
+    if (nextProps.web3 !== web3 && nextProps.web3 !== '') {
       blockchain.setProvider(nextProps.web3);
       blockchain.getUserAddress(nextProps.web3, dispatch);
     }
@@ -86,7 +94,13 @@ export class Welcome extends Component {
   }
 
   render() {
-    const {web3, userAccount, dispatch} = this.props;
+    const {
+      web3,
+      web3Loaded,
+      userAccount,
+      dispatch,
+      metaMaskWasRecognized,
+    } = this.props;
 
     this.account = web3 && web3.eth.accounts[0];
     var self = this;
@@ -108,6 +122,19 @@ export class Welcome extends Component {
               */}
       </div>
     );
+
+    let MetaMaskNotice = () => {
+      if (!web3Loaded) {
+        return null;
+      }
+      if (!!userAccount) {
+        return <ButtonsGroup />;
+      }
+      if (!!metaMaskWasRecognized) {
+        return <MetaMaskLocked />;
+      }
+      return <MetaMaskInstructions />;
+    };
 
     let WelcomeContainer = () => (
       <div className="welcome-container">
@@ -137,15 +164,7 @@ export class Welcome extends Component {
               </div>
             </div>
 
-            {web3 === '' ? null : typeof web3 === 'object' ? (
-              userAccount ? (
-                <ButtonsGroup />
-              ) : (
-                <MetaMaskLocked />
-              )
-            ) : (
-              <MetaMaskInstructions />
-            )}
+            <MetaMaskNotice />
           </div>
         </div>
       </div>
@@ -155,16 +174,13 @@ export class Welcome extends Component {
   }
 }
 
-// const mapDispatchToProps = {
-//    test,
-// }
-
 function mapStateToProps(state) {
   return {
     userAccount: state.registration.user.userAccount,
     web3: state.registration.web3,
+    web3Loaded: state.registration.web3Loaded,
+    metaMaskWasRecognized: state.registration.metaMaskWasRecognized,
   };
 }
 
-/*  , mapDispatchToProps */
 export default connect(mapStateToProps)(Welcome);

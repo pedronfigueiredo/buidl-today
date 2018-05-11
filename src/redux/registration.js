@@ -1,6 +1,7 @@
 // Action Types
 const STORE_WEB3 = 'STORE_WEB3';
 const STORE_USERACCOUNT = 'STORE_USERACCOUNT';
+const RECOGNIZE_METAMASK = 'RECOGNIZE_METAMASK';
 
 const REQUEST_REGISTER_USER = 'REQUEST_REGISTER_USER';
 const ERROR_REGISTERING_USER = 'ERROR_REGISTERING_USER';
@@ -25,6 +26,11 @@ export const storeUserAccount = payload => {
   return {
     type: STORE_USERACCOUNT,
     payload,
+  };
+};
+export const recognizeMetaMask = () => {
+  return {
+    type: RECOGNIZE_METAMASK,
   };
 };
 
@@ -87,6 +93,8 @@ export const updateRegistrationForm = (name, value) => {
 // Initial State
 const initialState = {
   web3: '',
+  web3Loaded: false,
+  metaMaskWasRecognized: false,
   user: {
     userAccount: '',
     email: '',
@@ -108,6 +116,7 @@ const registration = (state = initialState, action) => {
       return {
         ...state,
         web3: action.payload,
+        web3Loaded: true,
       };
     case STORE_USERACCOUNT:
       return {
@@ -116,6 +125,11 @@ const registration = (state = initialState, action) => {
           ...state.user,
           userAccount: action.payload,
         },
+      };
+    case RECOGNIZE_METAMASK:
+      return {
+        ...state,
+        metaMaskWasRecognized: true,
       };
     case REQUEST_REGISTER_USER:
       return {
