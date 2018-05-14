@@ -126,7 +126,27 @@ export class Registration extends Component {
   }
 
   render() {
-    const {registering, userAccount, nickname, emailAddress} = this.props;
+    const {
+      web3,
+      dispatch,
+      history,
+      registering,
+      userAccount,
+      nickname,
+      emailAddress,
+    } = this.props;
+
+    const account = web3 && web3.eth.accounts[0];
+    let repeater = setInterval(function() {
+      checkForChange();
+    }, 2 * 1000);
+    function checkForChange() {
+      if (web3 && web3.eth.accounts[0] !== account) {
+        history.push('/');
+        clearInterval(repeater);
+      }
+    }
+
     return (
       <div className="login-container">
         <div className="container">

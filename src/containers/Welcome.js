@@ -74,13 +74,16 @@ export class Welcome extends Component {
       metaMaskWasRecognized,
     } = this.props;
 
-    this.account = web3 && web3.eth.accounts[0];
-    var self = this;
-    this.accountInterval = setInterval(function() {
-      if (web3 && web3.eth.accounts[0] !== self.account) {
-        blockchain.getUserAddress(web3, dispatch);
-      }
+    const account = web3 && web3.eth.accounts[0];
+    let repeater = setInterval(function() {
+      checkForChange();
     }, 2 * 1000);
+    function checkForChange() {
+      if (web3 && web3.eth.accounts[0] !== account) {
+        blockchain.getUserAddress(web3, dispatch);
+        clearInterval(repeater);
+      }
+    }
 
     const ButtonsGroup = () => (
       <div className="buttons-group">

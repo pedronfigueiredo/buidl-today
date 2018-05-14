@@ -122,7 +122,7 @@ export class About extends Component {
           </p>
 
           <div className="go-back--wrapper">
-            <RedButton onClick={() => history.goBack('/')} text={'Home'} />
+            <RedButton onClick={() => history.push('/')} text={'Home'} />
           </div>
         </div>
       </div>

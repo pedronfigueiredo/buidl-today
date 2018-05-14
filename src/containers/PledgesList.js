@@ -163,7 +163,22 @@ export class PledgesList extends Component {
       userAccount,
       ethRate,
       userToRespondToMetaMask,
+      web3,
+      dispatch,
+      history,
     } = this.props;
+
+    const account = web3 && web3.eth.accounts[0];
+    let repeater = setInterval(function() {
+      checkForChange();
+    }, 2 * 1000);
+    function checkForChange() {
+      if (web3 && web3.eth.accounts[0] !== account) {
+        history.push('/');
+        clearInterval(repeater);
+      }
+    }
+
     const Navbar = () => (
       <div className="nav-bar">
         <div className="heading" onClick={this.goHome}>
