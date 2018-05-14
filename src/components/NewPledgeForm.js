@@ -181,23 +181,8 @@ export class NewPledgeForm extends Component {
         </Form.Field>
 
         <Form.Field>
-          <label id="refereeLabel">Referee</label>
-          <input
-            type="text"
-            name="referee"
-            id="refereeInput"
-            placeholder="Ethereum Address"
-            value={referee}
-            onChange={handlePledgeFormChange}
-            onFocus={handlePledgeFormFocus}
-            onBlur={handlePledgeFormBlur}
-            required
-          />
-          <p className="form-error" id="refereeError" />
-        </Form.Field>
-
-        <Form.Field>
           <label id="recipientLabel">Recipient</label>
+          <p className="label-description">This address will be able to withdraw the money you staked if you don't fullfill your pledge on time.</p>
           <input
             type="text"
             name="recipient"
@@ -225,6 +210,23 @@ export class NewPledgeForm extends Component {
               </div>
             </div>
           )}
+        </Form.Field>
+
+        <Form.Field>
+          <label id="refereeLabel">Referee</label>
+          <p className="label-description">This address will be able to confirm if you fullfilled your pledge on time.</p>
+          <input
+            type="text"
+            name="referee"
+            id="refereeInput"
+            placeholder="Ethereum Address"
+            value={referee}
+            onChange={handlePledgeFormChange}
+            onFocus={handlePledgeFormFocus}
+            onBlur={handlePledgeFormBlur}
+            required
+          />
+          <p className="form-error" id="refereeError" />
         </Form.Field>
 
         <RedButton
