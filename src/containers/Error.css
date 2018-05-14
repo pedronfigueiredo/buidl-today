@@ -7,3 +7,16 @@
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
+.error-container h1 {
+  margin: 5rem 0;
+}
+
+.error-container p {
+  text-align: center;
+  font-size: 1.75rem;
+}
+
+.error-container .go-back--wrapper {
+  text-align: center;
+  margin-top: 10rem;
+}
