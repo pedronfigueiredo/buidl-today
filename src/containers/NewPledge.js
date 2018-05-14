@@ -291,6 +291,8 @@ export class NewPledge extends Component {
 
   populateField(field, value) {
     const {dispatch, ethRate} = this.props;
+    let input = document.getElementById(`${field}Input`);
+    input.focus()
     let newValue;
     if (field === 'recipient') {
       newValue = value;

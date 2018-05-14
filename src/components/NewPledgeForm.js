@@ -85,6 +85,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="description"
+            id="descriptionInput"
             placeholder="Develop my new app"
             value={description}
             onChange={handlePledgeFormChange}
@@ -100,6 +101,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="deadline"
+            id="deadlineInput"
             placeholder={inAWeek}
             value={deadline}
             onChange={handlePledgeFormChange}
@@ -141,6 +143,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="stake"
+            id="stakeInput"
             placeholder="0.5"
             value={stake}
             onChange={handlePledgeFormChange}
@@ -182,6 +185,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="referee"
+            id="refereeInput"
             placeholder="Ethereum Address"
             value={referee}
             onChange={handlePledgeFormChange}
@@ -197,6 +201,7 @@ export class NewPledgeForm extends Component {
           <input
             type="text"
             name="recipient"
+            id="recipientInput"
             placeholder="Ethereum Address"
             value={recipient}
             onChange={handlePledgeFormChange}
