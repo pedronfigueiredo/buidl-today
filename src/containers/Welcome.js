@@ -16,13 +16,6 @@ import {
   checkIfUserExistsError,
 } from '../redux/registration.js';
 
-import {
-  getAllPledgesFromUser,
-  getAllPledgesFromUserEmpty,
-  getAllPledgesFromUserError,
-  getAllPledgesFromUserSuccess,
-} from '../redux/pledges.js';
-
 import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 
@@ -64,31 +57,10 @@ export class Welcome extends Component {
           this.props.history.push('/error');
         } else {
           dispatch(identifiedReturningUser(res));
-          this.getAllPledgesFromUser(userAccount);
         }
       })
       .catch(err => {
         console.error('err', err);
-        this.props.history.push('/error');
-      });
-  }
-
-  getAllPledgesFromUser(address) {
-    const {dispatch} = this.props;
-    dispatch(getAllPledgesFromUser());
-    api
-      .get('pledgesfromuser/' + address)
-      .then(res => {
-        if (res === 'No pledges found') {
-          dispatch(getAllPledgesFromUserEmpty());
-        } else if (res === 'error') {
-          dispatch(getAllPledgesFromUserError());
-          this.props.history.push('/error');
-        } else {
-          dispatch(getAllPledgesFromUserSuccess(res));
-        }
-      })
-      .catch(err => {
         this.props.history.push('/error');
       });
   }

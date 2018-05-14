@@ -6,6 +6,10 @@ import RedButton from '../components/RedButton.js';
 import {connect} from 'react-redux';
 
 import {
+  getAllPledgesFromUser,
+  getAllPledgesFromUserEmpty,
+  getAllPledgesFromUserError,
+  getAllPledgesFromUserSuccess,
   updateETHRate,
   updatePledgeItem,
   startWithdrawalProcess,
@@ -33,8 +37,37 @@ export class PledgesList extends Component {
   }
 
   componentDidMount() {
+    const {userAccount} = this.props;
+    this.getAllPledgesFromUser(userAccount);
     this.getEthereumPrice();
-    this.getMissedTransactionReceipts();
+  }
+
+  getAllPledgesFromUser(address) {
+    const {dispatch} = this.props;
+    dispatch(getAllPledgesFromUser());
+    api
+      .get('pledgesfromuser/' + address)
+      .then(res => {
+        if (res === 'No pledges found') {
+          dispatch(getAllPledgesFromUserEmpty());
+        } else if (res === 'error') {
+          dispatch(getAllPledgesFromUserError());
+          this.props.history.push('/error');
+        } else {
+          dispatch(getAllPledgesFromUserSuccess(res));
+          this.getMissedTransactionReceipts();
+        }
+      })
+      .catch(err => {
+        this.props.history.push('/error');
+      });
+  }
+
+  getEthereumPrice() {
+    const {dispatch} = this.props;
+    fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/')
+      .then(res => res.json())
+      .then(json => dispatch(updateETHRate(json[0].price_usd)));
   }
 
   getMissedTransactionReceipts() {
@@ -82,13 +115,6 @@ export class PledgesList extends Component {
           this.props.history.push('/error');
         });
     }
-  }
-
-  getEthereumPrice() {
-    const {dispatch} = this.props;
-    fetch('https://api.coinmarketcap.com/v1/ticker/ethereum/')
-      .then(res => res.json())
-      .then(json => dispatch(updateETHRate(json[0].price_usd)));
   }
 
   goHome() {
@@ -168,9 +194,7 @@ export class PledgesList extends Component {
             className="confirm-pledge-button"
             color={'yellow'}
             onClick={() => this.confirmPledge(item)}
-            disabled={
-              item.isPledgeConfirming
-            }>
+            disabled={item.isPledgeConfirming}>
             {item.isPledgeConfirming ? 'Confirming. Please wait...' : 'Confirm'}
           </Button>
         );
@@ -219,8 +243,7 @@ export class PledgesList extends Component {
             color={'green'}
             onClick={() => this.withdrawPledge(item, 'pledger')}
             disabled={
-              item.isWithdrawTxConfirmed === false ||
-              userToRespondToMetaMask
+              item.isWithdrawTxConfirmed === false || userToRespondToMetaMask
             }>
             {item.isWithdrawTxConfirmed === false
               ? 'Withdrawing. Please wait...'
