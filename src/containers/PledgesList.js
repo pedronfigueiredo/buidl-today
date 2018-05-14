@@ -243,7 +243,7 @@ export class PledgesList extends Component {
                 : 'Withdraw'}
           </Button>
         );
-      } else if (isPledgeConfirmed && !userIsPledger) {
+      } else if (isPledgeConfirmed && (userIsRecipient || userIsReferee)) {
         return (
           <div className="confirmed-pledge-notice">
             <p>This pledge was confirmed by the referee ({referee}).</p>
@@ -293,15 +293,11 @@ export class PledgesList extends Component {
             </p>
             <p className="pledge-referee">
               <span className="heading">Referee: </span>
-              {item.referee === userAccount
-                ? 'You (' + item.referee + ')'
-                : item.referee}
+              {item.referee === userAccount ? 'You' : item.referee}
             </p>
             <p className="pledge-recipient">
               <span className="heading">Recipient: </span>
-              {item.recipient === userAccount
-                ? 'You (' + item.recipient + ')'
-                : item.recipient}
+              {item.recipient === userAccount ? 'You' : item.recipient}
             </p>
           </Card.Description>
         </Card.Content>
