@@ -8,7 +8,7 @@ import About from './containers/About';
 import My404 from './containers/My404';
 import ErrorContainer from './containers/Error';
 
-import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
+import {HashRouter, Route, Switch, Redirect} from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
 
 import {Provider} from 'react-redux';
@@ -19,7 +19,7 @@ const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
         <Route path="/" exact component={Welcome} />
         <Route path="/register" exact component={Registration} />
@@ -30,7 +30,7 @@ ReactDOM.render(
         <Route path="/error" exact component={ErrorContainer} />
         <Redirect from="*" to="/404" />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   </Provider>,
   document.getElementById('root'),
 );
