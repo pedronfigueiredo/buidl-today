@@ -213,21 +213,13 @@ export class PledgesList extends Component {
             {item.isPledgeConfirming ? 'Confirming. Please wait...' : 'Confirm'}
           </Button>
         );
-      } else if (timeIsUp && !isPledgeConfirmed && !userIsRecipient) {
-        return (
-          <div className="expired-pledge-notice">
-            <p>
-              This pledge expired because it wasn't confirmed before the
-              deadline.
-            </p>
-            <p>
-              The stake can now be withdrawn by the recipient ({recipient}).
-            </p>
-          </div>
-        );
+      } else if (!timeIsUp && !isPledgeConfirmed && !userIsReferee) {
+        <div className="confirm-pledge-notice">
+          <p>
+            This pledge is waiting confirmation by the recipient ({recipient}).
+          </p>
+        </div>;
       } else if (timeIsUp && !isPledgeConfirmed && userIsRecipient) {
-        // Recipient Withdraw
-        // change text based on confirming transaction
         return (
           <Button
             className="withdraw-pledge-button"
@@ -243,11 +235,16 @@ export class PledgesList extends Component {
                 : 'Withdraw'}
           </Button>
         );
-      } else if (isPledgeConfirmed && (userIsRecipient || userIsReferee)) {
+      } else if (timeIsUp && !isPledgeConfirmed && !userIsRecipient) {
         return (
-          <div className="confirmed-pledge-notice">
-            <p>This pledge was confirmed by the referee ({referee}).</p>
-            <p>The stake can now be withdrawn by the pledger ({address}).</p>
+          <div className="expired-pledge-notice">
+            <p>
+              This pledge expired because it wasn't confirmed before the
+              deadline.
+            </p>
+            <p>
+              The stake can now be withdrawn by the recipient ({recipient}).
+            </p>
           </div>
         );
       } else if (isPledgeConfirmed && userIsPledger) {
@@ -266,6 +263,13 @@ export class PledgesList extends Component {
                 ? 'Confirm withdrawal on MetaMask'
                 : 'Withdraw'}
           </Button>
+        );
+      } else if (isPledgeConfirmed && !userIsPledger) {
+        return (
+          <div className="confirmed-pledge-notice">
+            <p>This pledge was confirmed by the referee ({referee}).</p>
+            <p>The stake can now be withdrawn by the pledger ({address}).</p>
+          </div>
         );
       } else {
         return null;
