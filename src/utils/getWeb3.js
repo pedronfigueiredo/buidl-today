@@ -16,7 +16,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
         recognizeMetaMask: true,
       };
 
-      console.log('Injected web3 detected.');
+      // Injected web3 detected.
 
       resolve(results);
     } else {
@@ -34,7 +34,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
           results = {
             web3: undefined,
           };
-          console.log("Couldn't find MetaMask nor connect to local RPC.");
+          // Couldn't find MetaMask nor connect to local RPC.
           return resolve(results);
         }
       }
@@ -43,7 +43,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
         web3: web3,
       };
 
-      console.log('No web3 instance injected, using Local web3.');
+      // No web3 instance injected, using Local web3.
 
       resolve(results);
     }

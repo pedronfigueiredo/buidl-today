@@ -153,7 +153,7 @@ export class NewPledgeForm extends Component {
           />
           <p className="form-error" id="stakeError" />
           {!!stake &&
-            stake == Number(stake) &&
+            stake == Number(stake) && // eslint-disable-line eqeqeq
             (stake !== 0 && stake !== '0') && (
               <p className="realtime-conversion">
                 Aproximately {Math.round(ethRate * stake * 100) / 100} USD

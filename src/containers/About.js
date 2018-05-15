@@ -103,7 +103,9 @@ export class About extends Component {
             Hodl is a meme originating from a misspelling on the{' '}
             <a
               href="https://bitcointalk.org/index.php?topic=375643.0"
-              target="_blank">
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               BitcoinTalk Forums
             </a>. The poster was stating his plan to keep his Bitcoin stake even
             while admiting his uncertainty about the future.

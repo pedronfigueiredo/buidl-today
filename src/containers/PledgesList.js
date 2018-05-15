@@ -164,7 +164,6 @@ export class PledgesList extends Component {
       ethRate,
       userToRespondToMetaMask,
       web3,
-      dispatch,
       history,
     } = this.props;
 
@@ -214,11 +213,13 @@ export class PledgesList extends Component {
           </Button>
         );
       } else if (!timeIsUp && !isPledgeConfirmed && !userIsReferee) {
-        <div className="confirm-pledge-notice">
-          <p>
-            This pledge is waiting confirmation by the recipient ({recipient}).
-          </p>
-        </div>;
+        return (
+          <div className="confirm-pledge-notice">
+            <p>
+              This pledge is waiting confirmation by the recipient ({recipient}).
+            </p>
+          </div>
+        );
       } else if (timeIsUp && !isPledgeConfirmed && userIsRecipient) {
         return (
           <Button

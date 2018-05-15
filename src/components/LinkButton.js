@@ -8,9 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const LinkButton = props => {
   const {
     history,
-    location,
-    match,
-    staticContext,
+    location, // eslint-disable-line no-unused-vars
+    match, // eslint-disable-line no-unused-vars
+    staticContext, // eslint-disable-line no-unused-vars
     to,
     onClick,
     // ⬆ filtering out props that `button` doesn’t know what to do with.

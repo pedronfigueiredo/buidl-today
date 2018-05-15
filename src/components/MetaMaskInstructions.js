@@ -15,6 +15,7 @@ const MetaMaskInstructions = () => (
     </p>
     <div className="iframe-wrapper">
       <iframe
+        title="MetaMask Instructions"
         width="560"
         height="315"
         src="https://www.youtube.com/embed/tfETpi-9ORs?rel=0&amp;showinfo=0"
@@ -24,7 +25,7 @@ const MetaMaskInstructions = () => (
       />
     </div>
     <p className="cta">
-      <a target="_blank" href="https://metamask.io/">
+      <a target="_blank" href="https://metamask.io/" rel="noopener noreferrer">
         Visit MetaMask website
       </a>
     </p>

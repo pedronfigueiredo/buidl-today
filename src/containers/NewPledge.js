@@ -208,7 +208,7 @@ export class NewPledge extends Component {
 
     if (name === 'stake') {
       const NUMBER_OF_DECIMAL_PLACES = 18;
-      let stakeIsANumber = Number(input.value) == input.value;
+      let stakeIsANumber = Number(input.value) == input.value; // eslint-disable-line eqeqeq
       let stakeIsBigEnough = input.value >= 0.1 ** NUMBER_OF_DECIMAL_PLACES;
       if (!stakeIsANumber) {
         input.setCustomValidity('Not valid');
@@ -266,6 +266,7 @@ export class NewPledge extends Component {
 
   hideInputError(input) {
     input.setCustomValidity('');
+    const name = input.name;
     this.setState((prevState, props) => ({
       ...prevState,
       areFieldsValid: {
@@ -273,7 +274,6 @@ export class NewPledge extends Component {
         [name]: true,
       },
     }));
-    const name = input.name;
     const error = document.getElementById(`${name}Error`);
     error.textContent = '';
   }
@@ -298,7 +298,6 @@ export class NewPledge extends Component {
       newValue = value;
       dispatch(changeFormField(field, newValue));
     } else if (field === 'deadline') {
-      let now = moment();
       if (value === '1 week') {
         newValue = moment()
           .add(1, 'weeks')
@@ -329,7 +328,6 @@ export class NewPledge extends Component {
       pledgeFormState,
       userToRespondToMetaMask,
       web3,
-      dispatch,
       history,
     } = this.props;
 

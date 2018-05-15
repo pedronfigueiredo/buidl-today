@@ -19,14 +19,6 @@ import {
 import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 
-let host = window.location.host;
-let env;
-if (host === 'localhost:3000') {
-  env = 'dev';
-} else {
-  env = 'prod';
-}
-
 export class Welcome extends Component {
   constructor(props) {
     super(props);
