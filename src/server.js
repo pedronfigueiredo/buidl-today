@@ -14,7 +14,7 @@ if (port === 5000) {
   ACCESS_CONTROL_ALLOW_ORIGIN = 'http://localhost:3000';
 } else {
   // prod
-  ACCESS_CONTROL_ALLOW_ORIGIN = 'http://buidl.today';
+  ACCESS_CONTROL_ALLOW_ORIGIN = 'https://buidl.today';
 }
 
 // parse application/x-www-form-urlencoded
