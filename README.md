@@ -49,3 +49,13 @@ The secondary repo has two remotes, one on GitHub for browsing purposes, and ano
 - `npm run dev` - Starts frontend and backend development.
 
 - `npm run redeploy` - Deploy contract to rinkeby, sync server code to the secondary repo, build the frontend and push it to github Pages.
+
+## Reset local database
+
+Inside the mongo console, switch to the relevant database
+
+`use buidltoday`
+
+and
+
+`db.dropDatabase();`
