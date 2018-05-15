@@ -128,7 +128,6 @@ export class Registration extends Component {
   render() {
     const {
       web3,
-      dispatch,
       history,
       registering,
       userAccount,
@@ -147,8 +146,18 @@ export class Registration extends Component {
       }
     }
 
+    const Navbar = () => (
+      <div className="nav-bar">
+        <div className="heading" onClick={() => history.push('/')}>
+          Buidl.Today
+        </div>
+        <div className="username" />
+      </div>
+    );
+
     return (
       <div className="login-container">
+        <Navbar />
         <div className="container">
           <RegistrationForm
             registering={registering}

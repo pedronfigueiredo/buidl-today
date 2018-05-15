@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
-import {Button, Form} from 'semantic-ui-react';
+import {Form} from 'semantic-ui-react';
 import LoaderScreen from './LoaderScreen.js';
+
+import RedButton from './RedButton.js';
 
 import 'semantic-ui-css/semantic.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -66,7 +68,12 @@ export class RegistrationForm extends Component {
           />
           <p className="form-error" id="nicknameError" />
         </Form.Field>
-        <Button type="submit">Save account info</Button>
+        <RedButton
+          name={'submit-user'}
+          text={'Save account info'}
+          type="submit"
+          fluid
+        />
       </Form>
     );
 
