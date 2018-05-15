@@ -7,3 +7,16 @@
   user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
 
+.my-404-container h1 {
+  margin: 5rem 0;
+}
+
+.my-404-container p {
+  text-align: center;
+  font-size: 1.75rem;
+}
+
+.my-404-container .go-back--wrapper {
+  text-align: center;
+  margin-top: 10rem;
+}
