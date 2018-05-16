@@ -200,9 +200,7 @@ export class PledgesList extends Component {
       let userIsRecipient = userAccount === recipient;
       let now = moment().format('X');
       let timeIsUp = deadline < now;
-      if (!timeIsUp && !userIsReferee) {
-        return null;
-      } else if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
+      if (!timeIsUp && !isPledgeConfirmed && userIsReferee) {
         return (
           <Button
             className="confirm-pledge-button"
@@ -214,9 +212,9 @@ export class PledgesList extends Component {
         );
       } else if (!timeIsUp && !isPledgeConfirmed && !userIsReferee) {
         return (
-          <div className="confirm-pledge-notice">
+          <div className="confirm-pledge-notice pledge-notice">
             <p>
-              This pledge is waiting confirmation by the recipient ({recipient}).
+              This pledge is waiting confirmation by the referee ({referee}).
             </p>
           </div>
         );
@@ -238,7 +236,7 @@ export class PledgesList extends Component {
         );
       } else if (timeIsUp && !isPledgeConfirmed && !userIsRecipient) {
         return (
-          <div className="expired-pledge-notice">
+          <div className="expired-pledge-notice pledge-notice">
             <p>
               This pledge expired because it wasn't confirmed before the
               deadline.
@@ -249,7 +247,6 @@ export class PledgesList extends Component {
           </div>
         );
       } else if (isPledgeConfirmed && userIsPledger) {
-        // Pledger Withdraw
         return (
           <Button
             className="withdraw-pledge-button"
@@ -267,9 +264,16 @@ export class PledgesList extends Component {
         );
       } else if (isPledgeConfirmed && !userIsPledger) {
         return (
-          <div className="confirmed-pledge-notice">
-            <p>This pledge was confirmed by the referee ({referee}).</p>
-            <p>The stake can now be withdrawn by the pledger ({address}).</p>
+          <div className="confirmed-pledge-notice pledge-notice">
+            <p>
+              This pledge was confirmed by {this.props.userAccount === referee
+                ? 'you.'
+                : 'the referee (' + referee + ').'}
+            </p>
+            {userAccount === recipient &&
+                <p>You won't be able to claim it.</p>
+            }
+            <p>The stake can be withdrawn by the pledger ({address}).</p>
           </div>
         );
       } else {
@@ -359,7 +363,9 @@ export class PledgesList extends Component {
         {pledges.length ? (
           <Card.Group key="1">{pledgeMap}</Card.Group>
         ) : (
-          <p className="empty-pledges-list-notice">You have no pledges yet.</p>
+          <p className="empty-pledges-list-notice">
+            You have no pledges yet.
+          </p>
         )}
       </div>
     );

@@ -88,9 +88,8 @@ h3 {
 .empty-pledges-list-notice {
   text-align: center;
   font-style: italic;
-  padding: 40px 0;
+  padding: 60px 0;
   background: #f2f2f2;
-  border: black 1px solid;
   border-radius: 5px;
 }
 
@@ -99,18 +98,17 @@ h3 {
   font-weight: bold;
 }
 
-.expired-pledge-notice {
+.pledge-notice {
   padding: 15px;
   background: #f2f2f2;
-  color: #b23d3d;
   border-top: 1px solid grey;
   font-style: italic;
 }
 
+.expired-pledge-notice {
+  color: #b23d3d;
+}
+
 .confirmed-pledge-notice {
-  padding: 15px;
-  background: #f2f2f2;
   color: green;
-  border-top: 1px solid grey;
-  font-style: italic;
 }
