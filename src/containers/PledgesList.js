@@ -340,7 +340,9 @@ export class PledgesList extends Component {
               </span>
             ) : null}
             <span className="pledge-creator-address">
-              {item.txConfirmed ? ' (' + item.address + ')' : null}
+              {item.txConfirmed && item.address !== userAccount
+                ? ' (' + item.address + ')'
+                : null}
             </span>
           </p>
         </Card.Content>
@@ -373,9 +375,9 @@ export class PledgesList extends Component {
         <Navbar />
         <div className="container pledges-list--container">
           {retrievingPledges ? (
-              <Dimmer inverted active>
-                <Loader>Loading pledges</Loader>
-              </Dimmer>
+            <Dimmer inverted active>
+              <Loader>Loading pledges</Loader>
+            </Dimmer>
           ) : (
             <div>
               <RedButton
