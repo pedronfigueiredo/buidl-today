@@ -77,6 +77,18 @@ export class About extends Component {
             you.
           </p>
 
+          <h3>Referee and Recipient</h3>
+          <p>
+            A <strong>referee</strong> is the Ethereum address of the person
+            that can confirm if the pledge is fullfilled on time. If the pledge
+            isn't confirmed before the deadline, the <strong>recipient</strong>{' '}
+            can withdraw the money.
+          </p>
+          <p>
+            In the future, Buidl Today will feature Ethereum addresses owned by
+            charities as suggested recipients.
+          </p>
+
           <h2 id="whydoyouneedtheblockchainforthis">
             Why do you need the blockchain for this?
           </h2>
@@ -94,7 +106,8 @@ export class About extends Component {
             <li>Finish an online course</li>
             <li>Establish a freelance career</li>
             <li>Build a home-based business</li>
-            <li>Block out office distractions ...and any others!</li>
+            <li>Block out office distractions</li>
+            <li>...and any others!</li>
           </ul>
 
           <h2 id="whythetypo">Why the typo?</h2>
@@ -104,8 +117,7 @@ export class About extends Component {
             <a
               href="https://bitcointalk.org/index.php?topic=375643.0"
               target="_blank"
-              rel="noopener noreferrer"
-            >
+              rel="noopener noreferrer">
               BitcoinTalk Forums
             </a>. The poster was stating his plan to keep his Bitcoin stake even
             while admiting his uncertainty about the future.
@@ -120,7 +132,14 @@ export class About extends Component {
           <h2 id="whomadethis">Who made this?</h2>
           <p>
             I'm Pedro, a Software Engineer currently diving into Blockchain
-            Technology. Drop me a line via email or Twitter.
+            Technology. Drop me a line via{' '}
+            <a href="mailto:pnfigueiredo@me.com">email</a> or{' '}
+            <a
+              href="https://twitter.com/pnfigueiredo"
+              target="_blank"
+              rel="noopener noreferrer">
+              Twitter
+            </a>.
           </p>
 
           <div className="go-back--wrapper">

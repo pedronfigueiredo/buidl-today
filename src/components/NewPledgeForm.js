@@ -198,7 +198,7 @@ export class NewPledgeForm extends Component {
           {!!recipient &&
             recipient === developerEthAddress && 
                 <p className="realtime-thank-you">
-                  Thank you for the support (but I hope you confirm your pledge!)
+                  Thank you for your support (but I hope you make it!)
                 </p>
               }
           {recipient === '' && (
