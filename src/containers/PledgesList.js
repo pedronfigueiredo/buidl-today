@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card} from 'semantic-ui-react';
+import {Button, Card, Loader, Segment, Dimmer} from 'semantic-ui-react';
 import LoaderScreen from '../components/LoaderScreen.js';
 import RedButton from '../components/RedButton.js';
 
@@ -165,6 +165,7 @@ export class PledgesList extends Component {
       userToRespondToMetaMask,
       web3,
       history,
+      retrievingPledges,
     } = this.props;
 
     const account = web3 && web3.eth.accounts[0];
@@ -266,13 +267,12 @@ export class PledgesList extends Component {
         return (
           <div className="confirmed-pledge-notice pledge-notice">
             <p>
-              This pledge was confirmed by {this.props.userAccount === referee
+              This pledge was confirmed by{' '}
+              {this.props.userAccount === referee
                 ? 'you.'
                 : 'the referee (' + referee + ').'}
             </p>
-            {userAccount === recipient &&
-                <p>You won't be able to claim it.</p>
-            }
+            {userAccount === recipient && <p>You won't be able to claim it.</p>}
             <p>The stake can be withdrawn by the pledger ({address}).</p>
           </div>
         );
@@ -363,9 +363,7 @@ export class PledgesList extends Component {
         {pledges.length ? (
           <Card.Group key="1">{pledgeMap}</Card.Group>
         ) : (
-          <p className="empty-pledges-list-notice">
-            You have no pledges yet.
-          </p>
+          <p className="empty-pledges-list-notice">You have no pledges yet.</p>
         )}
       </div>
     );
@@ -374,14 +372,22 @@ export class PledgesList extends Component {
       <div className="pledges-list--component">
         <Navbar />
         <div className="container pledges-list--container">
-          <RedButton
-            name={'new-pledge'}
-            text={'New Pledge!'}
-            fluid
-            link
-            to={'/new'}
-          />
-          <List />
+          {retrievingPledges ? (
+              <Dimmer inverted active>
+                <Loader>Loading pledges</Loader>
+              </Dimmer>
+          ) : (
+            <div>
+              <RedButton
+                name={'new-pledge'}
+                text={'New Pledge!'}
+                fluid
+                link
+                to={'/new'}
+              />
+              <List />
+            </div>
+          )}
         </div>
       </div>
     );
@@ -396,6 +402,7 @@ function mapStateToProps(state) {
     nickname: state.registration.user && state.registration.user.nickname,
     isAuthenticated: state.registration.isAuthenticated,
     pledges: state.pledges.pledges,
+    retrievingPledges: state.pledges.retrievingPledges,
     ethRate: state.pledges.ethRate,
     web3: state.registration.web3,
     justCreatedAgreement: state.pledges.justCreatedAgreement,

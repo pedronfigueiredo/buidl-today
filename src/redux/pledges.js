@@ -189,7 +189,8 @@ const pledges = (state = initialState, action) => {
     case GET_ALL_PLEDGES_FROM_USER:
       return {
         ...state,
-        retrievingPledges: false,
+        retrievingPledges: true,
+        pledges: [],
       };
     case GET_ALL_PLEDGES_FROM_USER_EMPTY:
       return {
