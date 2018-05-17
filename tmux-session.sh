@@ -26,13 +26,13 @@ then
   tmux send-keys -t ${SESSION_NAME}:2 "truffle develop" C-m
   # Lower left
   tmux select-pane -t 1
-  tmux send-keys -t ${SESSION_NAME}:2 "git status" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "clear && git status" C-m
   # Upper right
   tmux select-pane -t 2
   tmux send-keys -t ${SESSION_NAME}:2 "npm run dev" C-m
   # Lower right
   tmux select-pane -t 3
-  tmux send-keys -t ${SESSION_NAME}:2 "npm run test" C-m
+  tmux send-keys -t ${SESSION_NAME}:2 "cd ../buidl-api && clear && git status" C-m
   # Select Truffle pane
   tmux select-pane -t 0
   
