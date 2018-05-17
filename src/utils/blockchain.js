@@ -11,6 +11,8 @@ import {
   clearPledgeForm,
   errorSubmitPledge,
   stopWithdrawPledge,
+  notRightNetwork,
+  rightNetwork,
 } from '../redux/pledges.js';
 
 import api from '../utils/api.js';
@@ -28,6 +30,37 @@ const blockchain = {
       }
       dispatch(storeWeb3(results.web3));
     });
+  },
+
+  getNetwork(web3, dispatch) {
+    if (web3) {
+      web3.version.getNetwork((err, netId) => {
+        switch (netId) {
+          case '1':
+            // This is mainnet.
+            break;
+          case '2':
+            // This is the deprecated Morden test network.
+            break;
+          case '3':
+            // This is the ropsten test network.
+            break;
+          case '4':
+            // This is the Rinkeby test network.
+            break;
+          case '42':
+            // This is the Kovan test network.
+            break;
+          default:
+          // This is an unknown network.
+        }
+        if (netId !== '4') {
+          dispatch(notRightNetwork());
+        } else {
+          dispatch(rightNetwork());
+        }
+      });
+    }
   },
 
   setProvider(web3) {

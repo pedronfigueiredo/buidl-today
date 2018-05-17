@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card, Loader, Segment, Dimmer} from 'semantic-ui-react';
+import {Button, Card, Loader, Dimmer} from 'semantic-ui-react';
 import LoaderScreen from '../components/LoaderScreen.js';
 import RedButton from '../components/RedButton.js';
 

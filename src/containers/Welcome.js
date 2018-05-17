@@ -29,6 +29,7 @@ export class Welcome extends Component {
     const {dispatch, web3, userAccount} = this.props;
     if (nextProps.web3 !== web3 && nextProps.web3 !== '') {
       blockchain.setProvider(nextProps.web3);
+      blockchain.getNetwork(nextProps.web3, dispatch);
       blockchain.getUserAddress(nextProps.web3, dispatch);
     }
     if (nextProps.userAccount !== userAccount && nextProps.userAccount) {
@@ -64,6 +65,7 @@ export class Welcome extends Component {
       userAccount,
       dispatch,
       metaMaskWasRecognized,
+      isRightNetwork,
     } = this.props;
 
     const account = web3 && web3.eth.accounts[0];
@@ -128,7 +130,20 @@ export class Welcome extends Component {
                 </p>
               </div>
             </div>
-            <MetaMaskNotice />
+            {isRightNetwork || isRightNetwork === null ? (
+              <MetaMaskNotice />
+            ) : (
+              <div
+                style={{
+                  marginTop: '5rem',
+                  textAlign: 'center',
+                }}>
+                <h1>Wrong network</h1>
+                <p style={{fontSize: '1.5rem', marginTop: '3rem'}}>
+                  Please change to the Rinkeby Network.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -144,6 +159,7 @@ function mapStateToProps(state) {
     web3: state.registration.web3,
     web3Loaded: state.registration.web3Loaded,
     metaMaskWasRecognized: state.registration.metaMaskWasRecognized,
+    isRightNetwork: state.pledges.isRightNetwork,
   };
 }
 

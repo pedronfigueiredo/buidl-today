@@ -21,6 +21,9 @@ const CONFIRM_WITHDRAW_PLEDGE = 'CONFIRM_WITHDRAW_PLEDGE';
 
 const CHANGE_FORM_FIELD = 'CHANGE_FORM_FIELD';
 
+const RIGHT_NETWORK = 'RIGHT_NETWORK';
+const NOT_RIGHT_NETWORK = 'NOT_RIGHT_NETWORK';
+
 // Action Creators
 export const updateETHRate = payload => {
   return {
@@ -127,6 +130,18 @@ export const changeFormField = (field, value) => {
   };
 };
 
+export const rightNetwork = () => {
+  return {
+    type: RIGHT_NETWORK,
+  };
+};
+
+export const notRightNetwork = () => {
+  return {
+    type: NOT_RIGHT_NETWORK,
+  };
+};
+
 // Initial State
 const initialState = {
   ethRate: null,
@@ -144,6 +159,7 @@ const initialState = {
   justCreatedWithdrawal: false,
   newPledgeDetails: {},
   userToRespondToMetaMask: false,
+  isRightNetwork: null,
 };
 
 // Reducers
@@ -361,6 +377,16 @@ const pledges = (state = initialState, action) => {
           ...state.pledgeFormState,
           [field]: value,
         },
+      };
+    case RIGHT_NETWORK:
+      return {
+        ...state,
+        isRightNetwork: true,
+      };
+    case NOT_RIGHT_NETWORK:
+      return {
+        ...state,
+        isRightNetwork: false,
       };
     default:
       return state;
