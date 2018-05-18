@@ -107,7 +107,7 @@ export class About extends Component {
           <p>
             Buidl is the builders version of hodl, an expression born out of the
             urgency to invest time and skill in creating new tools and
-            applications of the technology, istead of concentrating on the
+            applications of the technology, instead of concentrating on the
             finantial side.
           </p>
 
