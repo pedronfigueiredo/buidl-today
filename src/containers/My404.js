@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
 import RedButton from '../components/RedButton.js';
+import Navbar from '../components/Navbar.js';
 import './My404.css';
 
 export class My404 extends Component {
@@ -9,6 +10,7 @@ export class My404 extends Component {
     const {history} = this.props;
     return (
       <div className="my-404-container">
+        <Navbar history={history} />
         <div className="container">
           <h1>Ooooops...</h1>
           <p>Page not Found!</p>

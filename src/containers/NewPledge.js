@@ -11,6 +11,8 @@ import {
 
 import moment from 'moment';
 
+import Navbar from '../components/Navbar.js';
+
 import blockchain from '../utils/blockchain.js';
 import {keccak256} from 'js-sha3';
 
@@ -28,7 +30,6 @@ export class NewPledge extends Component {
         referee: false,
       },
     };
-    this.goHome = this.goHome.bind(this);
     this.handleBackButton = this.handleBackButton.bind(this);
     this.handlePledgeFormChange = this.handlePledgeFormChange.bind(this);
     this.handlePledgeFormSubmit = this.handlePledgeFormSubmit.bind(this);
@@ -283,12 +284,6 @@ export class NewPledge extends Component {
     dispatch(clearPledgeForm());
   }
 
-  goHome() {
-    const {history} = this.props;
-    this.clearPledgeForm();
-    history.push('/');
-  }
-
   populateField(field, value) {
     const {dispatch, ethRate} = this.props;
     let input = document.getElementById(`${field}Input`);
@@ -342,15 +337,6 @@ export class NewPledge extends Component {
       }
     }
 
-    const Navbar = () => (
-      <div className="nav-bar">
-        <div className="heading" onClick={this.goHome}>
-          Buidl.Today
-        </div>
-        <div className="username">{nickname}</div>
-      </div>
-    );
-
     const RespondToMetaMask = () => (
       <div className="respond-to-metamask">
         <h2>Confirm Transaction</h2>
@@ -368,7 +354,7 @@ export class NewPledge extends Component {
 
     return (
       <div className="new-pledge-component">
-        <Navbar />
+        <Navbar history={history} nickname={nickname}/>
         <div className="container new-pledge-container">
           {userToRespondToMetaMask ? (
             <RespondToMetaMask />

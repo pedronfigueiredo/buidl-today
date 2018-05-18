@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Card, Loader, Dimmer} from 'semantic-ui-react';
 import LoaderScreen from '../components/LoaderScreen.js';
 import RedButton from '../components/RedButton.js';
+import Navbar from '../components/Navbar.js';
 
 import {connect} from 'react-redux';
 
@@ -24,11 +25,6 @@ import './PledgesList.css';
 import blockchain from '../utils/blockchain.js';
 
 export class PledgesList extends Component {
-  constructor(props) {
-    super(props);
-    this.goHome = this.goHome.bind(this);
-  }
-
   componentWillMount() {
     const {user: {userAccount}, isAuthenticated} = this.props;
     if (!userAccount || !isAuthenticated) {
@@ -117,11 +113,6 @@ export class PledgesList extends Component {
     }
   }
 
-  goHome() {
-    const {history} = this.props;
-    history.push('/');
-  }
-
   confirmPledge(item) {
     const {dispatch, history} = this.props;
     let updatedItem = {
@@ -177,15 +168,6 @@ export class PledgesList extends Component {
         clearInterval(repeater);
       }
     }
-
-    const Navbar = () => (
-      <div className="nav-bar">
-        <div className="heading" onClick={this.goHome}>
-          Buidl.Today
-        </div>
-        <div className="username">{nickname}</div>
-      </div>
-    );
 
     let PledgesButton = ({
       item,
@@ -371,7 +353,7 @@ export class PledgesList extends Component {
 
     let PledgeListComponent = () => (
       <div className="pledges-list--component">
-        <Navbar />
+        <Navbar history={history} nickname={nickname} />
         <div className="container pledges-list--container">
           {retrievingPledges ? (
             <Dimmer inverted active>

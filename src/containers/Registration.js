@@ -11,6 +11,7 @@ import {
 } from '../redux/registration.js';
 
 import api from '../utils/api.js';
+import Navbar from '../components/Navbar.js';
 
 export class Registration extends Component {
   constructor(props) {
@@ -146,18 +147,9 @@ export class Registration extends Component {
       }
     }
 
-    const Navbar = () => (
-      <div className="nav-bar">
-        <div className="heading" onClick={() => history.push('/')}>
-          Buidl.Today
-        </div>
-        <div className="username" />
-      </div>
-    );
-
     return (
       <div className="login-container">
-        <Navbar />
+        <Navbar nickname={nickname} history={history} />
         <div className="container">
           <RegistrationForm
             registering={registering}
