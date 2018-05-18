@@ -50,6 +50,16 @@ The secondary repo has two remotes, one on GitHub for browsing purposes, and ano
 
 - `npm run redeploy` - Deploy contract to rinkeby, sync server code to the secondary repo, build the frontend and push it to github Pages.
 
+## Closing mongo database from outside the console
+
+On Mac OS X
+
+- Find PID of mongod process using `top`
+
+- Kill the process by `kill` <PID> (the Mongo docs have more info on this)
+
+[source](https://stackoverflow.com/a/11776728)
+
 ## Reset local database
 
 Inside the mongo console, switch to the relevant database
