@@ -30,14 +30,14 @@ export class PledgesList extends Component {
   }
 
   componentWillMount() {
-    const {userAccount, isAuthenticated} = this.props;
+    const {user: {userAccount}, isAuthenticated} = this.props;
     if (!userAccount || !isAuthenticated) {
       this.props.history.push('/');
     }
   }
 
   componentDidMount() {
-    const {userAccount} = this.props;
+    const {user: {userAccount}} = this.props;
     this.getAllPledgesFromUser(userAccount);
     this.getEthereumPrice();
   }
@@ -75,7 +75,7 @@ export class PledgesList extends Component {
       dispatch,
       history,
       web3,
-      userAccount,
+      user: {userAccount},
       justCreatedAgreement,
       justCreatedWithdrawal,
     } = this.props;
@@ -158,9 +158,8 @@ export class PledgesList extends Component {
 
   render() {
     const {
-      nickname,
+      user: {nickname, userAccount},
       pledges,
-      userAccount,
       ethRate,
       userToRespondToMetaMask,
       web3,
@@ -400,8 +399,7 @@ export class PledgesList extends Component {
 
 function mapStateToProps(state) {
   return {
-    userAccount: state.registration.user && state.registration.user.userAccount,
-    nickname: state.registration.user && state.registration.user.nickname,
+    user: state.registration.user,
     isAuthenticated: state.registration.isAuthenticated,
     pledges: state.pledges.pledges,
     retrievingPledges: state.pledges.retrievingPledges,

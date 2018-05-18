@@ -9,14 +9,6 @@ import './Welcome.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../css/css/fontello.css';
 
-import {
-  checkIfUserExists,
-  identifiedNewUser,
-  identifiedReturningUser,
-  checkIfUserExistsError,
-} from '../redux/registration.js';
-
-import api from '../utils/api.js';
 import blockchain from '../utils/blockchain.js';
 
 export class Welcome extends Component {
@@ -26,36 +18,12 @@ export class Welcome extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const {dispatch, web3, userAccount} = this.props;
+    const {dispatch, web3, history} = this.props;
     if (nextProps.web3 !== web3 && nextProps.web3 !== '') {
       blockchain.setProvider(nextProps.web3);
       blockchain.getNetwork(nextProps.web3, dispatch);
-      blockchain.getUserAddress(nextProps.web3, dispatch);
     }
-    if (nextProps.userAccount !== userAccount && nextProps.userAccount) {
-      this.checkIfUserExists(nextProps.userAccount);
-    }
-  }
-
-  checkIfUserExists(userAccount) {
-    const {dispatch} = this.props;
-    dispatch(checkIfUserExists());
-    api
-      .get('userexists/' + userAccount)
-      .then(res => {
-        if (res === 'User not found') {
-          dispatch(identifiedNewUser());
-        } else if (res === 'error') {
-          dispatch(checkIfUserExistsError());
-          this.props.history.push('/error');
-        } else {
-          dispatch(identifiedReturningUser(res));
-        }
-      })
-      .catch(err => {
-        console.error('err', err);
-        this.props.history.push('/error');
-      });
+    blockchain.getUserAddress(nextProps.web3, dispatch, history);
   }
 
   render() {

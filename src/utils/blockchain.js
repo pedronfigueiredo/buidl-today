@@ -1,4 +1,8 @@
 import {
+  checkIfUserExists,
+  identifiedNewUser,
+  identifiedReturningUser,
+  checkIfUserExistsError,
   storeWeb3,
   storeUserAccount,
   recognizeMetaMask,
@@ -69,7 +73,7 @@ const blockchain = {
     }
   },
 
-  getUserAddress(web3, dispatch) {
+  getUserAddress(web3, dispatch, history) {
     if (web3) {
       web3.eth.getAccounts((error, accounts) => {
         Buidl.defaults({
@@ -77,8 +81,30 @@ const blockchain = {
           gas: 3 * 1000 * 1000,
         });
         dispatch(storeUserAccount(accounts[0]));
+
+        blockchain.checkIfUserExists(accounts[0], dispatch, history);
       });
     }
+  },
+
+  checkIfUserExists(userAccount, dispatch, history) {
+    dispatch(checkIfUserExists());
+    api
+      .get('userexists/' + userAccount)
+      .then(res => {
+        if (res === 'User not found') {
+          dispatch(identifiedNewUser());
+        } else if (res === 'error') {
+          dispatch(checkIfUserExistsError());
+          history.push('/error');
+        } else {
+          dispatch(identifiedReturningUser(res));
+        }
+      })
+      .catch(err => {
+        console.error('err', err);
+        this.props.history.push('/error');
+      });
   },
 
   createAgreement(newPledgeDetails, web3, dispatch, history) {
