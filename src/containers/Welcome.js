@@ -74,7 +74,7 @@ export class Welcome extends Component {
     let WelcomeContainer = () => (
       <div className="welcome-container">
         <div className="hero-card">
-          <h1 className="heading">Buidl.Today</h1>
+          <h1 className="heading">Buidl Today</h1>
           <p className="slogan">Ship your work</p>
         </div>
         <div className="call-to-action-card">
