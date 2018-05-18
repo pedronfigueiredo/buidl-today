@@ -33,8 +33,8 @@ then
   # Lower right
   tmux select-pane -t 3
   tmux send-keys -t ${SESSION_NAME}:2 "cd ../buidl-api && clear && git status" C-m
-  # Select Truffle pane
-  tmux select-pane -t 0
+  # Select git status pane
+  tmux select-pane -t 1
   
 
   tmux new-window -t ${SESSION_NAME}:3 -n 'Truffle, npm and git'
