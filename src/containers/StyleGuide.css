@@ -1,0 +1,77 @@
+/* General */
+body {
+  font-family: 'Open Sans', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.style-guide-container .text-component * {
+  line-height: 2;
+}
+
+.style-guide-container .text-component h1 {
+  font-size: 3rem;
+  margin-top: 6rem;
+  margin-bottom: 2rem;
+  letter-spacing: 1.5px;
+}
+
+.style-guide-container .text-component h2 {
+  font-size: 2.5rem;
+  text-align: left;
+  margin-top: 5rem;
+  margin-bottom: 1.5rem;
+}
+
+.style-guide-container .text-component h3 {
+  font-size: 2rem;
+  text-align: left;
+  margin-bottom: 0.5rem;
+  margin-top: 1.5rem;
+  color: #b23d3d;
+  font-style: italic;
+}
+
+.style-guide-container .text-component p,
+.style-guide-container .text-component li {
+  font-size: 1.25rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.style-guide-container .text-component small p {
+  font-size: 0.875rem;
+  margin-top: 0.875rem;
+}
+
+.style-guide-container .red--button__wrapper {
+  text-align: center;
+}
+
+.empty-pledges-list-notice {
+  text-align: center;
+  font-style: italic;
+  padding: 60px 0;
+  background: #f2f2f2;
+  border-radius: 5px;
+}
+
+.pledge-list-item .pledge-recipient .heading,
+.pledge-list-item .pledge-referee .heading {
+  font-weight: bold;
+}
+
+.pledge-notice {
+  padding: 15px;
+  background: #f2f2f2;
+  border-top: 1px solid grey;
+  font-style: italic;
+}
+
+.expired-pledge-notice {
+  color: #b23d3d;
+}
+
+.confirmed-pledge-notice {
+  color: green;
+}

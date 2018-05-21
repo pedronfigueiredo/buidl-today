@@ -7,6 +7,7 @@ import NewPledge from './containers/NewPledge';
 import About from './containers/About';
 import My404 from './containers/My404';
 import ErrorContainer from './containers/Error';
+import StyleGuide from './containers/StyleGuide';
 
 import {HashRouter, Route, Switch, Redirect} from 'react-router-dom';
 import PrivateRoute from './utils/PrivateRoute';
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route path="/about" exact component={About} />
         <Route path="/404" exact component={My404} />
         <Route path="/error" exact component={ErrorContainer} />
+        <Route path="/styleguide" exact component={StyleGuide} />
         <Redirect from="*" to="/404" />
       </Switch>
     </HashRouter>
