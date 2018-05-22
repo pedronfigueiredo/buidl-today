@@ -270,7 +270,8 @@ export class PledgesList extends Component {
           </Card.Header>
           <Card.Meta>
             <span className="pledge-deadline">
-              Until {moment(item.deadline, 'X').format('YYYY-MM-DD')} ({moment(
+              Until {moment(item.deadline, 'X').format('YYYY-MM-DD')}
+              {' at '}{moment(item.deadline, 'X').format('HH:mm')} ({moment(
                 item.deadline,
                 'X',
               ).fromNow()})
