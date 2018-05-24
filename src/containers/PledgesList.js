@@ -271,7 +271,8 @@ export class PledgesList extends Component {
           <Card.Meta>
             <span className="pledge-deadline">
               Until {moment(item.deadline, 'X').format('YYYY-MM-DD')}
-              {' at '}{moment(item.deadline, 'X').format('HH:mm')} ({moment(
+              {' at '}
+              {moment(item.deadline, 'X').format('HH:mm')} ({moment(
                 item.deadline,
                 'X',
               ).fromNow()})
@@ -279,7 +280,8 @@ export class PledgesList extends Component {
           </Card.Meta>
           <Card.Description>
             <p className="pledge-stake">
-              You pledged {item.stake} ETH (about{' '}
+              {item.address === userAccount ? 'You ' : item.nickname + ' '}
+              pledged {item.stake} ETH (about{' '}
               {Math.round(item.stake * ethRate * 100) / 100} USD)
             </p>
             <p className="pledge-referee">
