@@ -103,7 +103,7 @@ const blockchain = {
       })
       .catch(err => {
         console.error('err', err);
-        this.props.history.push('/error');
+        history.push('/error');
       });
   },
 
