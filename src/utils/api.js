@@ -5,7 +5,7 @@ const api = {
     const corsAnywhere = 'https://cors-anywhere.herokuapp.com/';
     if (hostname === 'buidl.today') {
       API_ROOT = corsAnywhere + 'https://buidl-today.herokuapp.com';
-      FRONT_END_ORIGIN = 'https://buidl.today';
+      FRONT_END_ORIGIN = 'http://buidl.today';
     } else if (hostname === 'localhost') {
       API_ROOT = 'http://localhost:5000';
       FRONT_END_ORIGIN = 'http://localhost:3000';
@@ -27,7 +27,7 @@ const api = {
     const hostname = window && window.location && window.location.hostname;
     if (hostname === 'buidl.today') {
       API_ROOT = 'https://buidl-today.herokuapp.com';
-      FRONT_END_ORIGIN = 'https://buidl.today';
+      FRONT_END_ORIGIN = 'http://buidl.today';
     } else if (hostname === 'localhost') {
       API_ROOT = 'http://localhost:5000';
       FRONT_END_ORIGIN = 'http://localhost:3000';
